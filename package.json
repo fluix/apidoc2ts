@@ -1,0 +1,43 @@
+{
+  "name": "apidoc2ts",
+  "version": "0.1.0",
+  "description": "Typescript interface generator based on ApiDoc",
+  "scripts": {
+    "start": "npm run lint && npm test && npm run build && npm run main",
+    "monitor": "nodemon",
+    "main": "node dist/index.js",
+    "build": "tsc",
+    "test": "jest --passWithNoTests",
+    "lint": "tslint --force -t stylish -c tslint.json 'src/**/*.ts'",
+    "lint-strict": "tslint -t stylish -c tslint.json 'src/**/*.ts'"
+  },
+  "jest": {
+    "preset": "ts-jest//presets/default",
+    "testRegex": "(\\.(test|spec))\\.ts$"
+  },
+  "husky": {
+    "hooks": {
+      "pre-commit": "npm run lint-strict && npm test"
+    }
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/fluix/web-apidoc2ts.git"
+  },
+  "author": "Artem Velkov",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/fluix/web-apidoc2ts/issues"
+  },
+  "homepage": "https://github.com/fluix/web-apidoc2ts#readme",
+  "devDependencies": {
+    "@types/jest": "^24.0.15",
+    "husky": "^3.0.0",
+    "jest": "^24.8.0",
+    "nodemon": "^1.19.1",
+    "ts-jest": "^24.0.2",
+    "tslint": "^5.18.0",
+    "tslint-config-airbnb": "5.11.1",
+    "typescript": "^3.5.3"
+  }
+}
