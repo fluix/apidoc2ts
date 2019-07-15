@@ -7,23 +7,29 @@ const branchRegex = new RegExp("EWN-\\d+\\/[\\w-]+");
 const exec = util.promisify(childProcessExec);
 
 async function getCurrentBranch() {
-
     const branchesOutput = await exec('git branch');
+
     if (branchesOutput.stderr) {
         throw new Error(stderr);
     }
-    let branch = branchesOutput.stdout;
-    branch = branch.split('\n').find(b => b.trim().charAt(0) === '*').trim().substring(2);
-    return branch;
+
+    return branchesOutput.stdout
+        .split('\n')
+        .find(b => b.trim().charAt(0) === '*')
+        .trim()
+        .substring(2);
 }
 
 async function checkBranchName() {
-    let branchName = await getCurrentBranch();
-    if (!branchRegex.test(branchName)) {
-        console.log("Invalid branch name");
-        console.log("Use EWN-######/my-description-message");
-        process.exit(1);
+    const branchName = await getCurrentBranch();
+
+    if (branchRegex.test(branchName)) {
+        process.exit(0);
     }
+
+    console.log("Invalid branch name");
+    console.log("Use EWN-######/my-description-message");
+    process.exit(1);
 }
 
 checkBranchName()
