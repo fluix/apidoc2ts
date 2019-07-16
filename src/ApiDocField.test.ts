@@ -14,6 +14,16 @@ describe("apiDoc Field", () => {
         expect(field.required).toBeFalsy();
     });
 
+    it("should consider field required if 'optional' is missing", () => {
+        const fieldData: IApiDocField = {
+            type: "number",
+            field: "fieldName",
+        };
+
+        const field: ApiDocField = new ApiDocField(fieldData);
+        expect(field.required).toBeTruthy();
+    });
+
     it("should show if the type is custom", () => {
         const fieldData: IApiDocField = {
             type: "CustomType",
@@ -35,7 +45,7 @@ describe("apiDoc Field", () => {
         expect(field.enum).toEqual(["val1", "val2"]);
     });
 
-    it("should generate JSON Schema", () => {
+    it("should generate JSON Schema for interface field", () => {
         const fieldData: IApiDocField = {
             group: "groupName",
             type: "string",

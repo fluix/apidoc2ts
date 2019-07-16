@@ -3,7 +3,7 @@ import {JsonSchema, JsonSchemaDefaultValues} from "./JsonSchema";
 
 export class ApiDocField {
     private readonly optional: boolean;
-    private readonly type: string;
+    private readonly _type: string;
     private readonly allowedValues: Array<string>;
     private readonly field: string;
 
@@ -12,23 +12,27 @@ export class ApiDocField {
     }
 
     get custom() {
-        return !JsonSchemaDefaultValues.includes(this.type);
+        return !JsonSchemaDefaultValues.includes(this._type);
     }
 
     get enum() {
         return this.allowedValues;
     }
 
+    get type() {
+        return this._type;
+    }
+
     constructor(field: IApiDocField) {
-        this.type = field.type;
+        this._type = field.type;
         this.field = field.field;
-        this.optional = !!field.optional;
+        this.optional = Boolean(field.optional);
         this.allowedValues = field.allowedValues || [];
     }
 
     toJsonSchemaField(): JsonSchema {
         return {
-            type: this.type,
+            type: this._type,
             required: this.required,
             enum: this.allowedValues,
         };
