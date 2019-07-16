@@ -1,81 +1,71 @@
 import {ApiDocField} from "./ApiDocField";
-import {IApiDocField} from "./ApiDocInterfaces";
-import {JsonSchema} from "./JsonSchema";
 
 describe("apiDoc Field", () => {
     it("should return required status", () => {
-        const fieldData: IApiDocField = {
+        const optionalField = new ApiDocField({
             type: "string",
             field: "fieldName",
             optional: true,
-        };
-
-        const field: ApiDocField = new ApiDocField(fieldData);
-        expect(field.required).toBeFalsy();
+        });
+        expect(optionalField.required).toBeFalsy();
     });
 
     it("should consider field required if 'optional' is missing", () => {
-        const fieldData: IApiDocField = {
+        const requiredField = new ApiDocField({
             type: "number",
             field: "fieldName",
-        };
-
-        const field: ApiDocField = new ApiDocField(fieldData);
-        expect(field.required).toBeTruthy();
+        });
+        expect(requiredField.required).toBeTruthy();
     });
 
     it("should show if the type is custom", () => {
-        const fieldData: IApiDocField = {
+        const customTypeField = new ApiDocField({
             type: "CustomType",
             field: "fieldName",
-        };
-
-        const field: ApiDocField = new ApiDocField(fieldData);
-        expect(field.custom).toBeTruthy();
+        });
+        expect(customTypeField.custom).toBeTruthy();
     });
 
     it("should generate enum from allowedValues", () => {
-        const fieldData: IApiDocField = {
+        const enumField = new ApiDocField({
             type: "string",
             field: "fieldName",
             allowedValues: ["val1", "val2"],
-        };
-
-        const field: ApiDocField = new ApiDocField(fieldData);
-        expect(field.enum).toEqual(["val1", "val2"]);
+        });
+        expect(enumField.enum).toEqual(["val1", "val2"]);
     });
 
-    it("should not declare 'enum' if no allowedValues are specified", () => {
-        const fieldData: IApiDocField = {
+    it("should return empty array for enum if no allowedValues are specified", () => {
+        const noEnumField = new ApiDocField({
             type: "string",
             field: "fieldName",
-        };
+        });
+        expect(noEnumField.enum).toEqual([]);
+    });
 
-        const expected: JsonSchema = {
+    it("should not declare 'enum' in schema if no allowedValues are specified", () => {
+        const noEnumField = new ApiDocField({
             type: "string",
-            required: true,
-        };
-
-        const field: ApiDocField = new ApiDocField(fieldData);
-        expect(expected).toEqual(field.toJsonSchemaField());
+            field: "fieldName",
+        });
+        expect(noEnumField.toJsonSchemaField().enum).toBeUndefined();
     });
 
     it("should generate JSON Schema for interface field", () => {
-        const fieldData: IApiDocField = {
+        const apiDocField = new ApiDocField({
             group: "groupName",
             type: "string",
             optional: false,
             field: "fieldName",
             allowedValues: ["value1", "value2"],
-        };
+        });
 
-        const expected: JsonSchema = {
+        const jsonSchemaField = {
             type: "string",
             required: true,
             enum: ["value1", "value2"],
         };
 
-        const field: ApiDocField = new ApiDocField(fieldData);
-        expect(field.toJsonSchemaField()).toEqual(expected);
+        expect(apiDocField.toJsonSchemaField()).toEqual(jsonSchemaField);
     });
 });
