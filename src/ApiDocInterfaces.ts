@@ -8,11 +8,11 @@ export interface IApiDocEndpoint {
     description?: string;
     groupDescription?: Array<string>;
     filename?: string;
-    permission?: Array<IApiDocPermission>;
-    parameter?: Array<IApiDocParameter>;
-    success?: Array<IApiDocSuccess>;
-    error?: Array<IApiDocError>;
-    header?: Array<IApiDocHeader>;
+    permission?: IApiDocPermission | string;
+    parameter?: IApiDocParameter;
+    success?: IApiDocSuccess;
+    error?: IApiDocError;
+    header?: IApiDocHeader;
     examples?: Array<IApiDocExample>;
     sampleRequest?: Array<IApiDocSampleRequest>;
 }
