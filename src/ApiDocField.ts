@@ -1,5 +1,5 @@
 import {IApiDocField} from "./ApiDocInterfaces";
-import {JsonSchema, JsonSchemaDefaultValues} from "./JsonSchema";
+import {JsonSchemaDefaultValues} from "./JsonSchema";
 
 export class ApiDocField {
     private readonly optional: boolean;
@@ -32,13 +32,5 @@ export class ApiDocField {
         this.field = field.field;
         this.optional = Boolean(field.optional);
         this.allowedValues = field.allowedValues || [];
-    }
-
-    toJsonSchemaField(): JsonSchema {
-        return {
-            type: this._type,
-            required: this.required,
-            enum: this.allowedValues.length ? this.allowedValues : undefined,
-        };
     }
 }

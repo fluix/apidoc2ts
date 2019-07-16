@@ -37,8 +37,8 @@ export class ApiDocEndpoint {
 
         this.fields.forEach(field => {
             schema.properties[field.fieldName] = field.custom
-                ? {$ref: `#/definitions/${field.type}`}
-                : field.toJsonSchemaField();
+                ? ApiDocEndpoint.toJsonSchemaRef(field)
+                : ApiDocEndpoint.toJsonSchemaField(field);
         });
 
         return schema;
@@ -52,5 +52,19 @@ export class ApiDocEndpoint {
         return this.fields
             .filter(field => field.custom)
             .map(field => field.type);
+    }
+
+    static toJsonSchemaRef(field: ApiDocField): JsonSchema {
+        return {
+            $ref: `#/definitions/${field.type}`,
+        };
+    }
+
+    static toJsonSchemaField(field: ApiDocField): JsonSchema {
+        return {
+            type: field.type,
+            required: field.required,
+            enum: field.enum.length ? field.enum : undefined,
+        };
     }
 }

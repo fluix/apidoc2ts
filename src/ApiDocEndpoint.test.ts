@@ -1,4 +1,5 @@
 import {ApiDocEndpoint} from "./ApiDocEndpoint";
+import {ApiDocField} from "./ApiDocField";
 
 const requiredField = {
     type: "string",
@@ -26,7 +27,7 @@ describe("apiDoc Endpoint", () => {
 
     it("should throw exception if no parameters are specified", () => {
         expect(() => {
-            const invalidEndpoint = new ApiDocEndpoint({});
+            return new ApiDocEndpoint({});
         }).toThrow();
     });
 
@@ -63,6 +64,32 @@ describe("apiDoc Endpoint", () => {
 
         const endpoint = new ApiDocEndpoint(endpointWithMultipleCustomTypes);
         expect(endpoint.customTypes).toEqual(["CustomType1", "CustomType2"]);
+    });
+
+    it("should not declare 'enum' in schema if no allowedValues are specified", () => {
+        const noEnumField = new ApiDocField({
+            type: "string",
+            field: "fieldName",
+        });
+        expect(ApiDocEndpoint.toJsonSchemaField(noEnumField).enum).toBeUndefined();
+    });
+
+    it("should generate JSON Schema for interface field", () => {
+        const apiDocField = new ApiDocField({
+            group: "groupName",
+            type: "string",
+            optional: false,
+            field: "fieldName",
+            allowedValues: ["value1", "value2"],
+        });
+
+        const jsonSchemaField = {
+            type: "string",
+            required: true,
+            enum: ["value1", "value2"],
+        };
+
+        expect(ApiDocEndpoint.toJsonSchemaField(apiDocField)).toEqual(jsonSchemaField);
     });
 
     it("should generate interface JSON Schema", () => {
