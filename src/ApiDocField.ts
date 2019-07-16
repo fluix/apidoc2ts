@@ -34,7 +34,7 @@ export class ApiDocField {
         return {
             type: this._type,
             required: this.required,
-            enum: this.allowedValues,
+            enum: this.allowedValues.length ? this.allowedValues : undefined,
         };
     }
 }

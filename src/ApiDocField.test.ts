@@ -45,6 +45,21 @@ describe("apiDoc Field", () => {
         expect(field.enum).toEqual(["val1", "val2"]);
     });
 
+    it("should not declare 'enum' if no allowedValues are specified", () => {
+        const fieldData: IApiDocField = {
+            type: "string",
+            field: "fieldName",
+        };
+
+        const expected: JsonSchema = {
+            type: "string",
+            required: true,
+        };
+
+        const field: ApiDocField = new ApiDocField(fieldData);
+        expect(expected).toEqual(field.toJsonSchemaField());
+    });
+
     it("should generate JSON Schema for interface field", () => {
         const fieldData: IApiDocField = {
             group: "groupName",
