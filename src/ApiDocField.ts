@@ -23,6 +23,10 @@ export class ApiDocField {
         return this._type;
     }
 
+    get fieldName() {
+        return this.field;
+    }
+
     constructor(field: IApiDocField) {
         this._type = field.type;
         this.field = field.field;
