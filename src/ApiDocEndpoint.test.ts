@@ -31,7 +31,7 @@ describe("apiDoc Endpoint", () => {
         }).toThrow();
     });
 
-    it("should reference custom types", () => {
+    it("should generate reference for custom types", () => {
         const endpointWithCustomType = new ApiDocEndpoint({
             parameter: {
                 fields: {Parameter: [customTypeField]},
@@ -40,7 +40,7 @@ describe("apiDoc Endpoint", () => {
 
         const schema = endpointWithCustomType.toJsonSchema();
         expect(schema.properties).toBeDefined();
-        expect(schema.properties!.fieldName2.$ref).toBe("#/definitions/CustomType1");
+        expect(schema.properties![customTypeField.field].$ref).toBe("#/definitions/CustomType1");
     });
 
     it("should create fake definition for custom type", () => {

@@ -15,8 +15,7 @@ export class ApiDocEndpoint {
     public readonly customTypes: Array<string>;
 
     constructor(endpoint: IApiDocEndpoint) {
-
-        if (endpoint.parameter === undefined) {
+        if (!endpoint.parameter) {
             throw new Error("No parameters specified");
         }
 
