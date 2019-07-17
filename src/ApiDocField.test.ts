@@ -42,30 +42,4 @@ describe("apiDoc Field", () => {
         });
         expect(noEnumField.enum).toEqual([]);
     });
-
-    it("should not declare 'enum' in schema if no allowedValues are specified", () => {
-        const noEnumField = new ApiDocField({
-            type: "string",
-            field: "fieldName",
-        });
-        expect(noEnumField.toJsonSchemaField().enum).toBeUndefined();
-    });
-
-    it("should generate JSON Schema for interface field", () => {
-        const apiDocField = new ApiDocField({
-            group: "groupName",
-            type: "string",
-            optional: false,
-            field: "fieldName",
-            allowedValues: ["value1", "value2"],
-        });
-
-        const jsonSchemaField = {
-            type: "string",
-            required: true,
-            enum: ["value1", "value2"],
-        };
-
-        expect(apiDocField.toJsonSchemaField()).toEqual(jsonSchemaField);
-    });
 });
