@@ -9,7 +9,7 @@ import {
     TypeScriptTargetLanguage,
 } from "quicktype-core";
 
-export const quicktypeFakeCustomType = {
+const qtFakeCustomType = {
     type: "object",
     properties: {
         prop: {},
@@ -38,7 +38,8 @@ export class InterfaceGenerator {
             throw new Error(`Interface ${name} exists in custom types: [${this.customTypes.join(",")}]`);
         }
 
-        const inputData = this.createInputData(schema, name);
+        const schemaCopy = Object.assign({}, schema);
+        const inputData = this.createInputData(schemaCopy, name);
         const quicktypeOptions = this.createOptions(inputData);
         const interfaceString = await this.execQuicktypeGenerator(quicktypeOptions);
         return this.removeFakeDefinitions(interfaceString);
@@ -46,10 +47,17 @@ export class InterfaceGenerator {
 
     private async execQuicktypeGenerator(quicktypeOptions) {
         const result = await quicktype(quicktypeOptions);
-        return result.lines.join("");
+        return result.lines
+            .join("\n")
+            .replace(new RegExp(/:\s+/), ": ");
     }
 
     private createInputData(schema: JsonSchema, name: string) {
+        if (this.customTypes.length !== 0) {
+            this.includeFakeDefinitions(schema);
+            this.replaceCustomTypesWithDefinitions(schema);
+        }
+
         const schemaString = JSON.stringify(schema);
         const source: JSONSchemaSourceData = {name, schema: schemaString};
         const inputData = new InputData();
@@ -64,6 +72,33 @@ export class InterfaceGenerator {
             lang: this.targetLang,
             rendererOptions: this.rendererOptions,
         };
+    }
+
+    private includeFakeDefinitions(schema: JsonSchema) {
+        const fakeDefinitions = {};
+        this.customTypes.forEach(type => {
+            fakeDefinitions[type] = qtFakeCustomType;
+        });
+        schema.definitions = Object.assign({}, schema.definitions, fakeDefinitions);
+    }
+
+    private replaceCustomTypesWithDefinitions(schema: JsonSchema) {
+        if (!schema.properties) {
+            return;
+        }
+
+        const customProperties = {};
+        _.entries(schema.properties).forEach(([propertyKey, property]: [string, JsonSchema]) => {
+            if (!property.type) {
+                return;
+            }
+
+            if (this.customTypes.includes(property.type)) {
+                customProperties[propertyKey] = {$ref: `#/definitions/${property.type}`};
+            }
+        });
+
+        schema.properties = Object.assign({}, schema.properties, customProperties);
     }
 
     private removeFakeDefinitions(interfaceString: string): string {

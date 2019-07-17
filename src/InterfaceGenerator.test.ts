@@ -26,15 +26,7 @@ const schemaWithCustomType = {
     type: "object",
     properties: {
         param: {
-            $ref: "#/definitions/User",
-        },
-    },
-    definitions: {
-        User: {
-            type: "object",
-            properties: {
-                prop: {},
-            },
+            type: "User",
         },
     },
 };
@@ -49,11 +41,35 @@ const schemaWithEnum = {
     },
 };
 
+const schemaWithTwoCustomTypes = {
+    type: "object",
+    properties: {
+        param: {
+            type: "User",
+        },
+        param2: {
+            $ref: "#/definitions/Admin",
+        },
+    },
+    definitions: {
+        Admin: {
+            type: "object",
+            properties: {
+                name: {
+                    type: "string",
+                },
+            },
+        },
+    },
+};
+
 describe("Interface generator", () => {
     let generator: InterfaceGenerator;
+    let generatorWithCustomTypes: InterfaceGenerator;
 
     beforeEach(() => {
         generator = new InterfaceGenerator();
+        generatorWithCustomTypes = new InterfaceGenerator(["User"]);
     });
 
     it("should return empty string if called with empty schema", async () => {
@@ -84,19 +100,23 @@ describe("Interface generator", () => {
     });
 
     it("should generate properties with custom types", async () => {
-        const interfaceString = await generator.createInterface(schemaWithCustomType);
+        const interfaceString = await generatorWithCustomTypes.createInterface(schemaWithCustomType);
         expect((interfaceString).includes("param?: User")).toBeTruthy();
     });
 
     it("should remove fake definitions from generated code", async () => {
-        const generatorWithCustomTypes = new InterfaceGenerator(["User"]);
         const interfaceString = await generatorWithCustomTypes.createInterface(schemaWithCustomType);
         expect((interfaceString).includes("interface User")).toBeFalsy();
     });
 
     it("should throw if interface name matches one of custom types", async () => {
-        const generatorWithCustomTypes = new InterfaceGenerator(["User"]);
         await expect(generatorWithCustomTypes.createInterface(schemaWithCustomType, "User"))
             .rejects.toThrow();
+    });
+
+    it("should respect existing definitions is schema", async () => {
+        const result = await generatorWithCustomTypes.createInterface(schemaWithTwoCustomTypes);
+        expect(result.includes("param?: User")).toBeTruthy();
+        expect(result.includes("param2?: Admin")).toBeTruthy();
     });
 });
