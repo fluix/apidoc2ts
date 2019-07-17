@@ -68,7 +68,7 @@ export class InterfaceGenerator {
 
     private removeFakeDefinitions(interfaceString: string): string {
         const regexpInterfaceNames = this.customTypes.join("|");
-        const regexp = new RegExp(`(export interface (${regexpInterfaceNames}) {[^}]*})`);
+        const regexp = new RegExp(`export interface (${regexpInterfaceNames}) {[^}]*}`);
         return interfaceString.replace(regexp, "");
     }
 }

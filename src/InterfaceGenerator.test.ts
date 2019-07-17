@@ -88,7 +88,7 @@ describe("Interface generator", () => {
         expect((interfaceString).includes("param?: User")).toBeTruthy();
     });
 
-    it("should cleanup generated code", async () => {
+    it("should remove fake definitions from generated code", async () => {
         const generatorWithCustomTypes = new InterfaceGenerator(["User"]);
         const interfaceString = await generatorWithCustomTypes.createInterface(schemaWithCustomType);
         expect((interfaceString).includes("interface User")).toBeFalsy();
