@@ -36,6 +36,7 @@
     "jest": "^24.8.0",
     "lodash": "^4.17.14",
     "nodemon": "^1.19.1",
+    "quicktype-core": "^6.0.44",
     "ts-jest": "^24.0.2",
     "tslint": "^5.18.0",
     "tslint-config-airbnb": "5.11.1",
