@@ -9,6 +9,13 @@ import {
     TypeScriptTargetLanguage,
 } from "quicktype-core";
 
+export const quicktypeFakeCustomType = {
+    type: "object",
+    properties: {
+        prop: {},
+    },
+};
+
 export class InterfaceGenerator {
 
     private readonly customTypes: Array<string> = [];

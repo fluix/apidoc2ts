@@ -2,13 +2,7 @@ import {IApiDocEndpoint} from "./ApiDocInterfaces";
 import {ApiDocField} from "./ApiDocField";
 import {JsonSchema} from "./JsonSchema";
 import * as _ from "lodash";
-
-const quicktypeFakeObject = {
-    type: "object",
-    properties: {
-        prop: {},
-    },
-};
+import {quicktypeFakeCustomType} from "./InterfaceGenerator";
 
 export class ApiDocEndpoint {
     private readonly fields: Array<ApiDocField>;
@@ -31,7 +25,7 @@ export class ApiDocEndpoint {
         };
 
         this.customTypes.forEach(type => {
-            schema.definitions[type] = quicktypeFakeObject;
+            schema.definitions[type] = quicktypeFakeCustomType;
         });
 
         this.fields.forEach(field => {
