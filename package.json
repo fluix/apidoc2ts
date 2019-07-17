@@ -7,7 +7,7 @@
     "monitor": "nodemon",
     "main": "node dist/index.js",
     "build": "tsc",
-    "test": "jest --passWithNoTests",
+    "test": "jest --verbose --passWithNoTests",
     "lint": "tslint --force -t stylish -c tslint.json 'src/**/*.ts'",
     "lint-strict": "tslint -t stylish -c tslint.json 'src/**/*.ts'"
   },
