@@ -27,18 +27,10 @@ export class ApiDocToInterfaceConverter {
     }
 
     async convert(apiDocData: Array<IApiDocEndpoint>): Promise<Array<ConverterResult>> {
-        const results: Array<ConverterResult> = [];
-
-        for (const requestData of apiDocData) {
-            const interfaceString = await this.generateInterface(requestData, requestData.name);
-
-            results.push({
-                metadata: requestData as InterfaceMetadata,
-                interface: interfaceString,
-            });
-        }
-
-        return results;
+        return await Promise.all(apiDocData.map(async (endpoint) => ({
+            metadata: endpoint as InterfaceMetadata,
+            interface: await this.generateInterface(endpoint, endpoint.name),
+        })));
     }
 
     private async generateInterface(apiDocRequest, interfaceName): Promise<string> {
