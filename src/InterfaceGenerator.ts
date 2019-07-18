@@ -72,10 +72,13 @@ export class InterfaceGenerator {
     }
 
     private fillInFakeTypes(schema: JsonSchema) {
-        if (this.customTypes.length !== 0) {
-            this.includeFakeDefinitions(schema);
-            this.replaceCustomTypesWithDefinitions(schema);
+        if (this.customTypes.length === 0) {
+            return;
         }
+
+        this.includeFakeDefinitions(schema);
+        this.includeRequiredPropertiesList(schema);
+        this.replaceCustomTypesWithReferences(schema);
     }
 
     private includeFakeDefinitions(schema: JsonSchema) {
@@ -86,11 +89,7 @@ export class InterfaceGenerator {
         schema.definitions = Object.assign({}, schema.definitions, fakeDefinitions);
     }
 
-    private replaceCustomTypesWithDefinitions(schema: JsonSchema) {
-        if (!schema.properties) {
-            return;
-        }
-
+    private replaceCustomTypesWithReferences(schema: JsonSchema) {
         const customProperties = {};
         _.entries(schema.properties).forEach(([propertyKey, property]: [string, JsonSchema]) => {
             if (!property.type) {
@@ -103,6 +102,16 @@ export class InterfaceGenerator {
         });
 
         schema.properties = Object.assign({}, schema.properties, customProperties);
+    }
+
+    private includeRequiredPropertiesList(schema: JsonSchema) {
+        const requiredProperties: Array<string> = [];
+        _.entries(schema.properties).forEach(([propertyKey, property]: [string, JsonSchema]) => {
+            if (property.required) {
+                requiredProperties.push(propertyKey);
+            }
+        });
+        schema.required = Object.assign([], schema.required, requiredProperties);
     }
 
     private removeFakeDefinitions(interfaceString: string): string {
