@@ -1,4 +1,6 @@
 import {ApiDocToInterfaceConverter} from "./ApiDocToInterfaceConverter";
+import {InterfaceGenerator} from "./InterfaceGenerator";
+import {ApiDocEndpointParser} from "./ApiDocEndpointParser";
 
 const getRequestData = {
     type: "get",
@@ -59,7 +61,7 @@ const postRequestDataWithCustomTypes = {
     url: "/user",
     title: "Create a new User",
     version: "0.3.0",
-    name: "PostUser",
+    name: "CreateUser",
     group: "User",
     permission: "none",
     description: "<p>Interface description</p>",
@@ -79,32 +81,50 @@ const postRequestDataWithCustomTypes = {
     filename: "source/example_full/example.js",
 };
 
-const apiDocDataWithCustomTypes = [postRequestDataWithCustomTypes];
-const apiDocData = [getRequestData, postRequestData];
+jest.mock("./ApiDocEndpointParser");
+jest.mock("./InterfaceGenerator");
+
+const apiDocDataFull = [getRequestData, postRequestData, postRequestDataWithCustomTypes];
+
+const schemaMock = {type: "mock"};
 
 describe("ApiDoc to Interface converter", () => {
+    const apiDocEndpoint: ApiDocEndpointParser = new ApiDocEndpointParser();
+    const parseEndpointSpy = jest.spyOn(apiDocEndpoint, "parseEndpoint");
+
+    let interfaceGenerator: InterfaceGenerator;
     let converter: ApiDocToInterfaceConverter;
 
     beforeEach(() => {
-        converter = new ApiDocToInterfaceConverter();
+        parseEndpointSpy.mockReset();
+        parseEndpointSpy.mockImplementation(() => schemaMock);
+
+        interfaceGenerator = new InterfaceGenerator(["User"]);
+        converter = new ApiDocToInterfaceConverter(interfaceGenerator, apiDocEndpoint);
     });
 
-    it("should generate array that contains interface strings and metadata", async () => {
-        const result = await converter.convert(apiDocData);
-        expect(result).toBeInstanceOf(Array);
-        expect(result[0].metadata).toBeDefined();
-        expect(result[0].interface).toBeDefined();
+    it("should return empty array for empty data", async () => {
+        expect(await converter.convert([])).toEqual([]);
     });
 
-    it("should generate name for interface based on name from metadata", async () => {
-        const result = await converter.convert(apiDocData);
-        expect(result[0].interface.includes("interface GetUser {")).toBeTruthy();
-        expect(result[1].interface.includes("interface PostUser {")).toBeTruthy();
+    it("should call parseEndpoint with apiDoc data", async () => {
+        await converter.convert([getRequestData]);
+        expect(parseEndpointSpy).toBeCalledWith(getRequestData);
     });
 
-    it("should generate properties with custom types", async () => {
-        const converterWithCustomTypes = new ApiDocToInterfaceConverter(["User"]);
-        const result = await converterWithCustomTypes.convert(apiDocDataWithCustomTypes);
-        expect(result[0].interface.includes("user: User")).toBeTruthy();
+    it("should call createInterface with parsed Schema", async () => {
+        await converter.convert([getRequestData]);
+        expect(interfaceGenerator.createInterface).toBeCalledWith(schemaMock, expect.anything());
+    });
+
+    it("should call createInterface with name from apiDocData", async () => {
+        await converter.convert([getRequestData]);
+        expect(interfaceGenerator.createInterface).toBeCalledWith(expect.anything(), getRequestData.name);
+    });
+
+    it("should call parseEndpoint and createInterface for every endpoint", async () => {
+        await converter.convert(apiDocDataFull);
+        expect(parseEndpointSpy).toBeCalledTimes(apiDocDataFull.length);
+        expect(interfaceGenerator.createInterface).toBeCalledTimes(apiDocDataFull.length);
     });
 });

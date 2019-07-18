@@ -1,5 +1,5 @@
 import {IApiDocEndpoint} from "./ApiDocInterfaces";
-import {ApiDocEndpoint} from "./ApiDocEndpoint";
+import {ApiDocEndpointParser} from "./ApiDocEndpointParser";
 import {InterfaceGenerator} from "./InterfaceGenerator";
 
 export interface InterfaceMetadata {
@@ -20,10 +20,10 @@ interface ConverterResult {
 
 export class ApiDocToInterfaceConverter {
 
-    private readonly interfaceGenerator: InterfaceGenerator;
-
-    constructor(customTypes: Array<string> = []) {
-        this.interfaceGenerator = new InterfaceGenerator(customTypes);
+    constructor(
+        private readonly interfaceGenerator: InterfaceGenerator,
+        private readonly apiDocEndpoint: ApiDocEndpointParser,
+    ) {
     }
 
     async convert(apiDocData: Array<IApiDocEndpoint>): Promise<Array<ConverterResult>> {
@@ -34,8 +34,7 @@ export class ApiDocToInterfaceConverter {
     }
 
     private async generateInterface(apiDocRequest, interfaceName): Promise<string> {
-        const endpoint = new ApiDocEndpoint(apiDocRequest);
-        const schema = endpoint.toJsonSchema();
+        const schema = this.apiDocEndpoint.parseEndpoint(apiDocRequest);
         return await this.interfaceGenerator.createInterface(schema, interfaceName);
     }
 }

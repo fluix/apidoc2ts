@@ -1,4 +1,4 @@
-import {ApiDocEndpoint} from "./ApiDocEndpoint";
+import {ApiDocEndpointParser} from "./ApiDocEndpointParser";
 import {ApiDocField} from "./ApiDocField";
 
 const requiredField = {
@@ -20,20 +20,26 @@ const enumField = {
 
 describe("apiDoc Endpoint", () => {
 
+    let endpoint: ApiDocEndpointParser;
+
+    beforeEach(() => {
+        endpoint = new ApiDocEndpointParser();
+    });
+
     it("should throw exception if no parameters are specified", () => {
         expect(() => {
-            return new ApiDocEndpoint({});
+            return new ApiDocEndpointParser().parseEndpoint({});
         }).toThrow();
     });
 
     it("should create property with custom type", () => {
-        const endpoint = new ApiDocEndpoint({
+        const endpointData = {
             parameter: {
                 fields: {Parameter: [customTypeField]},
             },
-        });
+        };
 
-        expect(endpoint.toJsonSchema().properties!.fieldName2.type).toBe("CustomType1");
+        expect(endpoint.parseEndpoint(endpointData).properties!.fieldName2.type).toBe("CustomType1");
     });
 
     it("should not declare 'enum' in schema if no allowedValues are specified", () => {
@@ -41,7 +47,7 @@ describe("apiDoc Endpoint", () => {
             type: "string",
             field: "fieldName",
         });
-        expect(ApiDocEndpoint.toJsonSchemaField(noEnumField).enum).toBeUndefined();
+        expect(ApiDocEndpointParser.toJsonSchemaField(noEnumField).enum).toBeUndefined();
     });
 
     it("should generate JSON Schema for interface field", () => {
@@ -59,15 +65,15 @@ describe("apiDoc Endpoint", () => {
             enum: ["value1", "value2"],
         };
 
-        expect(ApiDocEndpoint.toJsonSchemaField(apiDocField)).toEqual(jsonSchemaField);
+        expect(ApiDocEndpointParser.toJsonSchemaField(apiDocField)).toEqual(jsonSchemaField);
     });
 
     it("should generate interface JSON Schema", () => {
-        const endpoint = new ApiDocEndpoint({
+        const endpointData = {
             parameter: {
                 fields: {Parameter: [requiredField, customTypeField, enumField]},
             },
-        });
+        };
 
         const expectedSchema = {
             type: "object",
@@ -88,6 +94,6 @@ describe("apiDoc Endpoint", () => {
             },
         };
 
-        expect(endpoint.toJsonSchema()).toEqual(expectedSchema);
+        expect(endpoint.parseEndpoint(endpointData)).toEqual(expectedSchema);
     });
 });
