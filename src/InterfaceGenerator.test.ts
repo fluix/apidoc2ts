@@ -31,6 +31,20 @@ const schemaWithCustomType = {
     },
 };
 
+const schemaWithTwoRequiredCustomTypes = {
+    type: "object",
+    properties: {
+        param: {
+            type: "User",
+            required: true,
+        },
+        param2: {
+            type: "User",
+            required: true,
+        },
+    },
+};
+
 const schemaWithEnum = {
     type: "object",
     properties: {
@@ -102,6 +116,12 @@ describe("Interface generator", () => {
     it("should generate properties with custom types", async () => {
         const interfaceString = await generatorWithCustomTypes.createInterface(schemaWithCustomType);
         expect((interfaceString).includes("param?: User")).toBeTruthy();
+    });
+
+    it("should set optional state depending on 'required'", async () => {
+        const interfaceString = await generatorWithCustomTypes.createInterface(schemaWithTwoRequiredCustomTypes);
+        expect((interfaceString).includes("param: User")).toBeTruthy();
+        expect((interfaceString).includes("param2: User")).toBeTruthy();
     });
 
     it("should remove fake definitions from generated code", async () => {
