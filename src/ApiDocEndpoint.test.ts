@@ -12,11 +12,6 @@ const customTypeField = {
     field: "fieldName2",
 };
 
-const anotherCustomTypeField = {
-    type: "CustomType2",
-    field: "fieldName3",
-};
-
 const enumField = {
     type: "number",
     field: "fieldName4",
@@ -31,39 +26,14 @@ describe("apiDoc Endpoint", () => {
         }).toThrow();
     });
 
-    it("should generate reference for custom types", () => {
-        const endpointWithCustomType = new ApiDocEndpoint({
+    it("should create property with custom type", () => {
+        const endpoint = new ApiDocEndpoint({
             parameter: {
                 fields: {Parameter: [customTypeField]},
             },
         });
 
-        const schema = endpointWithCustomType.toJsonSchema();
-        expect(schema.properties).toBeDefined();
-        expect(schema.properties![customTypeField.field].$ref).toBe("#/definitions/CustomType1");
-    });
-
-    it("should create fake definition for custom type", () => {
-        const endpointWithCustomType = new ApiDocEndpoint({
-            parameter: {
-                fields: {Parameter: [customTypeField]},
-            },
-        });
-
-        const schema = endpointWithCustomType.toJsonSchema();
-        expect(schema.definitions).toBeDefined();
-        expect(schema.definitions!.hasOwnProperty("CustomType1")).toBeTruthy();
-    });
-
-    it("should get all custom types from fields", () => {
-        const endpointWithMultipleCustomTypes = {
-            parameter: {
-                fields: {Parameter: [requiredField, customTypeField, anotherCustomTypeField]},
-            },
-        };
-
-        const endpoint = new ApiDocEndpoint(endpointWithMultipleCustomTypes);
-        expect(endpoint.customTypes).toEqual(["CustomType1", "CustomType2"]);
+        expect(endpoint.toJsonSchema().properties!.fieldName2.type).toBe("CustomType1");
     });
 
     it("should not declare 'enum' in schema if no allowedValues are specified", () => {
@@ -107,20 +77,13 @@ describe("apiDoc Endpoint", () => {
                     required: true,
                 },
                 fieldName2: {
-                    $ref: "#/definitions/CustomType1",
+                    type: "CustomType1",
+                    required: true,
                 },
                 fieldName4: {
                     type: "number",
                     required: true,
                     enum: [1, 2, 3],
-                },
-            },
-            definitions: {
-                CustomType1: {
-                    type: "object",
-                    properties: {
-                        prop: {},
-                    },
                 },
             },
         };

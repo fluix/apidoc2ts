@@ -1,5 +1,4 @@
 import {IApiDocField} from "./ApiDocInterfaces";
-import {JsonSchemaDefaultValues} from "./JsonSchema";
 
 export class ApiDocField {
     private readonly optional: boolean;
@@ -9,10 +8,6 @@ export class ApiDocField {
 
     get required() {
         return !this.optional;
-    }
-
-    get custom() {
-        return !JsonSchemaDefaultValues.includes(this._type);
     }
 
     get enum() {

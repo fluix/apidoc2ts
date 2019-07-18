@@ -18,14 +18,6 @@ describe("apiDoc Field", () => {
         expect(requiredField.required).toBeTruthy();
     });
 
-    it("should show if the type is custom", () => {
-        const customTypeField = new ApiDocField({
-            type: "CustomType",
-            field: "fieldName",
-        });
-        expect(customTypeField.custom).toBeTruthy();
-    });
-
     it("should generate enum from allowedValues", () => {
         const enumField = new ApiDocField({
             type: "string",
