@@ -53,10 +53,7 @@ export class InterfaceGenerator {
     }
 
     private createInputData(schema: JsonSchema, name: string) {
-        if (this.customTypes.length !== 0) {
-            this.includeFakeDefinitions(schema);
-            this.replaceCustomTypesWithDefinitions(schema);
-        }
+        this.fillInFakeTypes(schema);
 
         const schemaString = JSON.stringify(schema);
         const source: JSONSchemaSourceData = {name, schema: schemaString};
@@ -72,6 +69,13 @@ export class InterfaceGenerator {
             lang: this.targetLang,
             rendererOptions: this.rendererOptions,
         };
+    }
+
+    private fillInFakeTypes(schema: JsonSchema) {
+        if (this.customTypes.length !== 0) {
+            this.includeFakeDefinitions(schema);
+            this.replaceCustomTypesWithDefinitions(schema);
+        }
     }
 
     private includeFakeDefinitions(schema: JsonSchema) {
