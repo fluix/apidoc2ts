@@ -98,7 +98,10 @@ export class InterfaceGenerator {
             }
 
             if (this.customTypes.includes(property.type)) {
-                customProperties[propertyKey] = {$ref: `#/definitions/${property.type}`};
+                customProperties[propertyKey] = {
+                    $ref: `#/definitions/${property.type}`,
+                    required: property.required,
+                };
             }
         });
 
