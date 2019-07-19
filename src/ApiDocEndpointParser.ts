@@ -21,13 +21,37 @@ export class ApiDocEndpointParser {
 
         const properties = {};
         fields.forEach(field => {
-            properties[field.fieldName] = ApiDocEndpointParser.toJsonSchemaField(field);
+            const jsonSchemaProperty = ApiDocEndpointParser.toJsonSchemaProperty(field);
+
+            if (!field.nested) {
+                properties[field.fieldName] = jsonSchemaProperty;
+                return;
+            }
+
+            const property = this.getNestedProperty(properties, field.qualifiedName);
+            if (!property.properties) {
+                property.properties = {};
+            }
+            property.properties[field.fieldName] = jsonSchemaProperty;
         });
 
         return properties;
     }
 
-    static toJsonSchemaField(field: ApiDocField): JsonSchema {
+    private getNestedProperty(properties: {}, qualifiedName: Array<string>): JsonSchema {
+        return qualifiedName.slice(1).reduce((property: JsonSchema, name: string) => {
+            if (property.properties && property.properties[name]) {
+                return property.properties[name];
+            }
+
+            property.type = "object";
+            property.properties = {};
+            property.properties[name] = {};
+            return property.properties[name];
+        }, properties[qualifiedName[0]]);
+    }
+
+    static toJsonSchemaProperty(field: ApiDocField): JsonSchema {
         return {
             type: field.type,
             required: field.required,

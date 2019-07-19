@@ -18,6 +18,24 @@ describe("apiDoc Field", () => {
         expect(requiredField.required).toBeTruthy();
     });
 
+    it("should return field name without qualified part", () => {
+        const nestedField = new ApiDocField({
+            type: "number",
+            field: "nested.field.name",
+        });
+
+        expect(nestedField.fieldName).toBe("name");
+    });
+
+    it("should consider field nested if it's name is qualified", () => {
+        const nestedField = new ApiDocField({
+            type: "number",
+            field: "nested.field.name",
+        });
+
+        expect(nestedField.nested).toBeTruthy();
+    });
+
     it("should generate enum from allowedValues", () => {
         const enumField = new ApiDocField({
             type: "string",

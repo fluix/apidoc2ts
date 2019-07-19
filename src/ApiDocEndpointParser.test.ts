@@ -20,10 +20,10 @@ const enumField = {
 
 describe("apiDoc Endpoint", () => {
 
-    let endpoint: ApiDocEndpointParser;
+    let parser: ApiDocEndpointParser;
 
     beforeEach(() => {
-        endpoint = new ApiDocEndpointParser();
+        parser = new ApiDocEndpointParser();
     });
 
     it("should throw exception if no parameters are specified", () => {
@@ -39,7 +39,7 @@ describe("apiDoc Endpoint", () => {
             },
         };
 
-        expect(endpoint.parseEndpoint(endpointData).properties!.fieldName2.type).toBe("CustomType1");
+        expect(parser.parseEndpoint(endpointData).properties!.fieldName2.type).toBe("CustomType1");
     });
 
     it("should not declare 'enum' in schema if no allowedValues are specified", () => {
@@ -47,7 +47,56 @@ describe("apiDoc Endpoint", () => {
             type: "string",
             field: "fieldName",
         });
-        expect(ApiDocEndpointParser.toJsonSchemaField(noEnumField).enum).toBeUndefined();
+        expect(ApiDocEndpointParser.toJsonSchemaProperty(noEnumField).enum).toBeUndefined();
+    });
+
+    it("should set nested properties fields to root property", () => {
+        const endpointWithNestedFields = {
+            parameter: {
+                fields: {
+                    Parameter: [
+                        {
+                            type: "object",
+                            field: "user",
+                        },
+                        {
+                            type: "string",
+                            field: "user.name",
+                        },
+                        {
+                            type: "string",
+                            field: "user.name.firstName",
+                        },
+                    ],
+                },
+            },
+        };
+
+        const schema = parser.parseEndpoint(endpointWithNestedFields);
+        expect(schema.properties!.user.properties!.name).toBeDefined();
+        expect(schema.properties!.user.properties!.name.properties!.firstName).toBeDefined();
+    });
+
+    it("should create nested properties", () => {
+        const endpointWithSkippedNestedFields = {
+            parameter: {
+                fields: {
+                    Parameter: [
+                        {
+                            type: "object",
+                            field: "user",
+                        },
+                        {
+                            type: "string",
+                            field: "user.name.first",
+                        },
+                    ],
+                },
+            },
+        };
+
+        const schema = parser.parseEndpoint(endpointWithSkippedNestedFields);
+        expect(schema.properties!.user.properties!.name.properties!.first).toBeDefined();
     });
 
     it("should generate JSON Schema for interface field", () => {
@@ -65,7 +114,7 @@ describe("apiDoc Endpoint", () => {
             enum: ["value1", "value2"],
         };
 
-        expect(ApiDocEndpointParser.toJsonSchemaField(apiDocField)).toEqual(jsonSchemaField);
+        expect(ApiDocEndpointParser.toJsonSchemaProperty(apiDocField)).toEqual(jsonSchemaField);
     });
 
     it("should generate interface JSON Schema", () => {
@@ -94,6 +143,6 @@ describe("apiDoc Endpoint", () => {
             },
         };
 
-        expect(endpoint.parseEndpoint(endpointData)).toEqual(expectedSchema);
+        expect(parser.parseEndpoint(endpointData)).toEqual(expectedSchema);
     });
 });
