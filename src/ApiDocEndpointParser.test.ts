@@ -77,7 +77,7 @@ describe("apiDoc Endpoint", () => {
         expect(schema.properties!.user.properties!.name.properties!.firstName).toBeDefined();
     });
 
-    it("should create nested properties", () => {
+    it("should create skipped root properties for nested properties", () => {
         const endpointWithSkippedNestedFields = {
             parameter: {
                 fields: {
@@ -96,6 +96,7 @@ describe("apiDoc Endpoint", () => {
         };
 
         const schema = parser.parseEndpoint(endpointWithSkippedNestedFields);
+        expect(schema.properties!.user.properties!.name).toBeDefined();
         expect(schema.properties!.user.properties!.name.properties!.first).toBeDefined();
     });
 
