@@ -1,4 +1,5 @@
 import {IApiDocField} from "./ApiDocInterfaces";
+import * as _ from "lodash";
 
 export class ApiDocField {
     private readonly optional: boolean;
@@ -20,7 +21,7 @@ export class ApiDocField {
     }
 
     get fieldName() {
-        return this._qualifiedName[this._qualifiedName.length - 1];
+        return _.last(this._qualifiedName);
     }
 
     get qualifiedName() {
