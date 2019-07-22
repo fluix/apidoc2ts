@@ -87,10 +87,29 @@ const schemaWithUppercaseDefaultTypes = {
             type: "Number",
         },
         param3: {
-            type: "object",
+            type: "Object",
             properties: {
                 nestedParam1: {
                     type: "Boolean",
+                },
+            },
+        },
+    },
+};
+
+const schemaWithUppercaseDefaultTypesInDefinitions = {
+    type: "object",
+    properties: {
+        param: {
+            $ref: "#/definitions/User",
+        },
+    },
+    definitions: {
+        User: {
+            type: "Object",
+            properties: {
+                param: {
+                    type: "String",
                 },
             },
         },
@@ -169,11 +188,16 @@ describe("Interface generator", () => {
         expect(result.includes("param2?: Admin")).toBeTruthy();
     });
 
-    it("should fix uppercase for default types", async () => {
+    it("should fix uppercase for default types in properties", async () => {
         const result = await generator.createInterface(schemaWithUppercaseDefaultTypes);
         expect(result.includes("param1?: string")).toBeTruthy();
         expect(result.includes("param2?: number")).toBeTruthy();
         expect(result.includes("nestedParam1?: boolean")).toBeTruthy();
+    });
+
+    it("should fix uppercase for default types in definitions", async () => {
+        const result = await generator.createInterface(schemaWithUppercaseDefaultTypesInDefinitions);
+        expect(result.includes("param?: string")).toBeTruthy();
     });
 
     it("should not override custom types that match uppercase default types", async () => {
