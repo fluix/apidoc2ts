@@ -1,4 +1,4 @@
-import {JsonSchema} from "./JsonSchema";
+import {JsonSchema, jsonSchemaDefaultTypes} from "./JsonSchema";
 import * as _ from "lodash";
 import {
     InputData,
@@ -48,12 +48,13 @@ export class InterfaceGenerator {
     private async execQuicktypeGenerator(quicktypeOptions) {
         const result = await quicktype(quicktypeOptions);
         return result.lines
-            .join("\n")
-            .replace(new RegExp(/:\s+/), ": ");
+                     .join("\n")
+                     .replace(new RegExp(/:\s+/), ": ");
     }
 
     private createInputData(schema: JsonSchema, name: string) {
         this.fillInFakeTypes(schema);
+        this.fixInvalidDefaultTypes(schema);
 
         const schemaString = JSON.stringify(schema);
         const source: JSONSchemaSourceData = {name, schema: schemaString};
@@ -118,5 +119,32 @@ export class InterfaceGenerator {
         const regexpInterfaceNames = this.customTypes.join("|");
         const regexp = new RegExp(`export interface (${regexpInterfaceNames}) {[^}]*}`);
         return interfaceString.replace(regexp, "");
+    }
+
+    private fixInvalidDefaultTypes(schema: JsonSchema) {
+        if (schema.type === "object" && schema.properties) {
+            if (schema.properties) {
+                _.values(schema.properties).forEach((property: JsonSchema) => {
+                    return this.fixInvalidDefaultTypes(property);
+                });
+            }
+
+            if (schema.definitions) {
+                _.values(schema.definitions).forEach((property: JsonSchema) => {
+                    return this.fixInvalidDefaultTypes(property);
+                });
+            }
+        }
+
+        if (!schema.type) {
+            return;
+        }
+
+        const lowercaseType = schema.type.toLowerCase();
+        if (this.customTypes.includes(schema.type) || !jsonSchemaDefaultTypes.includes(lowercaseType)) {
+            return;
+        }
+
+        schema.type = lowercaseType;
     }
 }

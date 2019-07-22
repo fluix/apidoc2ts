@@ -77,6 +77,35 @@ const schemaWithTwoCustomTypes = {
     },
 };
 
+const schemaWithInvalidDefaultTypes = {
+    type: "object",
+    properties: {
+        param1: {
+            type: "String",
+        },
+        param2: {
+            type: "Number",
+        },
+        param3: {
+            type: "object",
+            properties: {
+                nestedParam1: {
+                    type: "Boolean",
+                },
+            },
+        },
+    },
+};
+
+const schemaWithOverriddenDefaultType = {
+    type: "object",
+    properties: {
+        param: {
+            type: "String",
+        },
+    },
+};
+
 describe("Interface generator", () => {
     let generator: InterfaceGenerator;
     let generatorWithCustomTypes: InterfaceGenerator;
@@ -138,5 +167,18 @@ describe("Interface generator", () => {
         const result = await generatorWithCustomTypes.createInterface(schemaWithTwoCustomTypes);
         expect(result.includes("param?: User")).toBeTruthy();
         expect(result.includes("param2?: Admin")).toBeTruthy();
+    });
+
+    it("should automatically fix invalid default types", async () => {
+        const result = await generator.createInterface(schemaWithInvalidDefaultTypes);
+        expect(result.includes("param1?: string")).toBeTruthy();
+        expect(result.includes("param2?: number")).toBeTruthy();
+        expect(result.includes("nestedParam1?: boolean")).toBeTruthy();
+    });
+
+    it("should not override custom types that match default types", async () => {
+        const generatorWithCustomDefaultValue = new InterfaceGenerator(["String"]);
+        const result = await generatorWithCustomDefaultValue.createInterface(schemaWithOverriddenDefaultType);
+        expect(result.includes("param?: String")).toBeTruthy();
     });
 });
