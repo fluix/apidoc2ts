@@ -122,7 +122,7 @@ export class InterfaceGenerator {
     }
 
     private fixInvalidDefaultTypes(schema: JsonSchema) {
-        if (schema.type === "object" && schema.properties) {
+        if (schema.type === "object") {
             if (schema.properties) {
                 _.values(schema.properties).forEach((property: JsonSchema) => {
                     return this.fixInvalidDefaultTypes(property);
