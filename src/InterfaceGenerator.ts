@@ -122,22 +122,20 @@ export class InterfaceGenerator {
     }
 
     private lowercaseDefaultTypes(schema: JsonSchema) {
-        if (schema.type === "object") {
-            if (schema.properties) {
-                _.values(schema.properties).forEach((property: JsonSchema) => {
-                    return this.lowercaseDefaultTypes(property);
-                });
-            }
-
-            if (schema.definitions) {
-                _.values(schema.definitions).forEach((property: JsonSchema) => {
-                    return this.lowercaseDefaultTypes(property);
-                });
-            }
-        }
-
         if (!schema.type) {
             return;
+        }
+
+        if (schema.properties) {
+            return _.values(schema.properties).forEach((property: JsonSchema) => {
+                this.lowercaseDefaultTypes(property);
+            });
+        }
+
+        if (schema.definitions) {
+            return _.values(schema.definitions).forEach((property: JsonSchema) => {
+                this.lowercaseDefaultTypes(property);
+            });
         }
 
         const lowercaseType = schema.type.toLowerCase();
