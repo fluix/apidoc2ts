@@ -21,34 +21,38 @@ export class ApiDocEndpointParser {
 
         const properties = {};
         fields.forEach(field => {
-            const jsonSchemaProperty = ApiDocEndpointParser.toJsonSchemaProperty(field);
-
-            if (!field.nested) {
-                properties[field.fieldName] = jsonSchemaProperty;
-                return;
-            }
-
-            const property = this.getNestedProperty(properties, field.qualifiedName);
-            if (!property.properties) {
-                property.properties = {};
-            }
-            property.properties[field.fieldName] = jsonSchemaProperty;
+            const props = this.lookupProperties(properties, field.qualifiedName);
+            props[field.fieldName] = ApiDocEndpointParser.toJsonSchemaProperty(field);
         });
 
         return properties;
     }
 
-    private getNestedProperty(properties: {}, qualifiedName: Array<string>): JsonSchema {
-        return qualifiedName.slice(1).reduce((property: JsonSchema, name: string) => {
-            if (property.properties && property.properties[name]) {
-                return property.properties[name];
+    private lookupProperties(properties: {}, qualifiedName: Array<string>): {} {
+        if (qualifiedName.length === 1) {
+            return properties;
+        }
+
+        let nestedProperties = properties;
+        qualifiedName.forEach((propertyName) => {
+            if (nestedProperties[propertyName] && nestedProperties[propertyName].properties) {
+                nestedProperties = nestedProperties[propertyName].properties;
+                return;
             }
 
-            property.type = "object";
-            property.properties = {};
-            property.properties[name] = {};
-            return property.properties[name];
-        }, properties[qualifiedName[0]]);
+            nestedProperties = this.createNestedProperties(nestedProperties, propertyName);
+        });
+
+        return nestedProperties;
+    }
+
+    private createNestedProperties(nestedProperties, propertyName) {
+        nestedProperties[propertyName] = {};
+        nestedProperties[propertyName].properties = {
+            type: "object",
+            properties: {},
+        };
+        return nestedProperties[propertyName].properties;
     }
 
     static toJsonSchemaProperty(field: ApiDocField): JsonSchema {
