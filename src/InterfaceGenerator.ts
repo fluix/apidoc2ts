@@ -54,7 +54,7 @@ export class InterfaceGenerator {
 
     private createInputData(schema: JsonSchema, name: string) {
         this.fillInFakeTypes(schema);
-        this.fixInvalidDefaultTypes(schema);
+        this.lowercaseDefaultTypes(schema);
 
         const schemaString = JSON.stringify(schema);
         const source: JSONSchemaSourceData = {name, schema: schemaString};
@@ -121,17 +121,17 @@ export class InterfaceGenerator {
         return interfaceString.replace(regexp, "");
     }
 
-    private fixInvalidDefaultTypes(schema: JsonSchema) {
+    private lowercaseDefaultTypes(schema: JsonSchema) {
         if (schema.type === "object") {
             if (schema.properties) {
                 _.values(schema.properties).forEach((property: JsonSchema) => {
-                    return this.fixInvalidDefaultTypes(property);
+                    return this.lowercaseDefaultTypes(property);
                 });
             }
 
             if (schema.definitions) {
                 _.values(schema.definitions).forEach((property: JsonSchema) => {
-                    return this.fixInvalidDefaultTypes(property);
+                    return this.lowercaseDefaultTypes(property);
                 });
             }
         }

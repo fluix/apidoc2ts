@@ -77,7 +77,7 @@ const schemaWithTwoCustomTypes = {
     },
 };
 
-const schemaWithInvalidDefaultTypes = {
+const schemaWithUppercaseDefaultTypes = {
     type: "object",
     properties: {
         param1: {
@@ -169,14 +169,14 @@ describe("Interface generator", () => {
         expect(result.includes("param2?: Admin")).toBeTruthy();
     });
 
-    it("should automatically fix invalid default types", async () => {
-        const result = await generator.createInterface(schemaWithInvalidDefaultTypes);
+    it("should fix uppercase for default types", async () => {
+        const result = await generator.createInterface(schemaWithUppercaseDefaultTypes);
         expect(result.includes("param1?: string")).toBeTruthy();
         expect(result.includes("param2?: number")).toBeTruthy();
         expect(result.includes("nestedParam1?: boolean")).toBeTruthy();
     });
 
-    it("should not override custom types that match default types", async () => {
+    it("should not override custom types that match uppercase default types", async () => {
         const generatorWithCustomDefaultValue = new InterfaceGenerator(["String"]);
         const result = await generatorWithCustomDefaultValue.createInterface(schemaWithOverriddenDefaultType);
         expect(result.includes("param?: String")).toBeTruthy();
