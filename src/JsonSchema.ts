@@ -1,4 +1,4 @@
-export const JsonSchemaDefaultValues: Array<string> =
+export const jsonSchemaDefaultTypes: Array<string> =
     ["null", "boolean", "object", "array", "number", "string", "integer"];
 
 export interface JsonSchema {

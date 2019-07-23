@@ -1,4 +1,4 @@
-import {JsonSchema} from "./JsonSchema";
+import {JsonSchema, jsonSchemaDefaultTypes} from "./JsonSchema";
 import * as _ from "lodash";
 import {
     InputData,
@@ -48,12 +48,13 @@ export class InterfaceGenerator {
     private async execQuicktypeGenerator(quicktypeOptions) {
         const result = await quicktype(quicktypeOptions);
         return result.lines
-            .join("\n")
-            .replace(new RegExp(/:\s+/), ": ");
+                     .join("\n")
+                     .replace(new RegExp(/:\s+/), ": ");
     }
 
     private createInputData(schema: JsonSchema, name: string) {
         this.fillInFakeTypes(schema);
+        this.lowercaseDefaultTypes(schema);
 
         const schemaString = JSON.stringify(schema);
         const source: JSONSchemaSourceData = {name, schema: schemaString};
@@ -118,5 +119,33 @@ export class InterfaceGenerator {
         const regexpInterfaceNames = this.customTypes.join("|");
         const regexp = new RegExp(`export interface (${regexpInterfaceNames}) {[^}]*}`);
         return interfaceString.replace(regexp, "");
+    }
+
+    private lowercaseDefaultTypes(schema: JsonSchema) {
+        this.lowercaseType(schema);
+        this.lowercaseNestedPropertiesTypes(schema);
+    }
+
+    private lowercaseNestedPropertiesTypes(schema: JsonSchema) {
+        _.values(schema.properties).forEach((property: JsonSchema) => {
+            this.lowercaseDefaultTypes(property);
+        });
+
+        _.values(schema.definitions).forEach((definition: JsonSchema) => {
+            this.lowercaseDefaultTypes(definition);
+        });
+    }
+
+    private lowercaseType(schema: JsonSchema) {
+        if (!schema.type || this.customTypes.includes(schema.type)) {
+            return;
+        }
+
+        const lowercaseType = schema.type.toLowerCase();
+        if (!jsonSchemaDefaultTypes.includes(lowercaseType)) {
+            return;
+        }
+
+        schema.type = lowercaseType;
     }
 }
