@@ -1,4 +1,4 @@
-import {IApiDocEndpoint, IApiDocField} from "./ApiDocInterfaces";
+import {ApiDocEndpointPart, IApiDocEndpoint, IApiDocField} from "./ApiDocInterfaces";
 import {ApiDocField} from "./ApiDocField";
 import {JsonSchema, JsonSubSchemas} from "./JsonSchema";
 import * as _ from "lodash";
@@ -16,25 +16,18 @@ export class ApiDocEndpointParser {
         }
 
         return {
-            request: {
-                type: "object",
-                properties: endpoint.parameter
-                            ? this.convertFieldsToProperties(endpoint.parameter.fields)
-                            : {},
-            },
-            response: {
-                type: "object",
-                properties: endpoint.success
-                            ? this.convertFieldsToProperties(endpoint.success.fields)
-                            : {},
-            },
-            error: {
-                type: "object",
-                properties: endpoint.error
-                            ? this.convertFieldsToProperties(endpoint.error.fields)
-                            : {},
-            },
+            request: this.parseFields(endpoint.parameter),
+            response: this.parseFields(endpoint.success),
+            error: this.parseFields(endpoint.error),
         };
+    }
+
+    private parseFields(endpointPart: ApiDocEndpointPart | undefined): JsonSchema {
+        return endpointPart ? {
+            type: "object",
+            properties: this.convertFieldsToProperties(endpointPart.fields),
+        } : {};
+
     }
 
     private convertFieldsToProperties(fieldGroups: Record<string, Array<IApiDocField>>): JsonSubSchemas {

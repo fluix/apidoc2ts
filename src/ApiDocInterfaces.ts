@@ -1,3 +1,5 @@
+export type ApiDocEndpointPart = IApiDocParameter | IApiDocSuccess | IApiDocError | IApiDocHeader;
+
 export interface IApiDocEndpoint {
     group?: string;
     name?: string;
