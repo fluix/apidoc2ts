@@ -86,7 +86,11 @@ jest.mock("./InterfaceGenerator");
 
 const apiDocDataFull = [getRequestData, postRequestData, postRequestDataWithCustomTypes];
 
-const schemaMock = {type: "mock"};
+const parserResultMock = {
+    request: {type: "requestMock"},
+    response: {type: "responseMock"},
+    error: {type: "errorMock"},
+};
 
 describe("ApiDoc to Interface converter", () => {
     const apiDocEndpoint: ApiDocEndpointParser = new ApiDocEndpointParser();
@@ -97,7 +101,7 @@ describe("ApiDoc to Interface converter", () => {
 
     beforeEach(() => {
         parseEndpointSpy.mockReset();
-        parseEndpointSpy.mockImplementation(() => schemaMock);
+        parseEndpointSpy.mockImplementation(() => parserResultMock);
 
         interfaceGenerator = new InterfaceGenerator(["User"]);
         converter = new ApiDocToInterfaceConverter(interfaceGenerator, apiDocEndpoint);
@@ -112,19 +116,23 @@ describe("ApiDoc to Interface converter", () => {
         expect(parseEndpointSpy).toBeCalledWith(getRequestData);
     });
 
-    it("should call createInterface with parsed Schema", async () => {
+    it("should call createInterface with parsed schemas for request, response and error", async () => {
         await converter.convert([getRequestData]);
-        expect(interfaceGenerator.createInterface).toBeCalledWith(schemaMock, expect.anything());
+        expect(interfaceGenerator.createInterface).toBeCalledWith(parserResultMock.request, expect.anything());
+        expect(interfaceGenerator.createInterface).toBeCalledWith(parserResultMock.response, expect.anything());
+        expect(interfaceGenerator.createInterface).toBeCalledWith(parserResultMock.error, expect.anything());
     });
 
-    it("should call createInterface with name from apiDocData", async () => {
+    it("should call createInterface with name from apiDoc endpoint and default postfixes", async () => {
         await converter.convert([getRequestData]);
         expect(interfaceGenerator.createInterface).toBeCalledWith(expect.anything(), getRequestData.name);
+        expect(interfaceGenerator.createInterface).toBeCalledWith(expect.anything(), `${getRequestData.name}Response`);
+        expect(interfaceGenerator.createInterface).toBeCalledWith(expect.anything(), `${getRequestData.name}Error`);
     });
 
     it("should call parseEndpoint and createInterface for every endpoint", async () => {
         await converter.convert(apiDocDataFull);
         expect(parseEndpointSpy).toBeCalledTimes(apiDocDataFull.length);
-        expect(interfaceGenerator.createInterface).toBeCalledTimes(apiDocDataFull.length);
+        expect(interfaceGenerator.createInterface).toBeCalledTimes(apiDocDataFull.length * 3);
     });
 });

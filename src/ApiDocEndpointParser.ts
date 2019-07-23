@@ -1,18 +1,35 @@
-import {IApiDocEndpoint, IApiDocField} from "./ApiDocInterfaces";
+import {ApiDocEndpointPart, IApiDocEndpoint, IApiDocField} from "./ApiDocInterfaces";
 import {ApiDocField} from "./ApiDocField";
 import {JsonSchema, JsonSubSchemas} from "./JsonSchema";
 import * as _ from "lodash";
 
+export interface ParserResult {
+    request: JsonSchema;
+    response: JsonSchema;
+    error: JsonSchema;
+}
+
 export class ApiDocEndpointParser {
-    parseEndpoint(endpoint: IApiDocEndpoint): JsonSchema {
-        if (!endpoint.parameter) {
-            throw new Error("No parameters specified");
+    parseEndpoint(endpoint: IApiDocEndpoint): ParserResult {
+        if (!endpoint.parameter && !endpoint.success && !endpoint.error) {
+            throw new Error("Empty endpoint");
         }
 
-        const properties = this.convertFieldsToProperties(endpoint.parameter.fields);
         return {
-            properties,
+            request: this.parseFields(endpoint.parameter),
+            response: this.parseFields(endpoint.success),
+            error: this.parseFields(endpoint.error),
+        };
+    }
+
+    private parseFields(endpointPart: ApiDocEndpointPart | undefined): JsonSchema {
+        if (!endpointPart) {
+            return {};
+        }
+
+        return {
             type: "object",
+            properties: this.convertFieldsToProperties(endpointPart.fields),
         };
     }
 
