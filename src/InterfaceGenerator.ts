@@ -137,12 +137,12 @@ export class InterfaceGenerator {
     }
 
     private lowercaseType(schema: JsonSchema) {
-        if (!schema.type) {
+        if (!schema.type || this.customTypes.includes(schema.type)) {
             return;
         }
 
-        const lowercaseType = schema.type!.toLowerCase();
-        if (this.customTypes.includes(schema.type!) || !jsonSchemaDefaultTypes.includes(lowercaseType)) {
+        const lowercaseType = schema.type.toLowerCase();
+        if (!jsonSchemaDefaultTypes.includes(lowercaseType)) {
             return;
         }
 
