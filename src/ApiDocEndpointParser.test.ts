@@ -1,5 +1,6 @@
 import {ApiDocEndpointParser} from "./ApiDocEndpointParser";
 import {ApiDocField} from "./ApiDocField";
+import {JsonSchema} from "./JsonSchema";
 
 const requiredField = {
     type: "string",
@@ -16,6 +17,13 @@ const enumField = {
     type: "number",
     field: "fieldName4",
     allowedValues: [1, 2, 3],
+};
+
+const arrayField = {
+    group: "groupName",
+    type: "string[]",
+    optional: false,
+    field: "fieldName",
 };
 
 describe("apiDoc Endpoint", () => {
@@ -142,6 +150,23 @@ describe("apiDoc Endpoint", () => {
         const schema = parser.parseEndpoint(endpointWithSkippedNestedFields);
         expect(schema.properties!.user.properties!.name).toBeDefined();
         expect(schema.properties!.user.properties!.name.properties!.first).toBeDefined();
+    });
+
+    it("should create array properties for array fields", () => {
+        const apiDocField = new ApiDocField(arrayField);
+        expect(ApiDocEndpointParser.toJsonSchemaProperty(apiDocField).type).toBe("array");
+    });
+
+    it("should create array property with the same items type as field", () => {
+        const apiDocField = new ApiDocField(arrayField);
+        const items = ApiDocEndpointParser.toJsonSchemaProperty(apiDocField).items;
+        expect(Array.isArray(items)).toBeFalsy();
+        expect((items as JsonSchema).type).toBe("string");
+    });
+
+    it("should create array property with the same required status as field", () => {
+        const apiDocField = new ApiDocField(arrayField);
+        expect(ApiDocEndpointParser.toJsonSchemaProperty(apiDocField).required).toBeTruthy();
     });
 
     it("should generate JSON Schema for interface field", () => {

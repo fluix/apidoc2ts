@@ -61,4 +61,22 @@ describe("apiDoc Field", () => {
         });
         expect(noEnumField.enum).toEqual([]);
     });
+
+    it("should show if field is array", () => {
+        const arrayField = new ApiDocField({
+            type: "string[]",
+            field: "fieldName",
+        });
+
+        expect(arrayField.isArray).toBeTruthy();
+    });
+
+    it("should return field type without array notation", () => {
+        const arrayField = new ApiDocField({
+            type: "string[]",
+            field: "fieldName",
+        });
+
+        expect(arrayField.type).toBe("string");
+    });
 });

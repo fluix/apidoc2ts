@@ -7,6 +7,7 @@ export class ApiDocField {
     private readonly allowedValues: Array<string>;
     private readonly _fieldName: string;
     private readonly _qualifiedName: Array<string>;
+    public readonly isArray;
 
     get required() {
         return !this.optional;
@@ -33,7 +34,8 @@ export class ApiDocField {
     }
 
     constructor(field: IApiDocField) {
-        this._type = field.type;
+        this._type = field.type.replace("[]", "");
+        this.isArray = field.type.endsWith("[]");
         this._fieldName = field.field;
         this._qualifiedName = this._fieldName.split(".");
         this.optional = Boolean(field.optional);
