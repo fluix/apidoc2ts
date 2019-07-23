@@ -27,7 +27,6 @@ export class ApiDocEndpointParser {
             type: "object",
             properties: this.convertFieldsToProperties(endpointPart.fields),
         } : {};
-
     }
 
     private convertFieldsToProperties(fieldGroups: Record<string, Array<IApiDocField>>): JsonSubSchemas {
