@@ -1,4 +1,4 @@
-import {IApiDocEndpoint} from "./ApiDocInterfaces";
+import {IApiDocEndpoint, IApiDocField} from "./ApiDocInterfaces";
 import {ApiDocField} from "./ApiDocField";
 import {JsonSchema, JsonSubSchemas} from "./JsonSchema";
 import * as _ from "lodash";
@@ -16,7 +16,7 @@ export class ApiDocEndpointParser {
         };
     }
 
-    private convertFieldsToProperties(fieldGroups): JsonSubSchemas {
+    private convertFieldsToProperties(fieldGroups: Record<string, Array<IApiDocField>>): JsonSubSchemas {
         const fields = this.getSortedFlatFields(fieldGroups);
 
         const properties = {};
@@ -33,7 +33,7 @@ export class ApiDocEndpointParser {
         return properties;
     }
 
-    private fillNestedField(properties, field, fieldJsonSchema): void {
+    private fillNestedField(properties: JsonSchema, field: ApiDocField, fieldJsonSchema: JsonSchema): void {
         field.qualifiedName.reduce((parentProperties, currentNamePart, index, nameParts) => {
             const isLastNamePart = index === nameParts.length - 1;
             if (!isLastNamePart) {
@@ -45,7 +45,7 @@ export class ApiDocEndpointParser {
         }, properties);
     }
 
-    private createParentProperties(parentProperties, currentNamePart): JsonSubSchemas {
+    private createParentProperties(parentProperties: JsonSchema, currentNamePart: string): JsonSubSchemas {
         parentProperties[currentNamePart] = parentProperties[currentNamePart] || {
             type: "object",
         };
@@ -53,7 +53,7 @@ export class ApiDocEndpointParser {
         return parentProperties[currentNamePart].properties;
     }
 
-    private getSortedFlatFields(fieldGroups): Array<ApiDocField> {
+    private getSortedFlatFields(fieldGroups: Record<string, Array<IApiDocField>>): Array<ApiDocField> {
         return _.flatMap(fieldGroups).map(field => new ApiDocField(field))
                 .sort((a, b) => a.qualifiedName.length - b.qualifiedName.length);
     }
