@@ -23,10 +23,14 @@ export class ApiDocEndpointParser {
     }
 
     private parseFields(endpointPart: ApiDocEndpointPart | undefined): JsonSchema {
-        return endpointPart ? {
+        if (!endpointPart) {
+            return {};
+        }
+
+        return {
             type: "object",
             properties: this.convertFieldsToProperties(endpointPart.fields),
-        } : {};
+        };
     }
 
     private convertFieldsToProperties(fieldGroups: Record<string, Array<IApiDocField>>): JsonSubSchemas {
