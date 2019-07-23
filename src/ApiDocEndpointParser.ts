@@ -76,6 +76,16 @@ export class ApiDocEndpointParser {
     }
 
     static toJsonSchemaProperty(field: ApiDocField): JsonSchema {
+        if (field.isArray) {
+            return {
+                type: "array",
+                required: field.required,
+                items: {
+                    type: field.type,
+                },
+            };
+        }
+
         return {
             type: field.type,
             required: field.required,
