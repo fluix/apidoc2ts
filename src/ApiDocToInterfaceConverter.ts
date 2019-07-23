@@ -15,7 +15,9 @@ export interface InterfaceMetadata {
 
 interface ConverterResult {
     metadata: InterfaceMetadata;
-    interface: string;
+    requestInterface: string;
+    responseInterface: string;
+    errorInterface: string;
 }
 
 export class ApiDocToInterfaceConverter {
@@ -26,15 +28,21 @@ export class ApiDocToInterfaceConverter {
     ) {
     }
 
-    async convert(apiDocData: Array<IApiDocEndpoint>): Promise<Array<ConverterResult>> {
-        return await Promise.all(apiDocData.map(async (endpoint) => ({
-            metadata: endpoint as InterfaceMetadata,
-            interface: await this.generateInterface(endpoint, endpoint.name),
-        })));
+    async convert(apiDocEndpoint: Array<IApiDocEndpoint>): Promise<Array<ConverterResult>> {
+        return await Promise.all(apiDocEndpoint.map(async (endpoint) => {
+            return await this.createInterfaces(endpoint);
+        }));
     }
 
-    private async generateInterface(endpoint, interfaceName): Promise<string> {
-        const schema = this.endpointParser.parseEndpoint(endpoint);
-        return await this.interfaceGenerator.createInterface(schema.request, interfaceName);
+    private async createInterfaces(endpoint: IApiDocEndpoint): Promise<ConverterResult> {
+        const {error, request, response} = this.endpointParser.parseEndpoint(endpoint);
+        const {createInterface} = this.interfaceGenerator;
+
+        return {
+            metadata: endpoint as InterfaceMetadata,
+            requestInterface: await createInterface(request, endpoint.name),
+            responseInterface: await createInterface(response, `${endpoint.name}Response`),
+            errorInterface: await createInterface(error, `${endpoint.name}Error`),
+        };
     }
 }
