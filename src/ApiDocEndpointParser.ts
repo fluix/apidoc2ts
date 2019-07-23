@@ -3,16 +3,37 @@ import {ApiDocField} from "./ApiDocField";
 import {JsonSchema, JsonSubSchemas} from "./JsonSchema";
 import * as _ from "lodash";
 
+export interface ParserResult {
+    request: JsonSchema;
+    response: JsonSchema;
+    error: JsonSchema;
+}
+
 export class ApiDocEndpointParser {
-    parseEndpoint(endpoint: IApiDocEndpoint): JsonSchema {
-        if (!endpoint.parameter) {
-            throw new Error("No parameters specified");
+    parseEndpoint(endpoint: IApiDocEndpoint): ParserResult {
+        if (!endpoint.parameter && !endpoint.success && !endpoint.error) {
+            throw new Error("Empty endpoint");
         }
 
-        const properties = this.convertFieldsToProperties(endpoint.parameter.fields);
         return {
-            properties,
-            type: "object",
+            request: {
+                type: "object",
+                properties: endpoint.parameter
+                            ? this.convertFieldsToProperties(endpoint.parameter.fields)
+                            : {},
+            },
+            response: {
+                type: "object",
+                properties: endpoint.success
+                            ? this.convertFieldsToProperties(endpoint.success.fields)
+                            : {},
+            },
+            error: {
+                type: "object",
+                properties: endpoint.error
+                            ? this.convertFieldsToProperties(endpoint.error.fields)
+                            : {},
+            },
         };
     }
 

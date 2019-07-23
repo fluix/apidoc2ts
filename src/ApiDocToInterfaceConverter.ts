@@ -22,7 +22,7 @@ export class ApiDocToInterfaceConverter {
 
     constructor(
         private readonly interfaceGenerator: InterfaceGenerator,
-        private readonly apiDocEndpoint: ApiDocEndpointParser,
+        private readonly endpointParser: ApiDocEndpointParser,
     ) {
     }
 
@@ -33,8 +33,8 @@ export class ApiDocToInterfaceConverter {
         })));
     }
 
-    private async generateInterface(apiDocRequest, interfaceName): Promise<string> {
-        const schema = this.apiDocEndpoint.parseEndpoint(apiDocRequest);
-        return await this.interfaceGenerator.createInterface(schema, interfaceName);
+    private async generateInterface(endpoint, interfaceName): Promise<string> {
+        const schema = this.endpointParser.parseEndpoint(endpoint);
+        return await this.interfaceGenerator.createInterface(schema.request, interfaceName);
     }
 }

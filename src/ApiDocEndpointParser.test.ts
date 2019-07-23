@@ -18,18 +18,61 @@ const enumField = {
     allowedValues: [1, 2, 3],
 };
 
+const parentField = {
+    type: "object",
+    field: "user",
+};
+
+const nestedField = {
+    type: "string",
+    field: "user.name",
+};
+
+const doubleNestedField = {
+    type: "number",
+    field: "user.name.first",
+};
+
 describe("apiDoc Endpoint", () => {
 
-    let parser: ApiDocEndpointParser;
+    const parser = new ApiDocEndpointParser();
 
-    beforeEach(() => {
-        parser = new ApiDocEndpointParser();
-    });
-
-    it("should throw exception if no parameters are specified", () => {
+    it("should throw exception if endpoint is empty", () => {
         expect(() => {
             return new ApiDocEndpointParser().parseEndpoint({});
         }).toThrow();
+    });
+
+    it("should return separate schemas for request/response/error", () => {
+        const endpointData = {
+            parameter: {
+                fields: {Parameter: [requiredField]},
+            },
+        };
+
+        const parserResult = parser.parseEndpoint(endpointData);
+        expect(parserResult.request).toBeDefined();
+        expect(parserResult.response).toBeDefined();
+        expect(parserResult.error).toBeDefined();
+    });
+
+    it("should parse request, response and error", () => {
+        const endpointData = {
+            parameter: {
+                fields: {Parameter: [parentField]},
+            },
+            success: {
+                fields: {["Success 2xx"]: [requiredField]},
+            },
+            error: {
+                fields: {["Error 4xx"]: [customTypeField]},
+            },
+        };
+
+        const parserResult = parser.parseEndpoint(endpointData);
+        expect(parserResult.request).toHaveProperty(["properties", "user"]);
+        expect(parserResult.response).toHaveProperty(["properties", "fieldName1"]);
+        expect(parserResult.error).toHaveProperty(["properties", "fieldName2"]);
     });
 
     it("should create property with custom type", () => {
@@ -39,7 +82,7 @@ describe("apiDoc Endpoint", () => {
             },
         };
 
-        expect(parser.parseEndpoint(endpointData).properties!.fieldName2.type).toBe("CustomType1");
+        expect(parser.parseEndpoint(endpointData).request.properties!.fieldName2.type).toBe("CustomType1");
     });
 
     it("should not declare 'enum' in schema if no allowedValues are specified", () => {
@@ -54,21 +97,12 @@ describe("apiDoc Endpoint", () => {
         const endpointWithNestedFields = {
             parameter: {
                 fields: {
-                    Parameter: [
-                        {
-                            type: "object",
-                            field: "user",
-                        },
-                        {
-                            type: "string",
-                            field: "user.name",
-                        },
-                    ],
+                    Parameter: [parentField, nestedField],
                 },
             },
         };
 
-        const schema = parser.parseEndpoint(endpointWithNestedFields);
+        const schema = parser.parseEndpoint(endpointWithNestedFields).request;
         expect(schema.properties!.user.properties!.name).toBeDefined();
     });
 
@@ -76,47 +110,25 @@ describe("apiDoc Endpoint", () => {
         const endpointWithNestedFields = {
             parameter: {
                 fields: {
-                    Parameter: [
-                        {
-                            type: "object",
-                            field: "user",
-                        },
-                        {
-                            type: "object",
-                            field: "user.name",
-                        },
-                        {
-                            type: "number",
-                            field: "user.name.age",
-                        },
-                    ],
+                    Parameter: [parentField, nestedField, doubleNestedField],
                 },
             },
         };
 
-        const schema = parser.parseEndpoint(endpointWithNestedFields);
-        expect(schema.properties!.user.properties!.name.properties!.age).toBeDefined();
+        const schema = parser.parseEndpoint(endpointWithNestedFields).request;
+        expect(schema.properties!.user.properties!.name.properties!.first).toBeDefined();
     });
 
     it("should create skipped root properties for nested properties", () => {
         const endpointWithSkippedNestedFields = {
             parameter: {
                 fields: {
-                    Parameter: [
-                        {
-                            type: "object",
-                            field: "user",
-                        },
-                        {
-                            type: "string",
-                            field: "user.name.first",
-                        },
-                    ],
+                    Parameter: [parentField, doubleNestedField],
                 },
             },
         };
 
-        const schema = parser.parseEndpoint(endpointWithSkippedNestedFields);
+        const schema = parser.parseEndpoint(endpointWithSkippedNestedFields).request;
         expect(schema.properties!.user.properties!.name).toBeDefined();
         expect(schema.properties!.user.properties!.name.properties!.first).toBeDefined();
     });
@@ -125,21 +137,12 @@ describe("apiDoc Endpoint", () => {
         const endpointWithSkippedNestedFields = {
             parameter: {
                 fields: {
-                    Parameter: [
-                        {
-                            type: "string",
-                            field: "user.name.first",
-                        },
-                        {
-                            type: "object",
-                            field: "user",
-                        },
-                    ],
+                    Parameter: [doubleNestedField, parentField],
                 },
             },
         };
 
-        const schema = parser.parseEndpoint(endpointWithSkippedNestedFields);
+        const schema = parser.parseEndpoint(endpointWithSkippedNestedFields).request;
         expect(schema.properties!.user.properties!.name).toBeDefined();
         expect(schema.properties!.user.properties!.name.properties!.first).toBeDefined();
     });
@@ -188,6 +191,6 @@ describe("apiDoc Endpoint", () => {
             },
         };
 
-        expect(parser.parseEndpoint(endpointData)).toEqual(expectedSchema);
+        expect(parser.parseEndpoint(endpointData).request).toEqual(expectedSchema);
     });
 });

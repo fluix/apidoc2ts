@@ -86,7 +86,11 @@ jest.mock("./InterfaceGenerator");
 
 const apiDocDataFull = [getRequestData, postRequestData, postRequestDataWithCustomTypes];
 
-const schemaMock = {type: "mock"};
+const parserResultMock = {
+    request: {type: "requestMock"},
+    response: {type: "responseMock"},
+    error: {type: "errorMock"},
+};
 
 describe("ApiDoc to Interface converter", () => {
     const apiDocEndpoint: ApiDocEndpointParser = new ApiDocEndpointParser();
@@ -97,7 +101,7 @@ describe("ApiDoc to Interface converter", () => {
 
     beforeEach(() => {
         parseEndpointSpy.mockReset();
-        parseEndpointSpy.mockImplementation(() => schemaMock);
+        parseEndpointSpy.mockImplementation(() => parserResultMock);
 
         interfaceGenerator = new InterfaceGenerator(["User"]);
         converter = new ApiDocToInterfaceConverter(interfaceGenerator, apiDocEndpoint);
@@ -114,7 +118,7 @@ describe("ApiDoc to Interface converter", () => {
 
     it("should call createInterface with parsed Schema", async () => {
         await converter.convert([getRequestData]);
-        expect(interfaceGenerator.createInterface).toBeCalledWith(schemaMock, expect.anything());
+        expect(interfaceGenerator.createInterface).toBeCalledWith(parserResultMock.request, expect.anything());
     });
 
     it("should call createInterface with name from apiDocData", async () => {
