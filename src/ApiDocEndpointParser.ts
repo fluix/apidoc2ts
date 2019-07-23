@@ -1,6 +1,6 @@
-import {IApiDocEndpoint} from "./ApiDocInterfaces";
+import {IApiDocEndpoint, IApiDocField} from "./ApiDocInterfaces";
 import {ApiDocField} from "./ApiDocField";
-import {JsonSchema} from "./JsonSchema";
+import {JsonSchema, JsonSubSchemas} from "./JsonSchema";
 import * as _ from "lodash";
 
 export class ApiDocEndpointParser {
@@ -16,43 +16,46 @@ export class ApiDocEndpointParser {
         };
     }
 
-    private convertFieldsToProperties(fieldGroups): Record<string, JsonSchema> {
-        const fields = _.flatMap(fieldGroups).map(field => new ApiDocField(field));
+    private convertFieldsToProperties(fieldGroups: Record<string, Array<IApiDocField>>): JsonSubSchemas {
+        const fields = this.getSortedFlatFields(fieldGroups);
 
         const properties = {};
         fields.forEach(field => {
-            const props = this.lookupProperties(properties, field.qualifiedName);
-            props[field.fieldName] = ApiDocEndpointParser.toJsonSchemaProperty(field);
+            const fieldJsonSchema = ApiDocEndpointParser.toJsonSchemaProperty(field);
+
+            if (field.nested) {
+                return this.fillNestedField(properties, field, fieldJsonSchema);
+            }
+
+            properties[field.fieldName] = fieldJsonSchema;
         });
 
         return properties;
     }
 
-    private lookupProperties(properties: {}, qualifiedName: Array<string>): {} {
-        if (qualifiedName.length === 1) {
-            return properties;
-        }
-
-        let nestedProperties = properties;
-        qualifiedName.forEach((propertyName) => {
-            if (nestedProperties[propertyName] && nestedProperties[propertyName].properties) {
-                nestedProperties = nestedProperties[propertyName].properties;
-                return;
+    private fillNestedField(properties: JsonSchema, field: ApiDocField, fieldJsonSchema: JsonSchema): void {
+        field.qualifiedName.reduce((parentProperties, currentNamePart, index, nameParts) => {
+            const isLastNamePart = index === nameParts.length - 1;
+            if (!isLastNamePart) {
+                return this.createParentProperties(parentProperties, currentNamePart);
             }
 
-            nestedProperties = this.createNestedProperties(nestedProperties, propertyName);
-        });
-
-        return nestedProperties;
+            parentProperties[currentNamePart] = fieldJsonSchema;
+            return parentProperties[currentNamePart];
+        }, properties);
     }
 
-    private createNestedProperties(nestedProperties, propertyName) {
-        nestedProperties[propertyName] = {};
-        nestedProperties[propertyName].properties = {
+    private createParentProperties(parentProperties: JsonSchema, currentNamePart: string): JsonSubSchemas {
+        parentProperties[currentNamePart] = parentProperties[currentNamePart] || {
             type: "object",
-            properties: {},
         };
-        return nestedProperties[propertyName].properties;
+        parentProperties[currentNamePart].properties = parentProperties[currentNamePart].properties || {};
+        return parentProperties[currentNamePart].properties;
+    }
+
+    private getSortedFlatFields(fieldGroups: Record<string, Array<IApiDocField>>): Array<ApiDocField> {
+        return _.flatMap(fieldGroups).map(field => new ApiDocField(field))
+                .sort((a, b) => a.qualifiedName.length - b.qualifiedName.length);
     }
 
     static toJsonSchemaProperty(field: ApiDocField): JsonSchema {

@@ -1,6 +1,8 @@
 export const jsonSchemaDefaultTypes: Array<string> =
     ["null", "boolean", "object", "array", "number", "string", "integer"];
 
+export type JsonSubSchemas = Record<string, JsonSchema>;
+
 export interface JsonSchema {
     $id?: string;
     $schema?: string;
