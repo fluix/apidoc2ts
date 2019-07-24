@@ -46,13 +46,22 @@ const doubleNestedField = {
     field: "user.name.first",
 };
 
+const defaultEndpointMetadata = {
+    type: "",
+    url: "",
+    name: "",
+    group: "",
+    filename: "",
+    version: "",
+};
+
 describe("apiDoc Endpoint", () => {
 
     const parser = new ApiDocEndpointParser();
 
-    it("should throw exception if endpoint is empty", () => {
+    it("should throw exception if endpoint has no parameters at all", () => {
         expect(() => {
-            return new ApiDocEndpointParser().parseEndpoint({});
+            return new ApiDocEndpointParser().parseEndpoint(defaultEndpointMetadata);
         }).toThrow();
     });
 
@@ -61,6 +70,7 @@ describe("apiDoc Endpoint", () => {
             parameter: {
                 fields: {Parameter: [requiredField]},
             },
+            ...defaultEndpointMetadata,
         };
 
         const parserResult = parser.parseEndpoint(endpointData);
@@ -80,6 +90,7 @@ describe("apiDoc Endpoint", () => {
             error: {
                 fields: {["Error 4xx"]: [customTypeField]},
             },
+            ...defaultEndpointMetadata,
         };
 
         const parserResult = parser.parseEndpoint(endpointData);
@@ -93,6 +104,7 @@ describe("apiDoc Endpoint", () => {
             parameter: {
                 fields: {Parameter: [customTypeField]},
             },
+            ...defaultEndpointMetadata,
         };
 
         expect(parser.parseEndpoint(endpointData).request.properties!.fieldName2.type).toBe("CustomType1");
@@ -113,6 +125,7 @@ describe("apiDoc Endpoint", () => {
                     Parameter: [parentField, nestedField],
                 },
             },
+            ...defaultEndpointMetadata,
         };
 
         const schema = parser.parseEndpoint(endpointWithNestedFields).request;
@@ -126,6 +139,7 @@ describe("apiDoc Endpoint", () => {
                     Parameter: [parentField, nestedField, doubleNestedField],
                 },
             },
+            ...defaultEndpointMetadata,
         };
 
         const schema = parser.parseEndpoint(endpointWithNestedFields).request;
@@ -139,6 +153,7 @@ describe("apiDoc Endpoint", () => {
                     Parameter: [parentField, doubleNestedField],
                 },
             },
+            ...defaultEndpointMetadata,
         };
 
         const schema = parser.parseEndpoint(endpointWithSkippedNestedFields).request;
@@ -153,6 +168,7 @@ describe("apiDoc Endpoint", () => {
                     Parameter: [doubleNestedField, parentField],
                 },
             },
+            ...defaultEndpointMetadata,
         };
 
         const schema = parser.parseEndpoint(endpointWithSkippedNestedFields).request;
@@ -184,6 +200,7 @@ describe("apiDoc Endpoint", () => {
                     Parameter: [parentArrayField, nestedField],
                 },
             },
+            ...defaultEndpointMetadata,
         };
 
         const schema = parser.parseEndpoint(endpointWithNestedFields).request;
@@ -213,6 +230,7 @@ describe("apiDoc Endpoint", () => {
             parameter: {
                 fields: {Parameter: [requiredField, customTypeField, enumField]},
             },
+            ...defaultEndpointMetadata,
         };
 
         const expectedSchema = {
