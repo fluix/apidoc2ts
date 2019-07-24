@@ -38,7 +38,7 @@ export class InterfaceGenerator {
             throw new Error(`Interface ${name} exists in custom types: [${this.customTypes.join(",")}]`);
         }
 
-        const schemaCopy = Object.assign({}, schema);
+        const schemaCopy = _.cloneDeep(schema);
         const inputData = this.createInputData(schemaCopy, name);
         const quicktypeOptions = this.createOptions(inputData);
         const interfaceString = await this.execQuicktypeGenerator(quicktypeOptions);

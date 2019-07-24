@@ -1,5 +1,5 @@
 import {InterfaceGenerator} from "./InterfaceGenerator";
-import {serializeRenderResult} from "quicktype-core/dist/Source";
+import * as _ from "lodash";
 
 const simpleSchema = {
     type: "object",
@@ -135,6 +135,15 @@ const schemaWithInvalidType = {
     },
 };
 
+const schemaWithInvalidType2 = {
+    type: "object",
+    properties: {
+        invalidParam: {
+            type: "ISO-8601",
+        },
+    },
+};
+
 describe("Interface generator", () => {
     let generator: InterfaceGenerator;
     let generatorWithCustomTypes: InterfaceGenerator;
@@ -157,6 +166,12 @@ describe("Interface generator", () => {
         const name = "User";
         expect((await generator.createInterface(simpleSchema, name))
             .includes(`interface ${name}`)).toBeTruthy();
+    });
+
+    it("should not modify passed in schema", async () => {
+        const originalType = schemaWithInvalidType2.properties.invalidParam.type;
+        await generator.createInterface(schemaWithInvalidType2);
+        expect(schemaWithInvalidType2.properties.invalidParam.type).toEqual(originalType);
     });
 
     it("should generate properties with corresponding optional state", async () => {
