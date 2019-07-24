@@ -59,11 +59,9 @@ describe("apiDoc Endpoint", () => {
 
     const parser = new ApiDocEndpointParser();
 
-    it("should throw exception if endpoint is empty", () => {
+    it("should throw exception if endpoint has no parameters at all", () => {
         expect(() => {
-            return new ApiDocEndpointParser().parseEndpoint({
-                ...defaultEndpointMetadata,
-            });
+            return new ApiDocEndpointParser().parseEndpoint(defaultEndpointMetadata);
         }).toThrow();
     });
 
