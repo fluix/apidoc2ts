@@ -193,12 +193,12 @@ describe("ApiDoc to Interface converter", () => {
         expect(interfaceGenerator.createInterface).toBeCalledTimes(apiDocDataFull.length * 3);
     });
 
-    it("should add version postfix to interface if it is not the newest one", async () => {
+    it("should add version postfix to interface if it is not the latest one", async () => {
         await converter.convert([requestVersion1, requestVersion2, requestVersion3]);
         expect(interfaceGenerator.createInterface)
-            .toBeCalledWith(expect.anything(), `${requestVersion1.name}v${requestVersion1.version}`);
+            .toBeCalledWith(expect.anything(), `${requestVersion1.name}_v${requestVersion1.version}`);
         expect(interfaceGenerator.createInterface)
-            .toBeCalledWith(expect.anything(), `${requestVersion2.name}v${requestVersion2.version}`);
+            .toBeCalledWith(expect.anything(), `${requestVersion2.name}_v${requestVersion2.version}`);
         expect(interfaceGenerator.createInterface)
             .toBeCalledWith(expect.anything(), `${requestVersion3.name}`);
     });

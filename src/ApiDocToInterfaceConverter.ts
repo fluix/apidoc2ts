@@ -29,36 +29,64 @@ export class ApiDocToInterfaceConverter {
     }
 
     async convert(apiDocEndpoints: Array<IApiDocEndpoint>): Promise<Array<ConverterResult>> {
-        const newestEndpointsVersions = this.getNewestEndpointsVersions(apiDocEndpoints);
+        const newestEndpointsVersions = this.getLatestEndpointsVersions(apiDocEndpoints);
 
         return await Promise.all(apiDocEndpoints.map(async (endpoint) => {
             return await this.createInterfaces(endpoint, newestEndpointsVersions);
         }));
     }
 
-    private getNewestEndpointsVersions(apiDocEndpoints: Array<IApiDocEndpoint>) {
-        const newestEndpointsVersions = {};
+    private getLatestEndpointsVersions(apiDocEndpoints: Array<IApiDocEndpoint>) {
+        const latestEndpointsVersions: Record<string, string> = {};
         apiDocEndpoints.forEach((endpoint) => {
-            const currentVersion = newestEndpointsVersions[endpoint.name] || endpoint.version;
-            newestEndpointsVersions[endpoint.name] = endpoint.version > currentVersion
+            const currentVersion = latestEndpointsVersions[endpoint.name] || endpoint.version;
+            latestEndpointsVersions[endpoint.name] = endpoint.version > currentVersion
                                                      ? endpoint.version
                                                      : currentVersion;
         });
-        return newestEndpointsVersions;
+        return latestEndpointsVersions;
     }
 
-    private async createInterfaces(endpoint: IApiDocEndpoint, newestEndpointsVersions: {}): Promise<ConverterResult> {
+    private async createInterfaces(
+        endpoint: IApiDocEndpoint,
+        latestEndpointsVersions: Record<string, string>,
+    ): Promise<ConverterResult> {
         const {request, response, error} = this.endpointParser.parseEndpoint(endpoint);
         const {createInterface} = this.interfaceGenerator;
-        const versionPostfix = endpoint.version !== newestEndpointsVersions[endpoint.name]
-                               ? `v${endpoint.version}`
-                               : "";
+        const versionPostfix = this.createVersionPostfix(endpoint, latestEndpointsVersions);
 
         return {
             metadata: endpoint as InterfaceMetadata,
-            requestInterface: await createInterface(request, `${endpoint.name}${versionPostfix}`),
-            responseInterface: await createInterface(response, `${endpoint.name}Response${versionPostfix}`),
-            errorInterface: await createInterface(error, `${endpoint.name}Error${versionPostfix}`),
+            requestInterface: await createInterface(
+                request,
+                this.createInterfaceName(endpoint, versionPostfix),
+            ),
+            responseInterface: await createInterface(
+                response,
+                this.createInterfaceName(endpoint, versionPostfix, "Response"),
+            ),
+            errorInterface: await createInterface(
+                error,
+                this.createInterfaceName(endpoint, versionPostfix, "Error"),
+            ),
         };
+    }
+
+    private createInterfaceName(
+        endpoint: IApiDocEndpoint,
+        versionPostfix = "",
+        postfix = "",
+        prefix = "",
+    ) {
+        return `${prefix}${endpoint.name}${postfix}${versionPostfix}`;
+    }
+
+    private createVersionPostfix(
+        endpoint: IApiDocEndpoint,
+        latestEndpointsVersions: Record<string, string>,
+    ) {
+        return endpoint.version !== latestEndpointsVersions[endpoint.name]
+               ? `_v${endpoint.version}`
+               : "";
     }
 }
