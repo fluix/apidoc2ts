@@ -63,11 +63,31 @@ export class ApiDocEndpointParser {
     }
 
     private createParentProperties(parentProperties: JsonSchema, currentNamePart: string): JsonSubSchemas {
+        if (parentProperties[currentNamePart] && parentProperties[currentNamePart].type === "array") {
+            return this.createArrayProperties(parentProperties, currentNamePart);
+        }
+
+        return this.createObjectProperties(parentProperties, currentNamePart);
+    }
+
+    private createObjectProperties(parentProperties: JsonSchema, currentNamePart: string) {
         parentProperties[currentNamePart] = parentProperties[currentNamePart] || {
             type: "object",
         };
         parentProperties[currentNamePart].properties = parentProperties[currentNamePart].properties || {};
         return parentProperties[currentNamePart].properties;
+    }
+
+    private createArrayProperties(parentProperties: JsonSchema, currentNamePart: string) {
+        parentProperties[currentNamePart].items =
+            parentProperties[currentNamePart].items || {
+                type: "object",
+            };
+
+        parentProperties[currentNamePart].items.properties =
+            parentProperties[currentNamePart].items.properties || {};
+
+        return parentProperties[currentNamePart].items.properties;
     }
 
     private getSortedFlatFields(fieldGroups: Record<string, Array<IApiDocField>>): Array<ApiDocField> {

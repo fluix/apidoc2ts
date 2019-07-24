@@ -172,6 +172,28 @@ describe("apiDoc Endpoint", () => {
         expect(ApiDocEndpointParser.toJsonSchemaProperty(apiDocField).required).toBeTruthy();
     });
 
+    it("should write nested fields of array field to 'items.properties' property", () => {
+        const endpointWithNestedFields = {
+            parameter: {
+                fields: {
+                    Parameter: [
+                        {
+                            type: "object[]",
+                            field: "user",
+                        },
+                        {
+                            type: "string",
+                            field: "user.name",
+                        },
+                    ],
+                },
+            },
+        };
+
+        const schema = parser.parseEndpoint(endpointWithNestedFields).request;
+        expect(schema).toHaveProperty("properties.user.items.properties.name");
+    });
+
     it("should generate JSON Schema for interface field", () => {
         const apiDocField = new ApiDocField({
             group: "groupName",
