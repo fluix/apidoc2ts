@@ -1,15 +1,15 @@
 export type ApiDocEndpointPart = IApiDocParameter | IApiDocSuccess | IApiDocError | IApiDocHeader;
 
 export interface IApiDocEndpoint {
-    group?: string;
-    name?: string;
-    version?: string;
-    type?: string;
-    url?: string;
+    group: string;
+    name: string;
+    version: string;
+    type: string;
+    url: string;
+    filename: string;
     title?: string;
     description?: string;
     groupDescription?: Array<string>;
-    filename?: string;
     permission?: IApiDocPermission | string;
     parameter?: IApiDocParameter;
     success?: IApiDocSuccess;

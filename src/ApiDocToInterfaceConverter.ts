@@ -8,7 +8,7 @@ export interface InterfaceMetadata {
     name: string;
     group: string;
     filename: string;
-    version?: string;
+    version: string;
     description?: string;
     title?: string;
 }
