@@ -135,7 +135,7 @@ const schemaWithInvalidType = {
     },
 };
 
-const schemaWithInvalidType2 = {
+const schemaWithInvalidTypeClone = {
     type: "object",
     properties: {
         invalidParam: {
@@ -169,9 +169,9 @@ describe("Interface generator", () => {
     });
 
     it("should not modify passed in schema", async () => {
-        const originalType = schemaWithInvalidType2.properties.invalidParam.type;
-        await generator.createInterface(schemaWithInvalidType2);
-        expect(schemaWithInvalidType2.properties.invalidParam.type).toEqual(originalType);
+        const originalType = schemaWithInvalidTypeClone.properties.invalidParam.type;
+        await generator.createInterface(schemaWithInvalidTypeClone);
+        expect(schemaWithInvalidTypeClone.properties.invalidParam.type).toEqual(originalType);
     });
 
     it("should generate properties with corresponding optional state", async () => {
