@@ -29,7 +29,7 @@ export class InterfaceGenerator {
         this.customTypes = customTypes;
     }
 
-    async createInterface(schema: JsonSchema, name = "Generated") {
+    async createInterface(schema: JsonSchema, name = "Generated"): Promise<string> {
         if (_.isEmpty(schema)) {
             return "";
         }
@@ -38,7 +38,7 @@ export class InterfaceGenerator {
             throw new Error(`Interface ${name} exists in custom types: [${this.customTypes.join(",")}]`);
         }
 
-        const schemaCopy = Object.assign({}, schema);
+        const schemaCopy = _.cloneDeep(schema);
         const inputData = this.createInputData(schemaCopy, name);
         const quicktypeOptions = this.createOptions(inputData);
         const interfaceString = await this.execQuicktypeGenerator(quicktypeOptions);
@@ -49,12 +49,13 @@ export class InterfaceGenerator {
         const result = await quicktype(quicktypeOptions);
         return result.lines
                      .join("\n")
-                     .replace(new RegExp(/:\s+/), ": ");
+                     .replace(/:\s+/, ": ");
     }
 
     private createInputData(schema: JsonSchema, name: string) {
         this.fillInFakeTypes(schema);
         this.lowercaseDefaultTypes(schema);
+        this.replaceInvalidTypesWithStrings(schema);
 
         const schemaString = JSON.stringify(schema);
         const source: JSONSchemaSourceData = {name, schema: schemaString};
@@ -122,30 +123,47 @@ export class InterfaceGenerator {
     }
 
     private lowercaseDefaultTypes(schema: JsonSchema) {
-        this.lowercaseType(schema);
-        this.lowercaseNestedPropertiesTypes(schema);
+        this.traverseSchemaRecursively(schema, (subSchema) => {
+            if (!subSchema.type || !this.isDefaultType(subSchema)) {
+                return;
+            }
+
+            subSchema.type = subSchema.type.toLowerCase();
+        });
     }
 
-    private lowercaseNestedPropertiesTypes(schema: JsonSchema) {
+    private replaceInvalidTypesWithStrings(schema: JsonSchema) {
+        this.traverseSchemaRecursively(schema, (subSchema) => {
+            if (!this.isInvalidType(subSchema)) {
+                return;
+            }
+
+            subSchema.description = `Replaced type: ${subSchema.type}`;
+            subSchema.type = "string";
+        });
+    }
+
+    private isDefaultType(subSchema) {
+        return subSchema.type
+               && !this.customTypes.includes(subSchema.type)
+               && jsonSchemaDefaultTypes.includes(subSchema.type.toLowerCase());
+    }
+
+    private isInvalidType(subSchema) {
+        return subSchema.type &&
+               !jsonSchemaDefaultTypes.includes(subSchema.type) &&
+               !this.customTypes.includes(subSchema.type);
+    }
+
+    private traverseSchemaRecursively(schema: JsonSchema, callback: (schema: JsonSchema) => void) {
         _.values(schema.properties).forEach((property: JsonSchema) => {
-            this.lowercaseDefaultTypes(property);
+            callback(property);
+            this.traverseSchemaRecursively(property, callback);
         });
 
         _.values(schema.definitions).forEach((definition: JsonSchema) => {
-            this.lowercaseDefaultTypes(definition);
+            callback(definition);
+            this.traverseSchemaRecursively(definition, callback);
         });
-    }
-
-    private lowercaseType(schema: JsonSchema) {
-        if (!schema.type || this.customTypes.includes(schema.type)) {
-            return;
-        }
-
-        const lowercaseType = schema.type.toLowerCase();
-        if (!jsonSchemaDefaultTypes.includes(lowercaseType)) {
-            return;
-        }
-
-        schema.type = lowercaseType;
     }
 }

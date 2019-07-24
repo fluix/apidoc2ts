@@ -1,4 +1,5 @@
 import {InterfaceGenerator} from "./InterfaceGenerator";
+import * as _ from "lodash";
 
 const simpleSchema = {
     type: "object",
@@ -125,6 +126,24 @@ const schemaWithOverriddenDefaultType = {
     },
 };
 
+const schemaWithInvalidType = {
+    type: "object",
+    properties: {
+        invalidParam: {
+            type: "ISO-8601",
+        },
+    },
+};
+
+const schemaWithInvalidTypeClone = {
+    type: "object",
+    properties: {
+        invalidParam: {
+            type: "ISO-8601",
+        },
+    },
+};
+
 describe("Interface generator", () => {
     let generator: InterfaceGenerator;
     let generatorWithCustomTypes: InterfaceGenerator;
@@ -147,6 +166,12 @@ describe("Interface generator", () => {
         const name = "User";
         expect((await generator.createInterface(simpleSchema, name))
             .includes(`interface ${name}`)).toBeTruthy();
+    });
+
+    it("should not modify passed in schema", async () => {
+        const originalType = schemaWithInvalidTypeClone.properties.invalidParam.type;
+        await generator.createInterface(schemaWithInvalidTypeClone);
+        expect(schemaWithInvalidTypeClone.properties.invalidParam.type).toEqual(originalType);
     });
 
     it("should generate properties with corresponding optional state", async () => {
@@ -204,5 +229,18 @@ describe("Interface generator", () => {
         const generatorWithCustomDefaultValue = new InterfaceGenerator(["String"]);
         const result = await generatorWithCustomDefaultValue.createInterface(schemaWithOverriddenDefaultType);
         expect(result.includes("param?: String")).toBeTruthy();
+    });
+
+    it("should replace invalid types with string", async () => {
+        const result = await generator.createInterface(schemaWithInvalidType);
+        expect(result.includes("invalidParam?: string")).toBeTruthy();
+    });
+
+    it("should add comment with original type for replaced invalid types", async () => {
+        const originalType = schemaWithInvalidType.properties.invalidParam.type;
+        const result = await generator.createInterface(schemaWithInvalidType);
+        expect(result.match(new RegExp(
+            `\\/\\*\\*\\s*\\* Replaced type: ${originalType}\\s*\\*\\/`),
+        )).toBeTruthy();
     });
 });
