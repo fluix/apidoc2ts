@@ -123,51 +123,44 @@ export class InterfaceGenerator {
     }
 
     private lowercaseDefaultTypes(schema: JsonSchema) {
-        this.lowercaseType(schema);
-        this.lowercaseNestedPropertiesTypes(schema);
-    }
+        this.traverseSchemaRecursively(schema, (subSchema) => {
+            if (!subSchema.type || this.customTypes.includes(subSchema.type)) {
+                return;
+            }
 
-    private lowercaseNestedPropertiesTypes(schema: JsonSchema) {
-        _.values(schema.properties).forEach((property: JsonSchema) => {
-            this.lowercaseDefaultTypes(property);
+            const lowercaseType = subSchema.type.toLowerCase();
+            if (!jsonSchemaDefaultTypes.includes(lowercaseType)) {
+                return;
+            }
+
+            subSchema.type = lowercaseType;
         });
-
-        _.values(schema.definitions).forEach((definition: JsonSchema) => {
-            this.lowercaseDefaultTypes(definition);
-        });
-    }
-
-    private lowercaseType(schema: JsonSchema) {
-        if (!schema.type || this.customTypes.includes(schema.type)) {
-            return;
-        }
-
-        const lowercaseType = schema.type.toLowerCase();
-        if (!jsonSchemaDefaultTypes.includes(lowercaseType)) {
-            return;
-        }
-
-        schema.type = lowercaseType;
     }
 
     private replaceInvalidTypesWithStrings(schema: JsonSchema) {
+        this.traverseSchemaRecursively(schema, (subSchema) => {
+            if (
+                !subSchema.type
+                || jsonSchemaDefaultTypes.includes(subSchema.type)
+                || this.customTypes.includes(subSchema.type)
+            ) {
+                return;
+            }
+
+            subSchema.description = `Replaced type: ${subSchema.type}`;
+            subSchema.type = "string";
+        });
+    }
+
+    private traverseSchemaRecursively(schema: JsonSchema, callback: (schema: JsonSchema) => void) {
         _.values(schema.properties).forEach((property: JsonSchema) => {
-            this.replaceInvalidTypesWithStrings(property);
+            callback(property);
+            this.traverseSchemaRecursively(property, callback);
         });
 
         _.values(schema.definitions).forEach((definition: JsonSchema) => {
-            this.replaceInvalidTypesWithStrings(definition);
+            callback(definition);
+            this.traverseSchemaRecursively(definition, callback);
         });
-
-        if (
-            !schema.type
-            || jsonSchemaDefaultTypes.includes(schema.type)
-            || this.customTypes.includes(schema.type)
-        ) {
-            return;
-        }
-
-        schema.description = `Replaced type: ${schema.type}`;
-        schema.type = "string";
     }
 }
