@@ -124,32 +124,35 @@ export class InterfaceGenerator {
 
     private lowercaseDefaultTypes(schema: JsonSchema) {
         this.traverseSchemaRecursively(schema, (subSchema) => {
-            if (!subSchema.type || this.customTypes.includes(subSchema.type)) {
+            if (!subSchema.type || !this.isDefaultType(subSchema)) {
                 return;
             }
 
-            const lowercaseType = subSchema.type.toLowerCase();
-            if (!jsonSchemaDefaultTypes.includes(lowercaseType)) {
-                return;
-            }
-
-            subSchema.type = lowercaseType;
+            subSchema.type = subSchema.type.toLowerCase();
         });
     }
 
     private replaceInvalidTypesWithStrings(schema: JsonSchema) {
         this.traverseSchemaRecursively(schema, (subSchema) => {
-            if (
-                !subSchema.type
-                || jsonSchemaDefaultTypes.includes(subSchema.type)
-                || this.customTypes.includes(subSchema.type)
-            ) {
+            if (!this.isInvalidType(subSchema)) {
                 return;
             }
 
             subSchema.description = `Replaced type: ${subSchema.type}`;
             subSchema.type = "string";
         });
+    }
+
+    private isDefaultType(subSchema) {
+        return subSchema.type
+               && !this.customTypes.includes(subSchema.type)
+               && jsonSchemaDefaultTypes.includes(subSchema.type.toLowerCase());
+    }
+
+    private isInvalidType(subSchema) {
+        return subSchema.type &&
+               !jsonSchemaDefaultTypes.includes(subSchema.type) &&
+               !this.customTypes.includes(subSchema.type);
     }
 
     private traverseSchemaRecursively(schema: JsonSchema, callback: (schema: JsonSchema) => void) {
