@@ -237,7 +237,10 @@ describe("Interface generator", () => {
     });
 
     it("should add comment with original type for replaced invalid types", async () => {
+        const originalType = schemaWithInvalidType.properties.invalidParam.type;
         const result = await generator.createInterface(schemaWithInvalidType);
-        expect(result.includes("ISO-8601")).toBeTruthy();
+        expect(result.match(new RegExp(
+            `\\/\\*\\*\\s*\\* Replaced type: ${originalType}\\s*\\*\\/`),
+        )).toBeTruthy();
     });
 });

@@ -49,7 +49,7 @@ export class InterfaceGenerator {
         const result = await quicktype(quicktypeOptions);
         return result.lines
                      .join("\n")
-                     .replace(new RegExp(/:\s+/), ": ");
+                     .replace(/:\s+/, ": ");
     }
 
     private createInputData(schema: JsonSchema, name: string) {
