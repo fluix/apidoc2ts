@@ -1,4 +1,5 @@
 import {InterfaceGenerator} from "./InterfaceGenerator";
+import {serializeRenderResult} from "quicktype-core/dist/Source";
 
 const simpleSchema = {
     type: "object",
@@ -125,6 +126,15 @@ const schemaWithOverriddenDefaultType = {
     },
 };
 
+const schemaWithInvalidType = {
+    type: "object",
+    properties: {
+        invalidParam: {
+            type: "ISO-8601",
+        },
+    },
+};
+
 describe("Interface generator", () => {
     let generator: InterfaceGenerator;
     let generatorWithCustomTypes: InterfaceGenerator;
@@ -204,5 +214,15 @@ describe("Interface generator", () => {
         const generatorWithCustomDefaultValue = new InterfaceGenerator(["String"]);
         const result = await generatorWithCustomDefaultValue.createInterface(schemaWithOverriddenDefaultType);
         expect(result.includes("param?: String")).toBeTruthy();
+    });
+
+    it("should replace invalid types with string", async () => {
+        const result = await generator.createInterface(schemaWithInvalidType);
+        expect(result.includes("invalidParam?: string")).toBeTruthy();
+    });
+
+    it("should add comment with original type for replaced invalid types", async () => {
+        const result = await generator.createInterface(schemaWithInvalidType);
+        expect(result.includes("ISO-8601")).toBeTruthy();
     });
 });

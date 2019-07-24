@@ -29,7 +29,7 @@ export class InterfaceGenerator {
         this.customTypes = customTypes;
     }
 
-    async createInterface(schema: JsonSchema, name = "Generated") {
+    async createInterface(schema: JsonSchema, name = "Generated"): Promise<string> {
         if (_.isEmpty(schema)) {
             return "";
         }
@@ -55,6 +55,7 @@ export class InterfaceGenerator {
     private createInputData(schema: JsonSchema, name: string) {
         this.fillInFakeTypes(schema);
         this.lowercaseDefaultTypes(schema);
+        this.replaceInvalidTypesWithStrings(schema);
 
         const schemaString = JSON.stringify(schema);
         const source: JSONSchemaSourceData = {name, schema: schemaString};
@@ -147,5 +148,26 @@ export class InterfaceGenerator {
         }
 
         schema.type = lowercaseType;
+    }
+
+    private replaceInvalidTypesWithStrings(schema: JsonSchema) {
+        _.values(schema.properties).forEach((property: JsonSchema) => {
+            this.replaceInvalidTypesWithStrings(property);
+        });
+
+        _.values(schema.definitions).forEach((definition: JsonSchema) => {
+            this.replaceInvalidTypesWithStrings(definition);
+        });
+
+        if (
+            !schema.type
+            || jsonSchemaDefaultTypes.includes(schema.type)
+            || this.customTypes.includes(schema.type)
+        ) {
+            return;
+        }
+
+        schema.description = `Replaced type: ${schema.type}`;
+        schema.type = "string";
     }
 }
