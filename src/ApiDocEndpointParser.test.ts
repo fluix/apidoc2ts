@@ -31,6 +31,11 @@ const parentField = {
     field: "user",
 };
 
+const parentArrayField = {
+    type: "object[]",
+    field: "user",
+};
+
 const nestedField = {
     type: "string",
     field: "user.name",
@@ -141,7 +146,7 @@ describe("apiDoc Endpoint", () => {
         expect(schema.properties!.user.properties!.name.properties!.first).toBeDefined();
     });
 
-    it("should create skipped root properties for nested properties", () => {
+    it("should create skipped root properties for unsorted nested properties", () => {
         const endpointWithSkippedNestedFields = {
             parameter: {
                 fields: {
@@ -170,6 +175,19 @@ describe("apiDoc Endpoint", () => {
     it("should create array property with the same required status as field", () => {
         const apiDocField = new ApiDocField(arrayField);
         expect(ApiDocEndpointParser.toJsonSchemaProperty(apiDocField).required).toBeTruthy();
+    });
+
+    it("should write nested fields of array field to 'items.properties'", () => {
+        const endpointWithNestedFields = {
+            parameter: {
+                fields: {
+                    Parameter: [parentArrayField, nestedField],
+                },
+            },
+        };
+
+        const schema = parser.parseEndpoint(endpointWithNestedFields).request;
+        expect(schema).toHaveProperty("properties.user.items.properties.name");
     });
 
     it("should generate JSON Schema for interface field", () => {
