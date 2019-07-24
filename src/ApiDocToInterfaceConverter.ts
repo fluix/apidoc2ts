@@ -28,21 +28,37 @@ export class ApiDocToInterfaceConverter {
     ) {
     }
 
-    async convert(apiDocEndpoint: Array<IApiDocEndpoint>): Promise<Array<ConverterResult>> {
-        return await Promise.all(apiDocEndpoint.map(async (endpoint) => {
-            return await this.createInterfaces(endpoint);
+    async convert(apiDocEndpoints: Array<IApiDocEndpoint>): Promise<Array<ConverterResult>> {
+        const newestEndpointsVersions = this.getNewestEndpointsVersions(apiDocEndpoints);
+
+        return await Promise.all(apiDocEndpoints.map(async (endpoint) => {
+            return await this.createInterfaces(endpoint, newestEndpointsVersions);
         }));
     }
 
-    private async createInterfaces(endpoint: IApiDocEndpoint): Promise<ConverterResult> {
-        const {error, request, response} = this.endpointParser.parseEndpoint(endpoint);
+    private getNewestEndpointsVersions(apiDocEndpoints: Array<IApiDocEndpoint>) {
+        const newestEndpointsVersions = {};
+        apiDocEndpoints.forEach((endpoint) => {
+            const currentVersion = newestEndpointsVersions[endpoint.name] || endpoint.version;
+            newestEndpointsVersions[endpoint.name] = endpoint.version > currentVersion
+                                                     ? endpoint.version
+                                                     : currentVersion;
+        });
+        return newestEndpointsVersions;
+    }
+
+    private async createInterfaces(endpoint: IApiDocEndpoint, newestEndpointsVersions: {}): Promise<ConverterResult> {
+        const {request, response, error} = this.endpointParser.parseEndpoint(endpoint);
         const {createInterface} = this.interfaceGenerator;
+        const versionPostfix = endpoint.version !== newestEndpointsVersions[endpoint.name]
+                               ? `v${endpoint.version}`
+                               : "";
 
         return {
             metadata: endpoint as InterfaceMetadata,
-            requestInterface: await createInterface(request, endpoint.name),
-            responseInterface: await createInterface(response, `${endpoint.name}Response`),
-            errorInterface: await createInterface(error, `${endpoint.name}Error`),
+            requestInterface: await createInterface(request, `${endpoint.name}${versionPostfix}`),
+            responseInterface: await createInterface(response, `${endpoint.name}Response${versionPostfix}`),
+            errorInterface: await createInterface(error, `${endpoint.name}Error${versionPostfix}`),
         };
     }
 }

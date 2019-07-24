@@ -81,6 +81,63 @@ const postRequestDataWithCustomTypes = {
     filename: "source/example_full/example.js",
 };
 
+const requestVersion1 = {
+    type: "post",
+    url: "/user",
+    version: "0.0.1",
+    name: "PostBook",
+    group: "Book",
+    filename: "source/example_full/example.js",
+    parameter: {
+        fields: {
+            Parameter: [
+                {
+                    type: "string",
+                    field: "name",
+                },
+            ],
+        },
+    },
+};
+
+const requestVersion2 = {
+    type: "post",
+    url: "/user",
+    version: "0.0.2",
+    name: "PostBook",
+    group: "Book",
+    filename: "source/example_full/example.js",
+    parameter: {
+        fields: {
+            Parameter: [
+                {
+                    type: "string",
+                    field: "name",
+                },
+            ],
+        },
+    },
+};
+
+const requestVersion3 = {
+    type: "post",
+    url: "/user",
+    version: "0.1.0",
+    name: "PostBook",
+    group: "Book",
+    filename: "source/example_full/example.js",
+    parameter: {
+        fields: {
+            Parameter: [
+                {
+                    type: "string",
+                    field: "name",
+                },
+            ],
+        },
+    },
+};
+
 jest.mock("./ApiDocEndpointParser");
 jest.mock("./InterfaceGenerator");
 
@@ -134,5 +191,15 @@ describe("ApiDoc to Interface converter", () => {
         await converter.convert(apiDocDataFull);
         expect(parseEndpointSpy).toBeCalledTimes(apiDocDataFull.length);
         expect(interfaceGenerator.createInterface).toBeCalledTimes(apiDocDataFull.length * 3);
+    });
+
+    it("should add version postfix to interface if it is not the newest one", async () => {
+        await converter.convert([requestVersion1, requestVersion2, requestVersion3]);
+        expect(interfaceGenerator.createInterface)
+            .toBeCalledWith(expect.anything(), `${requestVersion1.name}v${requestVersion1.version}`);
+        expect(interfaceGenerator.createInterface)
+            .toBeCalledWith(expect.anything(), `${requestVersion2.name}v${requestVersion2.version}`);
+        expect(interfaceGenerator.createInterface)
+            .toBeCalledWith(expect.anything(), `${requestVersion3.name}`);
     });
 });
