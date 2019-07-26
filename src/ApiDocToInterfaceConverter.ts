@@ -13,7 +13,7 @@ export interface InterfaceMetadata {
     title?: string;
 }
 
-interface ConverterResult {
+export interface ConverterResult {
     metadata: InterfaceMetadata;
     requestInterface: string;
     responseInterface: string;
@@ -52,20 +52,19 @@ export class ApiDocToInterfaceConverter {
         latestEndpointsVersions: Record<string, string>,
     ): Promise<ConverterResult> {
         const {request, response, error} = this.endpointParser.parseEndpoint(endpoint);
-        const {createInterface} = this.interfaceGenerator;
         const versionPostfix = this.createVersionPostfix(endpoint, latestEndpointsVersions);
 
         return {
             metadata: endpoint as InterfaceMetadata,
-            requestInterface: await createInterface(
+            requestInterface: await this.interfaceGenerator.createInterface(
                 request,
                 this.createInterfaceName(endpoint, versionPostfix),
             ),
-            responseInterface: await createInterface(
+            responseInterface: await this.interfaceGenerator.createInterface(
                 response,
                 this.createInterfaceName(endpoint, versionPostfix, "Response"),
             ),
-            errorInterface: await createInterface(
+            errorInterface: await this.interfaceGenerator.createInterface(
                 error,
                 this.createInterfaceName(endpoint, versionPostfix, "Error"),
             ),
