@@ -61,7 +61,7 @@ export class ApiDoc2Interface {
                 data.requestInterface,
                 data.responseInterface,
                 data.errorInterface,
-            ].join("\n"),
+            ].filter(str => str !== "").join("\n"),
         ).join("\n");
     }
 }
