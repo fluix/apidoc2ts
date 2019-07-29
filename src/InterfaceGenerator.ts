@@ -8,6 +8,7 @@ import {
     quicktype,
     TypeScriptTargetLanguage,
 } from "quicktype-core";
+import {removeFieldsAligningSpaces} from "./string-utils";
 
 const qtFakeCustomType = {
     type: "object",
@@ -47,9 +48,8 @@ export class InterfaceGenerator {
 
     private async execQuicktypeGenerator(quicktypeOptions) {
         const result = await quicktype(quicktypeOptions);
-        return result.lines
-                     .join("\n")
-                     .replace(/:\s+/, ": ");
+        const interfaceString = result.lines.join("\n");
+        return removeFieldsAligningSpaces(interfaceString);
     }
 
     private createInputData(schema: JsonSchema, name: string) {
