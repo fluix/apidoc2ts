@@ -129,7 +129,7 @@ describe("ApiDoc to Interface converter", () => {
             throw new Error("Mocked error while parsing");
         });
         const results = await converter.convert([requestVersion1, requestVersion2]);
-        expect(results[0].warning).toBeDefined();
+        expect(results[0].warning).toBe("Mocked error while parsing");
         expect(results[1].warning).toBeUndefined();
     });
 });
