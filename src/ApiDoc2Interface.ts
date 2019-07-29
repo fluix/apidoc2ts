@@ -65,13 +65,13 @@ export class ApiDoc2Interface {
             });
     }
 
-    private fillInWarnings(converterResults, warnings: Array<string>) {
+    private fillInWarnings(converterResults: Array<ConverterResult>, warnings: Array<string>) {
         converterResults.forEach(result => {
             if (!result.warning) {
                 return;
             }
 
-            warnings.push(result.warning);
+            warnings.push(`${result.metadata.name}: ${result.warning}`);
         });
     }
 

@@ -92,12 +92,18 @@ describe("ApiDoc2Interface wrapper", () => {
     it("should return warning messages for every endpoint", async () => {
         converter.convert.mockImplementationOnce(() => ([
             {
+                metadata: {
+                    name: "Endpoint name",
+                },
                 requestInterface: "",
                 responseInterface: "",
                 errorInterface: "",
                 warning: "Warning message",
             },
             {
+                metadata: {
+                    name: "Endpoint name",
+                },
                 requestInterface: "",
                 responseInterface: "",
                 errorInterface: "",
@@ -106,6 +112,6 @@ describe("ApiDoc2Interface wrapper", () => {
         ]));
         const result = await apiDoc2Interface.run(args);
         expect(result.warnings).toHaveLength(2);
-        expect(result.warnings[0]).toBe("Warning message");
+        expect(result.warnings[0]).toBe("Endpoint name: Warning message");
     });
 });
