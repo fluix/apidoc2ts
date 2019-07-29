@@ -2,6 +2,7 @@ import * as fs from "fs";
 import * as path from "path";
 import {promisify} from "util";
 import {ApiDocToInterfaceConverter, ConverterResult} from "./ApiDocToInterfaceConverter";
+import {filterEmptyStrings} from "./string-utils";
 
 const readFile = promisify(fs.readFile);
 const writeFile = promisify(fs.writeFile);
@@ -61,7 +62,7 @@ export class ApiDoc2Interface {
                 data.requestInterface,
                 data.responseInterface,
                 data.errorInterface,
-            ].filter(str => str !== "").join("\n"),
+            ].filter(filterEmptyStrings).join("\n"),
         ).join("\n");
     }
 }
