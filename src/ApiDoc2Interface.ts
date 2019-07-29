@@ -17,6 +17,7 @@ export enum ApiDoc2InterfaceExitCode {
 export interface ApiDoc2InterfaceResult {
     message: string;
     code: ApiDoc2InterfaceExitCode;
+    warnings: Array<string>;
 }
 
 export interface ApiDoc2InterfaceParameters {
@@ -31,23 +32,26 @@ export class ApiDoc2Interface {
         const generator = new InterfaceGenerator();
         const parser = new ApiDocEndpointParser();
         const converter = new ApiDocToInterfaceConverter(generator, parser);
-        return  new ApiDoc2Interface(converter);
+        return new ApiDoc2Interface(converter);
     }
 
     constructor(private readonly converter: ApiDocToInterfaceConverter) {
     }
 
     async run(args: ApiDoc2InterfaceParameters): Promise<ApiDoc2InterfaceResult> {
+        const warnings: Array<string> = [];
         return readFile(args.source, "utf-8")
             .then((fileData) => {
                 const apiDocEndpoints = JSON.parse(fileData);
                 return this.converter.convert(apiDocEndpoints);
             })
             .then((converterResults) => {
+                this.fillInWarnings(converterResults, warnings);
                 return this.writeInterfaces(converterResults, args.output, args.name);
             })
             .then(() => {
                 return {
+                    warnings,
                     message: "Successfully generated interfaces",
                     code: ApiDoc2InterfaceExitCode.SUCCESS,
                 };
@@ -56,8 +60,19 @@ export class ApiDoc2Interface {
                 return {
                     message: `${err}`,
                     code: ApiDoc2InterfaceExitCode.FAIL,
+                    warnings: [],
                 };
             });
+    }
+
+    private fillInWarnings(converterResults, warnings: Array<string>) {
+        converterResults.forEach(result => {
+            if (!result.warning) {
+                return;
+            }
+
+            warnings.push(result.warning);
+        });
     }
 
     private writeInterfaces(converterResults: Array<ConverterResult>, outPath: string, filename: string) {

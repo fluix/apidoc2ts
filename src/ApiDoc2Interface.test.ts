@@ -79,8 +79,33 @@ describe("ApiDoc2Interface wrapper", () => {
         expect(result.code).toBe(ApiDoc2InterfaceExitCode.FAIL);
     });
 
-    it("should return success code if there was no errors", async () => {
+    it("should return success code if there were no errors", async () => {
         const result = await apiDoc2Interface.run(args);
         expect(result.code).toBe(ApiDoc2InterfaceExitCode.SUCCESS);
+    });
+
+    it("should return no warnings if there were no errors while converting or parsing", async () => {
+        const result = await apiDoc2Interface.run(args);
+        expect(result.warnings).toEqual([]);
+    });
+
+    it("should return warning messages for every endpoint", async () => {
+        converter.convert.mockImplementationOnce(() => ([
+            {
+                requestInterface: "",
+                responseInterface: "",
+                errorInterface: "",
+                warning: "Warning message",
+            },
+            {
+                requestInterface: "",
+                responseInterface: "",
+                errorInterface: "",
+                warning: "Warning message",
+            },
+        ]));
+        const result = await apiDoc2Interface.run(args);
+        expect(result.warnings).toHaveLength(2);
+        expect(result.warnings[0]).toBe("Warning message");
     });
 });
