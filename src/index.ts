@@ -50,10 +50,6 @@ class Convert extends Command {
     private onSuccess(result: ApiDoc2InterfaceResult) {
         this.log(chalk.greenBright(result.message));
 
-        if (result.warnings.length === 0) {
-            return;
-        }
-
         result.warnings.forEach(warning => {
             this.log(`${chalk.yellowBright("Warning:")} ${chalk.yellow(warning)}`);
         });
