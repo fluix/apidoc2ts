@@ -156,6 +156,8 @@ export class InterfaceGenerator {
     }
 
     private traverseSchemaRecursively(schema: JsonSchema, callback: (schema: JsonSchema) => void) {
+        callback(schema);
+
         _.values(schema.properties).forEach((property: JsonSchema) => {
             callback(property);
             this.traverseSchemaRecursively(property, callback);
@@ -165,5 +167,13 @@ export class InterfaceGenerator {
             callback(definition);
             this.traverseSchemaRecursively(definition, callback);
         });
+
+        if (schema.items && !Array.isArray(schema.items)) {
+            this.traverseSchemaRecursively(schema.items, callback);
+            _.values(schema.items.properties).forEach((property: JsonSchema) => {
+                callback(property);
+                this.traverseSchemaRecursively(property, callback);
+            });
+        }
     }
 }

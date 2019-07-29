@@ -1,5 +1,4 @@
 import {InterfaceGenerator} from "./InterfaceGenerator";
-import * as _ from "lodash";
 
 const simpleSchema = {
     type: "object",
@@ -117,6 +116,23 @@ const schemaWithUppercaseDefaultTypesInDefinitions = {
     },
 };
 
+const schemaWithUppercaseDefaultTypesInArrayItems = {
+    type: "object",
+    properties: {
+        param: {
+            type: "Array",
+            items: {
+                type: "Object",
+                properties: {
+                    item: {
+                        type: "String",
+                    },
+                },
+            },
+        },
+    },
+};
+
 const schemaWithOverriddenDefaultType = {
     type: "object",
     properties: {
@@ -223,6 +239,11 @@ describe("Interface generator", () => {
     it("should fix uppercase for default types in definitions", async () => {
         const result = await generator.createInterface(schemaWithUppercaseDefaultTypesInDefinitions);
         expect(result.includes("param?: string")).toBeTruthy();
+    });
+
+    it("should fix uppercase for default types in array items", async () => {
+        const result = await generator.createInterface(schemaWithUppercaseDefaultTypesInArrayItems);
+        expect(result.includes("item?: string")).toBeTruthy();
     });
 
     it("should not override custom types that match uppercase default types", async () => {
