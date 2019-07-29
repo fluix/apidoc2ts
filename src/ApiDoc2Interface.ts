@@ -56,7 +56,7 @@ export class ApiDoc2Interface {
         return writeFile(path.join(outPath, filename), interfaces);
     }
 
-    private stringifyInterfaces(converterResults: Array<ConverterResult>) {
+    private stringifyInterfaces(converterResults: Array<ConverterResult>): string {
         return converterResults.map((endpointData) =>
             [
                 endpointData.requestInterface,
