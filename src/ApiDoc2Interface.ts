@@ -45,23 +45,23 @@ export class ApiDoc2Interface {
             })
             .catch((err) => {
                 return {
-                    message: `${err.stack}`,
+                    message: `${err}`,
                     code: ApiDoc2InterfaceExitCode.FAIL,
                 };
             });
     }
 
     private writeInterfaces(converterResults: Array<ConverterResult>, outPath: string, filename: string) {
-        const interfaces = this.combineInterfaces(converterResults);
+        const interfaces = this.stringifyInterfaces(converterResults);
         return writeFile(path.join(outPath, filename), interfaces);
     }
 
-    private combineInterfaces(converterResults: Array<ConverterResult>) {
-        return converterResults.map((data) =>
+    private stringifyInterfaces(converterResults: Array<ConverterResult>) {
+        return converterResults.map((endpointData) =>
             [
-                data.requestInterface,
-                data.responseInterface,
-                data.errorInterface,
+                endpointData.requestInterface,
+                endpointData.responseInterface,
+                endpointData.errorInterface,
             ].filter(filterEmptyStrings).join("\n"),
         ).join("\n");
     }
