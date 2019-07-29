@@ -1,8 +1,10 @@
 import {Command, flags} from "@oclif/command";
-import {InterfaceGenerator} from "./InterfaceGenerator";
-import {ApiDocEndpointParser} from "./ApiDocEndpointParser";
-import {ApiDocToInterfaceConverter} from "./ApiDocToInterfaceConverter";
-import {ApiDoc2Interface, ApiDoc2InterfaceExitCode, ApiDoc2InterfaceParameters} from "./ApiDoc2Interface";
+import {
+    ApiDoc2Interface,
+    ApiDoc2InterfaceExitCode,
+    ApiDoc2InterfaceParameters,
+    ApiDoc2InterfaceResult,
+} from "./ApiDoc2Interface";
 import chalk from "chalk";
 
 class Convert extends Command {
@@ -45,13 +47,17 @@ class Convert extends Command {
         this.onSuccess(result);
     }
 
-    private onSuccess(result) {
+    private onSuccess(result: ApiDoc2InterfaceResult) {
         this.log(chalk.greenBright(result.message));
+
+        result.warnings.forEach(warning => {
+            this.log(`${chalk.yellowBright("Warning:")} ${chalk.yellow(warning)}`);
+        });
     }
 
-    private onError(result) {
-        this.log(chalk.redBright("Error while generating interfaces"));
-        this.log(chalk.red(result.message));
+    private onError(result: ApiDoc2InterfaceResult) {
+        this.error(chalk.redBright("Error while generating interfaces"));
+        this.error(chalk.red(result.message));
         this.exit(1);
     }
 }

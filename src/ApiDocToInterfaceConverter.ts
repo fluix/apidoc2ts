@@ -18,6 +18,7 @@ export interface ConverterResult {
     requestInterface: string;
     responseInterface: string;
     errorInterface: string;
+    warning?: string;
 }
 
 export class ApiDocToInterfaceConverter {
@@ -32,7 +33,11 @@ export class ApiDocToInterfaceConverter {
         const newestEndpointsVersions = this.getLatestEndpointsVersions(apiDocEndpoints);
 
         return await Promise.all(apiDocEndpoints.map(async (endpoint) => {
-            return await this.createInterfaces(endpoint, newestEndpointsVersions);
+            try {
+                return await this.createInterfaces(endpoint, newestEndpointsVersions);
+            } catch (error) {
+                return this.createWarningResult(endpoint, error);
+            }
         }));
     }
 
@@ -87,5 +92,15 @@ export class ApiDocToInterfaceConverter {
         return endpoint.version !== latestEndpointsVersions[endpoint.name]
                ? `_v${endpoint.version}`
                : "";
+    }
+
+    private createWarningResult(endpoint, error) {
+        return {
+            metadata: endpoint as InterfaceMetadata,
+            requestInterface: "",
+            responseInterface: "",
+            errorInterface: "",
+            warning: error.message,
+        };
     }
 }
