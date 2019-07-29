@@ -56,19 +56,15 @@ export function traverseSchemaRecursively(schema: JsonSchema, callback: (schema:
 
     _.values(schema.properties).forEach((property: JsonSchema) => {
         callback(property);
-        this.traverseSchemaRecursively(property, callback);
+        traverseSchemaRecursively(property, callback);
     });
 
     _.values(schema.definitions).forEach((definition: JsonSchema) => {
         callback(definition);
-        this.traverseSchemaRecursively(definition, callback);
+        traverseSchemaRecursively(definition, callback);
     });
 
     if (schema.items && !Array.isArray(schema.items)) {
-        this.traverseSchemaRecursively(schema.items, callback);
-        _.values(schema.items.properties).forEach((property: JsonSchema) => {
-            callback(property);
-            this.traverseSchemaRecursively(property, callback);
-        });
+        traverseSchemaRecursively(schema.items, callback);
     }
 }
