@@ -3,6 +3,8 @@ import * as path from "path";
 import {promisify} from "util";
 import {ApiDocToInterfaceConverter, ConverterResult} from "./ApiDocToInterfaceConverter";
 import {filterEmptyStrings} from "./string-utils";
+import {InterfaceGenerator} from "./InterfaceGenerator";
+import {ApiDocEndpointParser} from "./ApiDocEndpointParser";
 
 const readFile = promisify(fs.readFile);
 const writeFile = promisify(fs.writeFile);
@@ -24,6 +26,13 @@ export interface ApiDoc2InterfaceParameters {
 }
 
 export class ApiDoc2Interface {
+
+    static simple(): ApiDoc2Interface {
+        const generator = new InterfaceGenerator();
+        const parser = new ApiDocEndpointParser();
+        const converter = new ApiDocToInterfaceConverter(generator, parser);
+        return  new ApiDoc2Interface(converter);
+    }
 
     constructor(private readonly converter: ApiDocToInterfaceConverter) {
     }

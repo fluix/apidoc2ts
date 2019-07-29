@@ -35,10 +35,7 @@ class Convert extends Command {
     async run() {
         const {args, flags: passedFlags} = this.parse(Convert);
 
-        const generator = new InterfaceGenerator();
-        const parser = new ApiDocEndpointParser();
-        const converter = new ApiDocToInterfaceConverter(generator, parser);
-        const apiDoc2interface = new ApiDoc2Interface(converter);
+        const apiDoc2interface = ApiDoc2Interface.simple();
         const result = await apiDoc2interface.run(passedFlags as ApiDoc2InterfaceParameters);
 
         if (result.code === ApiDoc2InterfaceExitCode.FAIL) {
