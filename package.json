@@ -8,7 +8,7 @@
   "main": "src/index.ts",
   "scripts": {
     "start": "npm run lint && npm test && npm run build && npm run main",
-    "monitor": "nodemon",
+    "monitor": "jest --watchAll --verbose",
     "main": "node dist/index.js",
     "build": "tsc",
     "test": "jest --verbose --passWithNoTests",

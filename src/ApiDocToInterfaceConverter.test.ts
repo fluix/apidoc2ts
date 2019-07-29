@@ -202,4 +202,13 @@ describe("ApiDoc to Interface converter", () => {
         expect(interfaceGenerator.createInterface)
             .toBeCalledWith(expect.anything(), `${requestVersion3.name}`);
     });
+
+    it("should add warning message if there was an error while parsing or converting", async () => {
+        parseEndpointSpy.mockImplementationOnce(() => {
+            throw new Error("Mocked error while parsing");
+        });
+        const results = await converter.convert([getRequestData, postRequestData]);
+        expect(results[0].warning).toBeDefined();
+        expect(results[1].warning).toBeUndefined();
+    });
 });
