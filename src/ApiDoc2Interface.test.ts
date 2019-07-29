@@ -7,12 +7,16 @@ jest.mock("fs");
 jest.mock("./ApiDocToInterfaceConverter");
 
 describe("ApiDoc2Interface wrapper", () => {
+    const requestInterface = "interface Request";
+    const responseInterface = "interface Response";
+    const errorInterface = "interface Error";
+
     const converter = {
         convert: jest.fn(() => ([
             {
-                requestInterface: "interface Request",
-                responseInterface: "interface Response",
-                errorInterface: "interface Error",
+                requestInterface,
+                responseInterface,
+                errorInterface,
             },
         ])),
     };
@@ -57,7 +61,7 @@ describe("ApiDoc2Interface wrapper", () => {
     });
 
     it("should call writeFile with formatted converter results", async () => {
-        const formattedResults = "interface Request\ninterface Response\ninterface Error";
+        const formattedResults = `${requestInterface}\n${responseInterface}\n${errorInterface}`;
         await apiDoc2Interface.run(args);
         expect(writeFileSpy).toBeCalledWith(expect.anything(), formattedResults, expect.anything());
     });
