@@ -42,12 +42,20 @@ class Convert extends Command {
         const result = await apiDoc2interface.run(passedFlags as ApiDoc2InterfaceParameters);
 
         if (result.code === ApiDoc2InterfaceExitCode.FAIL) {
-            this.log(chalk.redBright("Error while generating interfaces"));
-            this.log(chalk.red(result.message));
-            this.exit(1);
+            this.onError(result);
         }
 
+        this.onSuccess(result);
+    }
+
+    private onSuccess(result) {
         this.log(chalk.greenBright(result.message));
+    }
+
+    private onError(result) {
+        this.log(chalk.redBright("Error while generating interfaces"));
+        this.log(chalk.red(result.message));
+        this.exit(1);
     }
 }
 
