@@ -89,29 +89,30 @@ describe("ApiDoc2Interface wrapper", () => {
         expect(result.warnings).toEqual([]);
     });
 
-    it("should return warning messages for every endpoint", async () => {
+    it("should return warning messages for every endpoint error", async () => {
         converter.convert.mockImplementationOnce(() => ([
             {
                 metadata: {
-                    name: "Endpoint name",
+                    name: "GetUser",
                 },
                 requestInterface: "",
                 responseInterface: "",
                 errorInterface: "",
-                warning: "Warning message",
+                warning: "Invalid type",
             },
             {
                 metadata: {
-                    name: "Endpoint name",
+                    name: "DarkCave",
                 },
                 requestInterface: "",
                 responseInterface: "",
                 errorInterface: "",
-                warning: "Warning message",
+                warning: "Spooky ghost",
             },
         ]));
         const result = await apiDoc2Interface.run(args);
         expect(result.warnings).toHaveLength(2);
-        expect(result.warnings[0]).toBe("Endpoint name: Warning message");
+        expect(result.warnings[0]).toBe("GetUser: Invalid type");
+        expect(result.warnings[1]).toBe("DarkCave: Spooky ghost");
     });
 });
