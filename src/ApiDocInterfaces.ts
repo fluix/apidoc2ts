@@ -40,7 +40,7 @@ export interface IApiDocHeader {
 
 export interface IApiDocField {
     group?: string;
-    type: string;
+    type?: string;
     field: string;
     optional?: boolean;
     allowedValues?: Array<string>;
