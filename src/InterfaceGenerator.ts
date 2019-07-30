@@ -56,6 +56,7 @@ export class InterfaceGenerator {
         this.fillInFakeTypes(schema);
         this.lowercaseDefaultTypes(schema);
         this.replaceInvalidTypesWithStrings(schema);
+        this.replaceNumericEnumsWithStringEnums(schema);
 
         const schemaString = JSON.stringify(schema);
         const source: JSONSchemaSourceData = {name, schema: schemaString};
@@ -140,6 +141,17 @@ export class InterfaceGenerator {
 
             subSchema.description = `Replaced type: ${subSchema.type}`;
             subSchema.type = "string";
+        });
+    }
+
+    private replaceNumericEnumsWithStringEnums(schema: JsonSchema) {
+        traverseSchemaRecursively(schema, subSchema => {
+            if (!subSchema.enum || subSchema.type !== "number") {
+                return;
+            }
+
+            subSchema.type = "string";
+            subSchema.enum = subSchema.enum.map(item => `${item.toString()}`);
         });
     }
 
