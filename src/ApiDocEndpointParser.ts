@@ -63,7 +63,10 @@ export class ApiDocEndpointParser {
     }
 
     private createParentProperties(parentProperties: JsonSchema, currentNamePart: string): JsonSubSchemas {
-        if (parentProperties[currentNamePart] && parentProperties[currentNamePart].type === "array") {
+        if (
+            parentProperties[currentNamePart]
+            && parentProperties[currentNamePart].type.toLowerCase() === "array"
+        ) {
             return this.createArrayProperties(parentProperties, currentNamePart);
         }
 
