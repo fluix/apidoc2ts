@@ -1,4 +1,4 @@
-import {JsonSchema, jsonSchemaDefaultTypes} from "./JsonSchema";
+import {JsonSchema, jsonSchemaDefaultTypes, traverseSchemaRecursively} from "./JsonSchema";
 import * as _ from "lodash";
 import {
     InputData,
@@ -123,7 +123,7 @@ export class InterfaceGenerator {
     }
 
     private lowercaseDefaultTypes(schema: JsonSchema) {
-        this.traverseSchemaRecursively(schema, (subSchema) => {
+        traverseSchemaRecursively(schema, (subSchema) => {
             if (!subSchema.type || !this.isDefaultType(subSchema)) {
                 return;
             }
@@ -133,7 +133,7 @@ export class InterfaceGenerator {
     }
 
     private replaceInvalidTypesWithStrings(schema: JsonSchema) {
-        this.traverseSchemaRecursively(schema, (subSchema) => {
+        traverseSchemaRecursively(schema, (subSchema) => {
             if (!this.isInvalidType(subSchema)) {
                 return;
             }
@@ -153,17 +153,5 @@ export class InterfaceGenerator {
         return subSchema.type &&
                !jsonSchemaDefaultTypes.includes(subSchema.type) &&
                !this.customTypes.includes(subSchema.type);
-    }
-
-    private traverseSchemaRecursively(schema: JsonSchema, callback: (schema: JsonSchema) => void) {
-        _.values(schema.properties).forEach((property: JsonSchema) => {
-            callback(property);
-            this.traverseSchemaRecursively(property, callback);
-        });
-
-        _.values(schema.definitions).forEach((definition: JsonSchema) => {
-            callback(definition);
-            this.traverseSchemaRecursively(definition, callback);
-        });
     }
 }

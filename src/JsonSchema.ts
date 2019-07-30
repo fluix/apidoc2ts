@@ -1,3 +1,5 @@
+import * as _ from "lodash";
+
 export const jsonSchemaDefaultTypes: Array<string> =
     ["null", "boolean", "object", "array", "number", "string", "integer"];
 
@@ -47,4 +49,22 @@ export interface JsonSchema {
     anyOf?: Array<JsonSchema>;
     oneOf?: Array<JsonSchema>;
     not?: JsonSchema;
+}
+
+export function traverseSchemaRecursively(schema: JsonSchema, callback: (schema: JsonSchema) => void) {
+    callback(schema);
+
+    _.values(schema.properties).forEach((property: JsonSchema) => {
+        callback(property);
+        traverseSchemaRecursively(property, callback);
+    });
+
+    _.values(schema.definitions).forEach((definition: JsonSchema) => {
+        callback(definition);
+        traverseSchemaRecursively(definition, callback);
+    });
+
+    if (schema.items && !Array.isArray(schema.items)) {
+        traverseSchemaRecursively(schema.items, callback);
+    }
 }
