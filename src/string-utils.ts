@@ -3,5 +3,5 @@ export const filterEmptyStrings = (str) => {
 };
 
 export function removeFieldsAligningSpaces(interfaceString): string {
-    return interfaceString.replace(/:\s+/, ": ");
+    return interfaceString.replace(/:\s+/g, ": ");
 }
