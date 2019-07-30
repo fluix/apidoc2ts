@@ -79,4 +79,12 @@ describe("apiDoc Field", () => {
 
         expect(arrayField.type).toBe("string");
     });
+
+    it("should consider missing type as string", () => {
+        const missingTypeField = new ApiDocField({
+            field: "fieldName",
+        });
+
+        expect(missingTypeField.type).toBe("string");
+    });
 });
