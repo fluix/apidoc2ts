@@ -55,6 +55,16 @@ const schemaWithEnum = {
     },
 };
 
+const schemaWithNumericEnum = {
+    type: "object",
+    properties: {
+        param: {
+            type: "number",
+            enum: [2, 4, 6],
+        },
+    },
+};
+
 const schemaWithTwoCustomTypes = {
     type: "object",
     properties: {
@@ -263,5 +273,10 @@ describe("Interface generator", () => {
         expect(result.match(new RegExp(
             `\\/\\*\\*\\s*\\* Replaced type: ${originalType}\\s*\\*\\/`),
         )).toBeTruthy();
+    });
+
+    it("should create numeric enumeration", async () => {
+        const result = await generator.createInterface(schemaWithNumericEnum);
+        expect(result.includes("enum Param")).toBeTruthy();
     });
 });
