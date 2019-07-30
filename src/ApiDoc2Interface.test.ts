@@ -1,6 +1,6 @@
 import * as fs from "fs";
 import * as path from "path";
-import {ApiDoc2Interface, ApiDoc2InterfaceExitCode} from "./ApiDoc2Interface";
+import {ApiDoc2Interface, ApiDoc2InterfaceExitCode, ApiDoc2InterfaceGroupingMode} from "./ApiDoc2Interface";
 import {ApiDocToInterfaceConverter} from "./ApiDocToInterfaceConverter";
 
 jest.mock("fs");
@@ -25,6 +25,7 @@ describe("ApiDoc2Interface wrapper", () => {
         source: "path/to/the/file",
         output: "path/to/the/output",
         name: "interfaces.ts",
+        grouping: ApiDoc2InterfaceGroupingMode.SINGLE,
     };
 
     const readFileSpy = jest.spyOn(fs, "readFile");
@@ -114,5 +115,59 @@ describe("ApiDoc2Interface wrapper", () => {
         expect(result.warnings).toHaveLength(2);
         expect(result.warnings[0]).toBe("GetUser: Invalid type");
         expect(result.warnings[1]).toBe("DarkCave: Spooky ghost");
+    });
+
+    describe("Grouping mode - URL", () => {
+        beforeEach(() => {
+            args.grouping = ApiDoc2InterfaceGroupingMode.URL;
+        });
+
+        it("should call writeFile for endpoint interfaces based on URL", async () => {
+            const converterResult = {
+                metadata: {
+                    name: "GetUser",
+                    url: "/api/sample/user",
+                },
+                requestInterface: "interface Request",
+                responseInterface: "interface Response",
+                errorInterface: "interface Error",
+            };
+
+            converter.convert.mockImplementationOnce(() => ([
+                converterResult,
+            ]));
+
+            await apiDoc2Interface.run(args);
+
+            expect(writeFileSpy).toBeCalledWith(
+                path.join(args.output, converterResult.metadata.url, `${converterResult.metadata.name}.ts`),
+                expect.anything(),
+                expect.anything(),
+            );
+        });
+
+        it("should call writeFile without URL params", async () => {
+            const converterResult = {
+                metadata: {
+                    name: "CreateUser",
+                    url: "/api/sample/user/:user",
+                },
+                requestInterface: "interface Request",
+                responseInterface: "interface Response",
+                errorInterface: "interface Error",
+            };
+
+            converter.convert.mockImplementationOnce(() => ([
+                converterResult,
+            ]));
+
+            await apiDoc2Interface.run(args);
+
+            expect(writeFileSpy).toBeCalledWith(
+                path.join(args.output, "/api/sample/user", `${converterResult.metadata.name}.ts`),
+                expect.anything(),
+                expect.anything(),
+            );
+        });
     });
 });

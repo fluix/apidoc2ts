@@ -2,7 +2,7 @@ import * as fs from "fs";
 import * as path from "path";
 import {promisify} from "util";
 import {ApiDocToInterfaceConverter, ConverterResult} from "./ApiDocToInterfaceConverter";
-import {filterEmptyStrings} from "./string-utils";
+import {filterEmptyStrings, getUrlWithoutParameters} from "./string-utils";
 import {InterfaceGenerator} from "./InterfaceGenerator";
 import {ApiDocEndpointParser} from "./ApiDocEndpointParser";
 
@@ -12,6 +12,11 @@ const writeFile = promisify(fs.writeFile);
 export enum ApiDoc2InterfaceExitCode {
     SUCCESS,
     FAIL,
+}
+
+export enum ApiDoc2InterfaceGroupingMode {
+    SINGLE = "single",
+    URL = "url",
 }
 
 export interface ApiDoc2InterfaceResult {
@@ -24,6 +29,7 @@ export interface ApiDoc2InterfaceParameters {
     source: string;
     output: string;
     name: string;
+    grouping: ApiDoc2InterfaceGroupingMode;
 }
 
 export class ApiDoc2Interface {
@@ -47,7 +53,7 @@ export class ApiDoc2Interface {
             })
             .then((converterResults) => {
                 this.fillInWarnings(converterResults, warnings);
-                return this.writeInterfaces(converterResults, args.output, args.name);
+                return this.writeInterfaces(converterResults, args);
             })
             .then(() => {
                 return {
@@ -75,18 +81,57 @@ export class ApiDoc2Interface {
         });
     }
 
-    private writeInterfaces(converterResults: Array<ConverterResult>, outPath: string, filename: string) {
-        const interfaces = this.stringifyInterfaces(converterResults);
-        return writeFile(path.join(outPath, filename), interfaces);
+    private writeInterfaces(converterResults: Array<ConverterResult>, args: ApiDoc2InterfaceParameters) {
+        if (args.grouping === ApiDoc2InterfaceGroupingMode.URL) {
+            return this.writeInterfacesIntoUrlsPath(converterResults, args);
+        }
+
+        return this.writeInterfacesIntoFile(converterResults, args);
     }
 
-    private stringifyInterfaces(converterResults: Array<ConverterResult>): string {
-        return converterResults.map((endpointData) =>
-            [
-                endpointData.requestInterface,
-                endpointData.responseInterface,
-                endpointData.errorInterface,
-            ].filter(filterEmptyStrings).join("\n"),
-        ).join("\n");
+    private writeInterfacesIntoFile(converterResults: Array<ConverterResult>, args: ApiDoc2InterfaceParameters) {
+        const interfacesString = this.stringifyAllInterfaces(converterResults);
+        const filePath = path.join(args.output, args.name);
+
+        return this.writeFile(filePath, interfacesString);
+    }
+
+    private writeInterfacesIntoUrlsPath(converterResults: Array<ConverterResult>, args: ApiDoc2InterfaceParameters) {
+        converterResults.forEach(converterResult => {
+            const interfacesString = this.stringifyInterfaces(converterResult);
+
+            if (interfacesString.length === 0) {
+                return;
+            }
+
+            return this.writeInterfaceToUrlPath(converterResult, args, interfacesString);
+        });
+    }
+
+    private writeInterfaceToUrlPath(converterResult, args: ApiDoc2InterfaceParameters, interfacesString) {
+        const urlPath = getUrlWithoutParameters(converterResult.metadata.url);
+        const filePath = path.join(args.output, urlPath, `${converterResult.metadata.name}.ts`);
+
+        return this.writeFile(filePath, interfacesString);
+    }
+
+    private stringifyAllInterfaces(converterResults: Array<ConverterResult>): string {
+        return converterResults
+            .map((endpointData) => this.stringifyInterfaces(endpointData))
+            .filter(filterEmptyStrings)
+            .join("\n");
+    }
+
+    private stringifyInterfaces(converterResult: ConverterResult): string {
+        return [
+            converterResult.requestInterface,
+            converterResult.responseInterface,
+            converterResult.errorInterface,
+        ].filter(filterEmptyStrings).join("\n");
+    }
+
+    private writeFile(filePath, interfacesString) {
+        fs.mkdirSync(path.dirname(filePath), {recursive: true});
+        return writeFile(filePath, interfacesString);
     }
 }
