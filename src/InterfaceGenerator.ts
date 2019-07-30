@@ -151,7 +151,7 @@ export class InterfaceGenerator {
             }
 
             subSchema.type = "string";
-            subSchema.enum = subSchema.enum.map(item => `${item.toString()}`);
+            subSchema.enum = subSchema.enum.map(item => item.toString());
         });
     }
 
