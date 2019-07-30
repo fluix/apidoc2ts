@@ -83,20 +83,20 @@ export class ApiDoc2Interface {
 
     private writeInterfaces(converterResults: Array<ConverterResult>, args: ApiDoc2InterfaceParameters) {
         if (args.grouping === ApiDoc2InterfaceGroupingMode.URL) {
-            return this.writeInterfacesIntoUrlsPath(converterResults, args);
+            return this.writeAllInterfacesIntoUrlsPath(converterResults, args);
         }
 
-        return this.writeInterfacesIntoFile(converterResults, args);
+        return this.writeAllInterfacesIntoFile(converterResults, args);
     }
 
-    private writeInterfacesIntoFile(converterResults: Array<ConverterResult>, args: ApiDoc2InterfaceParameters) {
+    private writeAllInterfacesIntoFile(converterResults: Array<ConverterResult>, args: ApiDoc2InterfaceParameters) {
         const interfacesString = this.stringifyAllInterfaces(converterResults);
         const filePath = path.join(args.output, args.name);
 
         return this.writeFile(filePath, interfacesString);
     }
 
-    private writeInterfacesIntoUrlsPath(converterResults: Array<ConverterResult>, args: ApiDoc2InterfaceParameters) {
+    private writeAllInterfacesIntoUrlsPath(converterResults: Array<ConverterResult>, args: ApiDoc2InterfaceParameters) {
         converterResults.forEach(converterResult => {
             const interfacesString = this.stringifyInterfaces(converterResult);
 
@@ -104,11 +104,11 @@ export class ApiDoc2Interface {
                 return;
             }
 
-            return this.writeInterfaceToUrlPath(converterResult, args, interfacesString);
+            return this.writeInterfaceIntoUrlPath(converterResult, args, interfacesString);
         });
     }
 
-    private writeInterfaceToUrlPath(converterResult, args: ApiDoc2InterfaceParameters, interfacesString) {
+    private writeInterfaceIntoUrlPath(converterResult, args: ApiDoc2InterfaceParameters, interfacesString) {
         const urlPath = getUrlWithoutParameters(converterResult.metadata.url);
         const filePath = path.join(args.output, urlPath, `${converterResult.metadata.name}.ts`);
 
