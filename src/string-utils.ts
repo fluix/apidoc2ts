@@ -7,9 +7,9 @@ export function removeFieldsAligningSpaces(interfaceString): string {
 }
 
 export function getUrlWithoutParameters(url: string) {
-    const found = url.match(/^(?:\/\w+)+/);
-    if (!found || found.length === 0) {
+    const urlWithoutParams = url.match(/^(?:\/\w+)+/);
+    if (!urlWithoutParams || urlWithoutParams.length === 0) {
         return "/";
     }
-    return found[0];
+    return urlWithoutParams[0];
 }
