@@ -62,6 +62,6 @@ describe("Single file interfaces writer", () => {
 
     it("should call writeFile with given output path and filename", async () => {
         await writer.writeInterfaces(converterResults as Array<ConverterResult>, args);
-        expect(writeFileSpy).toBeCalledWith(path.join(args.output, args.name), expect.anything());
+        expect(writeFileSpy).toBeCalledWith("path/to/the/output/interfaces.ts", expect.anything());
     });
 });

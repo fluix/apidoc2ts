@@ -7,16 +7,23 @@ import {stringifyInterfaces} from "./WriterUtils";
 import * as path from "path";
 
 export class UrlStructureInterfacesWriter implements InterfacesWriter {
-    writeInterfaces(interfacesData: Array<ConverterResult>, args: ApiDoc2InterfaceParameters): Promise<Array<void>> {
-        return Promise.all(interfacesData.map(converterResult => {
-            const interfacesString = stringifyInterfaces(converterResult);
+    async writeInterfaces(interfacesData: Array<ConverterResult>, args: ApiDoc2InterfaceParameters): Promise<void> {
+        await Promise
+            .all(interfacesData.map(converterResult => {
+                const interfacesString = stringifyInterfaces(converterResult);
 
-            if (interfacesString.length === 0) {
-                return;
-            }
+                if (interfacesString.length === 0) {
+                    return;
+                }
 
-            return this.writeInterfaceIntoUrlPath(converterResult, args, interfacesString);
-        }));
+                return this.writeInterfaceIntoUrlPath(converterResult, args, interfacesString);
+            }))
+            .then(() => {
+                return Promise.resolve();
+            })
+            .catch((err) => {
+                return Promise.reject(err);
+            });
     }
 
     private writeInterfaceIntoUrlPath(converterResult, args: ApiDoc2InterfaceParameters, interfacesString) {

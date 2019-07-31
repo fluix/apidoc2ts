@@ -62,7 +62,7 @@ describe("Single file interfaces writer", () => {
         await writer.writeInterfaces(converterResults, args);
 
         expect(writeFileSpy).toBeCalledWith(
-            path.join(args.output, converterResults[0].metadata.url, `${converterResults[0].metadata.name}.ts`),
+            "path/to/the/output/api/sample/user/GetUser.ts",
             expect.anything(),
         );
     });
@@ -71,7 +71,7 @@ describe("Single file interfaces writer", () => {
         await writer.writeInterfaces(converterResults, args);
 
         expect(writeFileSpy).toBeCalledWith(
-            path.join(args.output, "/api/sample/user", `${converterResults[1].metadata.name}.ts`),
+            "path/to/the/output/api/sample/user/DarkCave.ts",
             expect.anything(),
         );
     });

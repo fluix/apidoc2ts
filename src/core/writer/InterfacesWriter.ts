@@ -7,7 +7,7 @@ export interface InterfacesWriter {
     writeInterfaces(
         interfacesData: Array<ConverterResult>,
         args: ApiDoc2InterfaceParameters,
-    ): Promise<void | Array<void>>;
+    ): Promise<void>;
 }
 
 export function getInterfaceWriter(groupingMode: ApiDoc2InterfaceGroupingMode): InterfacesWriter {
