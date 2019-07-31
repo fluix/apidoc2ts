@@ -31,7 +31,12 @@ const parentField = {
     field: "user",
 };
 
-const parentArrayField = {
+const parentUppercaseArrayField = {
+    type: "Array",
+    field: "user",
+};
+
+const parentObjectArrayField = {
     type: "object[]",
     field: "user",
 };
@@ -197,7 +202,21 @@ describe("apiDoc Endpoint", () => {
         const endpointWithNestedFields = {
             parameter: {
                 fields: {
-                    Parameter: [parentArrayField, nestedField],
+                    Parameter: [parentObjectArrayField, nestedField],
+                },
+            },
+            ...defaultEndpointMetadata,
+        };
+
+        const schema = parser.parseEndpoint(endpointWithNestedFields).request;
+        expect(schema).toHaveProperty("properties.user.items.properties.name");
+    });
+
+    it("should write nested fields of field with type 'array' to 'items.properties'", () => {
+        const endpointWithNestedFields = {
+            parameter: {
+                fields: {
+                    Parameter: [parentUppercaseArrayField, nestedField],
                 },
             },
             ...defaultEndpointMetadata,
