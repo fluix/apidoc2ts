@@ -1,6 +1,5 @@
 import {ConverterResult} from "../converter/ApiDocToInterfaceConverter";
 import {ApiDoc2InterfaceGroupingMode, ApiDoc2InterfaceParameters} from "../ApiDoc2Interface";
-import {filterEmptyStrings} from "../StringUtils";
 import {UrlStructureInterfacesWriter} from "./UrlStructureInterfacesWriter";
 import {SingleFileInterfacesWriter} from "./SingleFileInterfacesWriter";
 
@@ -17,19 +16,4 @@ export function getInterfaceWriter(groupingMode: ApiDoc2InterfaceGroupingMode): 
     }
 
     return new SingleFileInterfacesWriter();
-}
-
-export function stringifyAllInterfaces(converterResults: Array<ConverterResult>): string {
-    return converterResults
-        .map((endpointData) => this.stringifyInterfaces(endpointData))
-        .filter(filterEmptyStrings)
-        .join("\n");
-}
-
-export function stringifyInterfaces(converterResult: ConverterResult): string {
-    return [
-        converterResult.requestInterface,
-        converterResult.responseInterface,
-        converterResult.errorInterface,
-    ].filter(filterEmptyStrings).join("\n");
 }

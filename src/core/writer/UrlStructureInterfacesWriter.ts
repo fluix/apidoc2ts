@@ -1,8 +1,9 @@
-import {InterfacesWriter, stringifyInterfaces} from "./InterfacesWriter";
+import {InterfacesWriter} from "./InterfacesWriter";
 import {ConverterResult} from "../converter/ApiDocToInterfaceConverter";
 import {ApiDoc2InterfaceParameters} from "../ApiDoc2Interface";
 import {getUrlWithoutParameters} from "../StringUtils";
 import {writeFileToPath} from "../FsUtils";
+import {stringifyInterfaces} from "./WriterUtils";
 import * as path from "path";
 
 export class UrlStructureInterfacesWriter implements InterfacesWriter {

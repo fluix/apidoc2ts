@@ -1,9 +1,9 @@
 import {ConverterResult} from "../converter/ApiDocToInterfaceConverter";
 import {ApiDoc2InterfaceGroupingMode} from "../ApiDoc2Interface";
 import {UrlStructureInterfacesWriter} from "./UrlStructureInterfacesWriter";
-import {stringifyInterfaces} from "./InterfacesWriter";
 import {writeFileToPath} from "../FsUtils";
 import * as path from "path";
+import {stringifyInterfaces} from "./WriterUtils";
 
 jest.mock("../FsUtils");
 
