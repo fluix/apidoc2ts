@@ -2,10 +2,10 @@ import {SingleFileInterfacesWriter} from "./SingleFileInterfacesWriter";
 import {ConverterResult} from "./ApiDocToInterfaceConverter";
 import {ApiDoc2InterfaceGroupingMode} from "./ApiDoc2Interface";
 import {stringifyAllInterfaces} from "./InterfacesWriter";
-import * as fs from "fs";
 import * as path from "path";
+import {writeFileToPath} from "./fs-utils";
 
-jest.mock("fs");
+jest.mock("./fs-utils");
 
 describe("Single file interfaces writer", () => {
     const writer = new SingleFileInterfacesWriter();
@@ -48,22 +48,20 @@ describe("Single file interfaces writer", () => {
         grouping: ApiDoc2InterfaceGroupingMode.SINGLE,
     };
 
-    const writeFileSpy = jest.spyOn(fs, "writeFile");
+    const writeFileSpy = (writeFileToPath as jest.Mock).mockImplementation();
 
     beforeEach(() => {
         writeFileSpy.mockReset();
-        writeFileSpy.mockImplementation((a, b, callback) => {
-            callback(null);
-        });
+        writeFileSpy.mockImplementation();
     });
 
     it("should call writeFile with formatted converter results", async () => {
         await writer.writeInterfaces(converterResults as Array<ConverterResult>, args);
-        expect(writeFileSpy).toBeCalledWith(expect.anything(), formattedResults, expect.anything());
+        expect(writeFileSpy).toBeCalledWith(expect.anything(), formattedResults);
     });
 
     it("should call writeFile with given output path and filename", async () => {
         await writer.writeInterfaces(converterResults as Array<ConverterResult>, args);
-        expect(writeFileSpy).toBeCalledWith(path.join(args.output, args.name), expect.anything(), expect.anything());
+        expect(writeFileSpy).toBeCalledWith(path.join(args.output, args.name), expect.anything());
     });
 });

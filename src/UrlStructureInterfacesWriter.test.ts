@@ -2,10 +2,10 @@ import {ConverterResult} from "./ApiDocToInterfaceConverter";
 import {ApiDoc2InterfaceGroupingMode} from "./ApiDoc2Interface";
 import {UrlStructureInterfacesWriter} from "./UrlStructureInterfacesWriter";
 import {stringifyInterfaces} from "./InterfacesWriter";
-import * as fs from "fs";
+import {writeFileToPath} from "./fs-utils";
 import * as path from "path";
 
-jest.mock("fs");
+jest.mock("./fs-utils");
 
 describe("Single file interfaces writer", () => {
     const writer = new UrlStructureInterfacesWriter();
@@ -51,14 +51,7 @@ describe("Single file interfaces writer", () => {
         grouping: ApiDoc2InterfaceGroupingMode.URL,
     };
 
-    const writeFileSpy = jest.spyOn(fs, "writeFile");
-
-    beforeEach(() => {
-        writeFileSpy.mockReset();
-        writeFileSpy.mockImplementation((a, b, callback) => {
-            callback(null);
-        });
-    });
+    const writeFileSpy = (writeFileToPath as jest.Mock).mockImplementation();
 
     it("should call writeFile for every endpoint interfaces", async () => {
         await writer.writeInterfaces(converterResults, args);
@@ -71,7 +64,6 @@ describe("Single file interfaces writer", () => {
         expect(writeFileSpy).toBeCalledWith(
             path.join(args.output, converterResults[0].metadata.url, `${converterResults[0].metadata.name}.ts`),
             expect.anything(),
-            expect.anything(),
         );
     });
 
@@ -80,7 +72,6 @@ describe("Single file interfaces writer", () => {
 
         expect(writeFileSpy).toBeCalledWith(
             path.join(args.output, "/api/sample/user", `${converterResults[1].metadata.name}.ts`),
-            expect.anything(),
             expect.anything(),
         );
     });
@@ -91,13 +82,11 @@ describe("Single file interfaces writer", () => {
         expect(writeFileSpy).toBeCalledWith(
             expect.anything(),
             formattedResults1,
-            expect.anything(),
         );
 
         expect(writeFileSpy).toBeCalledWith(
             expect.anything(),
             formattedResults2,
-            expect.anything(),
         );
     });
 });
