@@ -21,22 +21,34 @@ export interface ConverterResult {
     warning?: string;
 }
 
+export interface ConverterOptions {
+    versionResolving: ConverterVersionResolving;
+}
+
+export enum ConverterVersionResolving {
+    ALL = "all",
+    LAST = "last",
+}
+
 export class ApiDocToInterfaceConverter {
 
     constructor(
         private readonly interfaceGenerator: InterfaceGenerator,
         private readonly endpointParser: ApiDocEndpointParser,
+        private readonly options: ConverterOptions = {
+            versionResolving: ConverterVersionResolving.ALL,
+        },
     ) {
     }
 
     async convert(apiDocEndpoints: Array<IApiDocEndpoint>): Promise<Array<ConverterResult>> {
-        const newestEndpointsVersions = this.getLatestEndpointsVersions(apiDocEndpoints);
+        const latestEndpointsVersions = this.getLatestEndpointsVersions(apiDocEndpoints);
 
         return await Promise.all(apiDocEndpoints.map(async (endpoint) => {
             try {
-                return await this.createInterfaces(endpoint, newestEndpointsVersions);
+                return await this.createInterfaces(endpoint, latestEndpointsVersions);
             } catch (error) {
-                return this.createWarningResult(endpoint, error);
+                return this.createWarningResult(endpoint, error.message);
             }
         }));
     }
@@ -57,6 +69,11 @@ export class ApiDocToInterfaceConverter {
         latestEndpointsVersions: Record<string, string>,
     ): Promise<ConverterResult> {
         const {request, response, error} = this.endpointParser.parseEndpoint(endpoint);
+
+        if (!this.shouldCreateInterfaceVersion(endpoint, latestEndpointsVersions)) {
+            return this.createWarningResult(endpoint, `Skipping older version [${endpoint.version}]`);
+        }
+
         const versionPostfix = this.createVersionPostfix(endpoint, latestEndpointsVersions);
 
         return {
@@ -74,6 +91,11 @@ export class ApiDocToInterfaceConverter {
                 this.createInterfaceName(endpoint, versionPostfix, "Error"),
             ),
         };
+    }
+
+    private shouldCreateInterfaceVersion(endpoint: IApiDocEndpoint, latestEndpointsVersions: Record<string, string>) {
+        return endpoint.version === latestEndpointsVersions[endpoint.name]
+               || this.options.versionResolving !== ConverterVersionResolving.LAST;
     }
 
     private createInterfaceName(
@@ -94,13 +116,13 @@ export class ApiDocToInterfaceConverter {
                : "";
     }
 
-    private createWarningResult(endpoint, error) {
+    private createWarningResult(endpoint, message) {
         return {
             metadata: endpoint as InterfaceMetadata,
             requestInterface: "",
             responseInterface: "",
             errorInterface: "",
-            warning: error.message,
+            warning: message,
         };
     }
 }
