@@ -1,6 +1,6 @@
-import {ConverterResult} from "./ApiDocToInterfaceConverter";
-import {ApiDoc2InterfaceGroupingMode, ApiDoc2InterfaceParameters} from "./ApiDoc2Interface";
-import {filterEmptyStrings} from "./string-utils";
+import {ConverterResult} from "../converter/ApiDocToInterfaceConverter";
+import {ApiDoc2InterfaceGroupingMode, ApiDoc2InterfaceParameters} from "../ApiDoc2Interface";
+import {filterEmptyStrings} from "../StringUtils";
 import {UrlStructureInterfacesWriter} from "./UrlStructureInterfacesWriter";
 import {SingleFileInterfacesWriter} from "./SingleFileInterfacesWriter";
 

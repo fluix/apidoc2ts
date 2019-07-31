@@ -1,6 +1,6 @@
-import {IApiDocEndpoint} from "./ApiDocInterfaces";
-import {ApiDocEndpointParser} from "./ApiDocEndpointParser";
-import {InterfaceGenerator} from "./InterfaceGenerator";
+import {IApiDocEndpoint} from "../ApiDocInterfaces";
+import {ApiDocEndpointParser} from "../parser/ApiDocEndpointParser";
+import {InterfaceGenerator} from "../generator/InterfaceGenerator";
 
 export interface InterfaceMetadata {
     type: string;

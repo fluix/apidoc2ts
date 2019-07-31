@@ -1,6 +1,6 @@
 import {ApiDocEndpointParser} from "./ApiDocEndpointParser";
 import {ApiDocField} from "./ApiDocField";
-import {JsonSchema} from "./JsonSchema";
+import {JsonSchema} from "../JsonSchema";
 
 const requiredField = {
     type: "string",

@@ -4,7 +4,7 @@ import {
     ApiDoc2InterfaceExitCode, ApiDoc2InterfaceGroupingMode,
     ApiDoc2InterfaceParameters,
     ApiDoc2InterfaceResult,
-} from "./ApiDoc2Interface";
+} from "../core/ApiDoc2Interface";
 import chalk from "chalk";
 
 class Convert extends Command {

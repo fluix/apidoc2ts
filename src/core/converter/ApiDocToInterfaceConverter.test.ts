@@ -1,6 +1,6 @@
 import {ApiDocToInterfaceConverter} from "./ApiDocToInterfaceConverter";
-import {InterfaceGenerator} from "./InterfaceGenerator";
-import {ApiDocEndpointParser} from "./ApiDocEndpointParser";
+import {InterfaceGenerator} from "../generator/InterfaceGenerator";
+import {ApiDocEndpointParser} from "../parser/ApiDocEndpointParser";
 
 const requestVersion1 = {
     type: "post",
@@ -59,8 +59,8 @@ const requestVersion3 = {
     },
 };
 
-jest.mock("./ApiDocEndpointParser");
-jest.mock("./InterfaceGenerator");
+jest.mock("../parser/ApiDocEndpointParser");
+jest.mock("../generator/InterfaceGenerator");
 
 const apiDocDataFull = [requestVersion1, requestVersion2, requestVersion3];
 

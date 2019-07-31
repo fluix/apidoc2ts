@@ -1,7 +1,7 @@
 import {InterfacesWriter, stringifyAllInterfaces} from "./InterfacesWriter";
-import {ConverterResult} from "./ApiDocToInterfaceConverter";
-import {ApiDoc2InterfaceParameters} from "./ApiDoc2Interface";
-import {writeFileToPath} from "./fs-utils";
+import {ConverterResult} from "../converter/ApiDocToInterfaceConverter";
+import {ApiDoc2InterfaceParameters} from "../ApiDoc2Interface";
+import {writeFileToPath} from "../FsUtils";
 import * as path from "path";
 
 export class SingleFileInterfacesWriter implements InterfacesWriter {

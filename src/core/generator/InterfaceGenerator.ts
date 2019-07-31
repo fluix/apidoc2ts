@@ -1,4 +1,4 @@
-import {JsonSchema, jsonSchemaDefaultTypes, traverseSchemaRecursively} from "./JsonSchema";
+import {JsonSchema, jsonSchemaDefaultTypes, traverseSchemaRecursively} from "../JsonSchema";
 import * as _ from "lodash";
 import {
     InputData,
@@ -8,7 +8,7 @@ import {
     quicktype,
     TypeScriptTargetLanguage,
 } from "quicktype-core";
-import {removeFieldsAligningSpaces} from "./string-utils";
+import {removeFieldsAligningSpaces} from "../StringUtils";
 
 const qtFakeCustomType = {
     type: "object",

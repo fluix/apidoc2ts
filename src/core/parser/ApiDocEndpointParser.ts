@@ -1,6 +1,6 @@
-import {ApiDocEndpointPart, IApiDocEndpoint, IApiDocField} from "./ApiDocInterfaces";
+import {ApiDocEndpointPart, IApiDocEndpoint, IApiDocField} from "../ApiDocInterfaces";
 import {ApiDocField} from "./ApiDocField";
-import {JsonSchema, JsonSubSchemas} from "./JsonSchema";
+import {JsonSchema, JsonSubSchemas} from "../JsonSchema";
 import * as _ from "lodash";
 
 export interface ParserResult {

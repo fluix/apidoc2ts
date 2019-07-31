@@ -5,7 +5,7 @@
   "bin": {
     "apidoc2ts": "./bin/run"
   },
-  "main": "src/index.ts",
+  "main": "src/cli/index.ts",
   "scripts": {
     "start": "npm run lint && npm test && npm run build && npm run main",
     "monitor": "jest --watchAll --verbose",
