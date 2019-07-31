@@ -1,13 +1,11 @@
 import * as fs from "fs";
-import * as path from "path";
 import {promisify} from "util";
 import {ApiDocToInterfaceConverter, ConverterResult} from "./ApiDocToInterfaceConverter";
-import {filterEmptyStrings, getUrlWithoutParameters} from "./string-utils";
 import {InterfaceGenerator} from "./InterfaceGenerator";
 import {ApiDocEndpointParser} from "./ApiDocEndpointParser";
+import {getInterfaceWriter} from "./InterfacesWriter";
 
 const readFile = promisify(fs.readFile);
-const writeFile = promisify(fs.writeFile);
 
 export enum ApiDoc2InterfaceExitCode {
     SUCCESS,
@@ -41,7 +39,11 @@ export class ApiDoc2Interface {
         return new ApiDoc2Interface(converter);
     }
 
-    constructor(private readonly converter: ApiDocToInterfaceConverter) {
+    constructor(
+        private readonly converter: ApiDocToInterfaceConverter,
+        private readonly writerFactory = getInterfaceWriter,
+    ) {
+
     }
 
     async run(args: ApiDoc2InterfaceParameters): Promise<ApiDoc2InterfaceResult> {
@@ -53,7 +55,8 @@ export class ApiDoc2Interface {
             })
             .then((converterResults) => {
                 this.fillInWarnings(converterResults, warnings);
-                return this.writeInterfaces(converterResults, args);
+                const writer = this.writerFactory(args.grouping);
+                return writer.writeInterfaces(converterResults, args);
             })
             .then(() => {
                 return {
@@ -79,59 +82,5 @@ export class ApiDoc2Interface {
 
             warnings.push(`${result.metadata.name}: ${result.warning}`);
         });
-    }
-
-    private writeInterfaces(converterResults: Array<ConverterResult>, args: ApiDoc2InterfaceParameters) {
-        if (args.grouping === ApiDoc2InterfaceGroupingMode.URL) {
-            return this.writeAllInterfacesIntoUrlsPath(converterResults, args);
-        }
-
-        return this.writeAllInterfacesIntoFile(converterResults, args);
-    }
-
-    private writeAllInterfacesIntoFile(converterResults: Array<ConverterResult>, args: ApiDoc2InterfaceParameters) {
-        const interfacesString = this.stringifyAllInterfaces(converterResults);
-        const filePath = path.join(args.output, args.name);
-
-        return this.writeFile(filePath, interfacesString);
-    }
-
-    private writeAllInterfacesIntoUrlsPath(converterResults: Array<ConverterResult>, args: ApiDoc2InterfaceParameters) {
-        converterResults.forEach(converterResult => {
-            const interfacesString = this.stringifyInterfaces(converterResult);
-
-            if (interfacesString.length === 0) {
-                return;
-            }
-
-            return this.writeInterfaceIntoUrlPath(converterResult, args, interfacesString);
-        });
-    }
-
-    private writeInterfaceIntoUrlPath(converterResult, args: ApiDoc2InterfaceParameters, interfacesString) {
-        const urlPath = getUrlWithoutParameters(converterResult.metadata.url);
-        const filePath = path.join(args.output, urlPath, `${converterResult.metadata.name}.ts`);
-
-        return this.writeFile(filePath, interfacesString);
-    }
-
-    private stringifyAllInterfaces(converterResults: Array<ConverterResult>): string {
-        return converterResults
-            .map((endpointData) => this.stringifyInterfaces(endpointData))
-            .filter(filterEmptyStrings)
-            .join("\n");
-    }
-
-    private stringifyInterfaces(converterResult: ConverterResult): string {
-        return [
-            converterResult.requestInterface,
-            converterResult.responseInterface,
-            converterResult.errorInterface,
-        ].filter(filterEmptyStrings).join("\n");
-    }
-
-    private writeFile(filePath, interfacesString) {
-        fs.mkdirSync(path.dirname(filePath), {recursive: true});
-        return writeFile(filePath, interfacesString);
     }
 }
