@@ -7,8 +7,9 @@ import {
 } from "./converter/ApiDocToInterfaceConverter";
 import {ApiDoc2Interface} from "./ApiDoc2Interface";
 
-export type BuilderOptions = ConverterOptions
-    & { customTypes: Array<string> };
+export interface BuilderOptions extends ConverterOptions {
+    customTypes: Array<string>;
+}
 
 export class ApiDoc2InterfaceBuilder {
     build(parameters: Partial<BuilderOptions>): ApiDoc2Interface {
