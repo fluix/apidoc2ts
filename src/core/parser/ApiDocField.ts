@@ -1,4 +1,4 @@
-import {IApiDocField} from "./ApiDocInterfaces";
+import {IApiDocField} from "../ApiDocInterfaces";
 import * as _ from "lodash";
 
 export class ApiDocField {

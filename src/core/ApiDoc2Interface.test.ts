@@ -1,34 +1,44 @@
 import * as fs from "fs";
-import * as path from "path";
-import {ApiDoc2Interface, ApiDoc2InterfaceExitCode} from "./ApiDoc2Interface";
-import {ApiDocToInterfaceConverter} from "./ApiDocToInterfaceConverter";
+import {ApiDoc2Interface, ApiDoc2InterfaceExitCode, ApiDoc2InterfaceGroupingMode} from "./ApiDoc2Interface";
+import {ApiDocToInterfaceConverter} from "./converter/ApiDocToInterfaceConverter";
 
 jest.mock("fs");
-jest.mock("./ApiDocToInterfaceConverter");
+jest.mock("./converter/ApiDocToInterfaceConverter");
 
 describe("ApiDoc2Interface wrapper", () => {
     const requestInterface = "interface Request";
     const responseInterface = "interface Response";
     const errorInterface = "interface Error";
 
+    const converterResults = [
+        {
+            requestInterface,
+            responseInterface,
+            errorInterface,
+        },
+    ];
+
     const converter = {
-        convert: jest.fn(() => ([
-            {
-                requestInterface,
-                responseInterface,
-                errorInterface,
-            },
-        ])),
+        convert: jest.fn(() => (converterResults)),
     };
-    const apiDoc2Interface = new ApiDoc2Interface(converter as unknown as ApiDocToInterfaceConverter);
+
+    const writeInterfacesMock = jest.fn((a, b) => Promise.resolve());
+    const interfaceWriterFactoryMock = jest.fn((grouping) => ({
+        writeInterfaces: writeInterfacesMock,
+    }));
+
+    const apiDoc2Interface = new ApiDoc2Interface(
+        converter as unknown as ApiDocToInterfaceConverter,
+        interfaceWriterFactoryMock,
+    );
     const args = {
         source: "path/to/the/file",
         output: "path/to/the/output",
         name: "interfaces.ts",
+        grouping: ApiDoc2InterfaceGroupingMode.SINGLE,
     };
 
     const readFileSpy = jest.spyOn(fs, "readFile");
-    const writeFileSpy = jest.spyOn(fs, "writeFile");
 
     beforeEach(() => {
         readFileSpy.mockReset();
@@ -36,10 +46,7 @@ describe("ApiDoc2Interface wrapper", () => {
             callback(null, "{\"mock\": \"data\"}");
         }) as any);
 
-        writeFileSpy.mockReset();
-        writeFileSpy.mockImplementation((a, b, callback) => {
-            callback(null);
-        });
+        writeInterfacesMock.mockReset();
     });
 
     it("should call readFile with given path", async () => {
@@ -60,20 +67,19 @@ describe("ApiDoc2Interface wrapper", () => {
         expect(converter.convert).toBeCalledWith({mock: "data"});
     });
 
-    it("should call writeFile with formatted converter results", async () => {
-        const formattedResults = `${requestInterface}\n${responseInterface}\n${errorInterface}`;
+    it("should call writer factory with grouping mode", async () => {
         await apiDoc2Interface.run(args);
-        expect(writeFileSpy).toBeCalledWith(expect.anything(), formattedResults, expect.anything());
+        expect(interfaceWriterFactoryMock).toBeCalledWith(args.grouping);
     });
 
-    it("should call writeFile with given output path and filename", async () => {
+    it("should call writeInterfaces with converter results and arguments", async () => {
         await apiDoc2Interface.run(args);
-        expect(writeFileSpy).toBeCalledWith(path.join(args.output, args.name), expect.anything(), expect.anything());
+        expect(writeInterfacesMock).toBeCalledWith(converterResults, args);
     });
 
-    it("should return fail code if writeFile failed", async () => {
-        writeFileSpy.mockImplementation(() => {
-            throw new Error("Mocked error while writing file");
+    it("should return fail code if writing failed", async () => {
+        writeInterfacesMock.mockImplementation(() => {
+            throw new Error("Mocked error while writing interfaces");
         });
         const result = await apiDoc2Interface.run(args);
         expect(result.code).toBe(ApiDoc2InterfaceExitCode.FAIL);

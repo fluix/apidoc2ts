@@ -1,10 +1,10 @@
 import {Command, flags} from "@oclif/command";
 import {
     ApiDoc2Interface,
-    ApiDoc2InterfaceExitCode,
+    ApiDoc2InterfaceExitCode, ApiDoc2InterfaceGroupingMode,
     ApiDoc2InterfaceParameters,
     ApiDoc2InterfaceResult,
-} from "./ApiDoc2Interface";
+} from "../core/ApiDoc2Interface";
 import chalk from "chalk";
 
 class Convert extends Command {
@@ -31,6 +31,15 @@ class Convert extends Command {
             required: true,
             default: "interfaces.ts",
             description: "Name for generated file",
+        }),
+        grouping: flags.string({
+            char: "g",
+            required: true,
+            options: [ApiDoc2InterfaceGroupingMode.SINGLE, ApiDoc2InterfaceGroupingMode.URL],
+            default: "single",
+            description: `Change the way to save interfaces
+single - save all interfaces into one file
+url - save all interfaces to corresponding url paths`,
         }),
     };
 

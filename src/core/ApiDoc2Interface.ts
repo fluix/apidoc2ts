@@ -1,17 +1,20 @@
 import * as fs from "fs";
-import * as path from "path";
 import {promisify} from "util";
-import {ApiDocToInterfaceConverter, ConverterResult} from "./ApiDocToInterfaceConverter";
-import {filterEmptyStrings} from "./string-utils";
-import {InterfaceGenerator} from "./InterfaceGenerator";
-import {ApiDocEndpointParser} from "./ApiDocEndpointParser";
+import {ApiDocToInterfaceConverter, ConverterResult} from "./converter/ApiDocToInterfaceConverter";
+import {InterfaceGenerator} from "./generator/InterfaceGenerator";
+import {ApiDocEndpointParser} from "./parser/ApiDocEndpointParser";
+import {getInterfaceWriter} from "./writer/InterfacesWriter";
 
 const readFile = promisify(fs.readFile);
-const writeFile = promisify(fs.writeFile);
 
 export enum ApiDoc2InterfaceExitCode {
     SUCCESS,
     FAIL,
+}
+
+export enum ApiDoc2InterfaceGroupingMode {
+    SINGLE = "single",
+    URL = "url",
 }
 
 export interface ApiDoc2InterfaceResult {
@@ -24,6 +27,7 @@ export interface ApiDoc2InterfaceParameters {
     source: string;
     output: string;
     name: string;
+    grouping: ApiDoc2InterfaceGroupingMode;
 }
 
 export class ApiDoc2Interface {
@@ -35,7 +39,11 @@ export class ApiDoc2Interface {
         return new ApiDoc2Interface(converter);
     }
 
-    constructor(private readonly converter: ApiDocToInterfaceConverter) {
+    constructor(
+        private readonly converter: ApiDocToInterfaceConverter,
+        private readonly writerFactory = getInterfaceWriter,
+    ) {
+
     }
 
     async run(args: ApiDoc2InterfaceParameters): Promise<ApiDoc2InterfaceResult> {
@@ -47,7 +55,8 @@ export class ApiDoc2Interface {
             })
             .then((converterResults) => {
                 this.fillInWarnings(converterResults, warnings);
-                return this.writeInterfaces(converterResults, args.output, args.name);
+                const writer = this.writerFactory(args.grouping);
+                return writer.writeInterfaces(converterResults, args);
             })
             .then(() => {
                 return {
@@ -73,20 +82,5 @@ export class ApiDoc2Interface {
 
             warnings.push(`${result.metadata.name}: ${result.warning}`);
         });
-    }
-
-    private writeInterfaces(converterResults: Array<ConverterResult>, outPath: string, filename: string) {
-        const interfaces = this.stringifyInterfaces(converterResults);
-        return writeFile(path.join(outPath, filename), interfaces);
-    }
-
-    private stringifyInterfaces(converterResults: Array<ConverterResult>): string {
-        return converterResults.map((endpointData) =>
-            [
-                endpointData.requestInterface,
-                endpointData.responseInterface,
-                endpointData.errorInterface,
-            ].filter(filterEmptyStrings).join("\n"),
-        ).join("\n");
     }
 }
