@@ -73,7 +73,6 @@ export class ApiDocToInterfaceConverter {
         latestEndpointsVersions: Record<string, string>,
     ): Promise<ConverterResult> {
         const {request, response, error} = this.endpointParser.parseEndpoint(endpoint);
-
         const versionPostfix = this.createVersionPostfix(endpoint, latestEndpointsVersions);
 
         return {
