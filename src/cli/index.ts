@@ -1,13 +1,12 @@
 import {Command, flags} from "@oclif/command";
 import {
-    ApiDoc2Interface,
     ApiDoc2InterfaceExitCode,
     ApiDoc2InterfaceGroupingMode,
-    ApiDoc2InterfaceParameters,
     ApiDoc2InterfaceResult,
 } from "../core/ApiDoc2Interface";
 import {ConverterVersionResolving} from "../core/converter/ApiDocToInterfaceConverter";
 import chalk from "chalk";
+import {ApiDoc2InterfaceBuilder, BuilderOptions} from "../core/ApiDoc2InterfaceBuilder";
 
 class Convert extends Command {
     static description = "Tool for converting apiDoc documentation to Typescript interfaces";
@@ -55,8 +54,11 @@ url - save all interfaces to corresponding url paths`,
     async run() {
         const {args, flags: passedFlags} = this.parse(Convert);
 
-        const apiDoc2interface = ApiDoc2Interface.simple();
-        const result = await apiDoc2interface.run(passedFlags as ApiDoc2InterfaceParameters);
+        const builderOptions = this.createBuilderOptions(passedFlags);
+
+        const builder = new ApiDoc2InterfaceBuilder();
+        const apiDoc2interface = builder.build(builderOptions);
+        const result = await apiDoc2interface.run(passedFlags);
 
         if (result.code === ApiDoc2InterfaceExitCode.FAIL) {
             this.onError(result);
@@ -77,6 +79,13 @@ url - save all interfaces to corresponding url paths`,
         this.error(chalk.redBright("Error while generating interfaces"));
         this.error(chalk.red(result.message));
         this.exit(1);
+    }
+
+    private createBuilderOptions(passedFlags): BuilderOptions {
+        return {
+            versionResolving: (passedFlags.version) as ConverterVersionResolving,
+            customTypes: [],
+        };
     }
 }
 
