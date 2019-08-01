@@ -16,7 +16,7 @@ describe("ApiDoc2InterfaceBuilder", () => {
         versionResolving: ConverterVersionResolving.LAST,
     };
 
-    it("should create parser", () => {
+    it("should create parser during execution", () => {
         builder.build(parameters);
         expect(ApiDocEndpointParser).toBeCalled();
     });

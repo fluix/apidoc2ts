@@ -147,8 +147,8 @@ describe("ApiDoc to Interface converter", () => {
 
     it("should create warnings for skipped older endpoints", async () => {
         const results = await converterWithLatestOption.convert(apiDocDataFull);
-        expect(results[0].warning).toBeDefined();
-        expect(results[1].warning).toBeDefined();
+        expect(results[0].warning).toBe("Skipping older version [0.0.1]");
+        expect(results[1].warning).toBe("Skipping older version [0.0.2]");
         expect(results[2].warning).toBeUndefined();
     });
 });
