@@ -1,5 +1,6 @@
 import {Command, flags} from "@oclif/command";
 import {
+    ApiDoc2Interface,
     ApiDoc2InterfaceExitCode,
     ApiDoc2InterfaceGroupingMode,
     ApiDoc2InterfaceResult,
@@ -54,10 +55,7 @@ url - save all interfaces to corresponding url paths`,
     async run() {
         const {args, flags: passedFlags} = this.parse(Convert);
 
-        const builderOptions = this.createBuilderOptions(passedFlags);
-
-        const builder = new ApiDoc2InterfaceBuilder();
-        const apiDoc2interface = builder.build(builderOptions);
+        const apiDoc2interface = this.getApiDoc2Interface(passedFlags);
         const result = await apiDoc2interface.run(passedFlags);
 
         if (result.code === ApiDoc2InterfaceExitCode.FAIL) {
@@ -79,6 +77,12 @@ url - save all interfaces to corresponding url paths`,
         this.error(chalk.redBright("Error while generating interfaces"));
         this.error(chalk.red(result.message));
         this.exit(1);
+    }
+
+    private getApiDoc2Interface(passedFlags): ApiDoc2Interface {
+        const builderOptions = this.createBuilderOptions(passedFlags);
+        const apiDoc2InterfaceBuilder = new ApiDoc2InterfaceBuilder();
+        return apiDoc2InterfaceBuilder.build(builderOptions);
     }
 
     private createBuilderOptions(passedFlags): BuilderOptions {
