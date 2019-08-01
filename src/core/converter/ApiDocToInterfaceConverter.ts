@@ -45,6 +45,10 @@ export class ApiDocToInterfaceConverter {
         const latestEndpointsVersions = this.getLatestEndpointsVersions(apiDocEndpoints);
 
         return await Promise.all(apiDocEndpoints.map(async (endpoint) => {
+            if (!this.isLatestEndpointVersion(endpoint, latestEndpointsVersions)) {
+                return this.createWarningResult(endpoint, `Skipping older version [${endpoint.version}]`);
+            }
+
             try {
                 return await this.createInterfaces(endpoint, latestEndpointsVersions);
             } catch (error) {
@@ -70,10 +74,6 @@ export class ApiDocToInterfaceConverter {
     ): Promise<ConverterResult> {
         const {request, response, error} = this.endpointParser.parseEndpoint(endpoint);
 
-        if (!this.shouldCreateInterfaceVersion(endpoint, latestEndpointsVersions)) {
-            return this.createWarningResult(endpoint, `Skipping older version [${endpoint.version}]`);
-        }
-
         const versionPostfix = this.createVersionPostfix(endpoint, latestEndpointsVersions);
 
         return {
@@ -93,7 +93,7 @@ export class ApiDocToInterfaceConverter {
         };
     }
 
-    private shouldCreateInterfaceVersion(endpoint: IApiDocEndpoint, latestEndpointsVersions: Record<string, string>) {
+    private isLatestEndpointVersion(endpoint: IApiDocEndpoint, latestEndpointsVersions: Record<string, string>) {
         return endpoint.version === latestEndpointsVersions[endpoint.name]
                || this.options.versionResolving !== ConverterVersionResolving.LAST;
     }
