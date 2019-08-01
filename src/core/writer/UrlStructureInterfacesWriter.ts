@@ -20,9 +20,6 @@ export class UrlStructureInterfacesWriter implements InterfacesWriter {
             }))
             .then(() => {
                 return Promise.resolve();
-            })
-            .catch((err) => {
-                return Promise.reject(err);
             });
     }
 
