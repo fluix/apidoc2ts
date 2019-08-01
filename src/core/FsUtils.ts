@@ -10,8 +10,5 @@ export function writeFileToPath(filePath: string, data: any, options?: WriteFile
     return mkdir(path.dirname(filePath), {recursive: true})
         .then(() => {
             return writeFile(filePath, data, options);
-        })
-        .catch((err) => {
-            return Promise.reject(err);
         });
 }
