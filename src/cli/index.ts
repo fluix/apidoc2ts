@@ -1,17 +1,19 @@
 import {Command, flags} from "@oclif/command";
 import {
     ApiDoc2Interface,
-    ApiDoc2InterfaceExitCode, ApiDoc2InterfaceGroupingMode,
-    ApiDoc2InterfaceParameters,
+    ApiDoc2InterfaceExitCode,
+    ApiDoc2InterfaceGroupingMode,
     ApiDoc2InterfaceResult,
 } from "../core/ApiDoc2Interface";
+import {ConverterVersionResolving} from "../core/converter/ApiDocToInterfaceConverter";
 import chalk from "chalk";
+import {ApiDoc2InterfaceBuilder, BuilderOptions} from "../core/ApiDoc2InterfaceBuilder";
 
 class Convert extends Command {
     static description = "Tool for converting apiDoc documentation to Typescript interfaces";
 
     static flags = {
-        version: flags.version({char: "v"}),
+        v: flags.version(),
         help: flags.help({char: "h"}),
 
         source: flags.string({
@@ -32,22 +34,29 @@ class Convert extends Command {
             default: "interfaces.ts",
             description: "Name for generated file",
         }),
-        grouping: flags.string({
+        grouping: flags.enum({
             char: "g",
             required: true,
             options: [ApiDoc2InterfaceGroupingMode.SINGLE, ApiDoc2InterfaceGroupingMode.URL],
-            default: "single",
+            default: ApiDoc2InterfaceGroupingMode.SINGLE,
             description: `Change the way to save interfaces
 single - save all interfaces into one file
 url - save all interfaces to corresponding url paths`,
+        }),
+        version: flags.enum({
+            char: "v",
+            required: true,
+            options: [ConverterVersionResolving.ALL, ConverterVersionResolving.LAST],
+            default: ConverterVersionResolving.ALL,
+            description: "Which versions should be processed",
         }),
     };
 
     async run() {
         const {args, flags: passedFlags} = this.parse(Convert);
 
-        const apiDoc2interface = ApiDoc2Interface.simple();
-        const result = await apiDoc2interface.run(passedFlags as ApiDoc2InterfaceParameters);
+        const apiDoc2interface = this.getApiDoc2Interface(passedFlags);
+        const result = await apiDoc2interface.run(passedFlags);
 
         if (result.code === ApiDoc2InterfaceExitCode.FAIL) {
             this.onError(result);
@@ -68,6 +77,19 @@ url - save all interfaces to corresponding url paths`,
         this.error(chalk.redBright("Error while generating interfaces"));
         this.error(chalk.red(result.message));
         this.exit(1);
+    }
+
+    private getApiDoc2Interface(passedFlags): ApiDoc2Interface {
+        const builderOptions = this.createBuilderOptions(passedFlags);
+        const apiDoc2InterfaceBuilder = new ApiDoc2InterfaceBuilder();
+        return apiDoc2InterfaceBuilder.build(builderOptions);
+    }
+
+    private createBuilderOptions(passedFlags): BuilderOptions {
+        return {
+            versionResolving: (passedFlags.version) as ConverterVersionResolving,
+            customTypes: [],
+        };
     }
 }
 

@@ -21,22 +21,38 @@ export interface ConverterResult {
     warning?: string;
 }
 
+export interface ConverterOptions {
+    versionResolving: ConverterVersionResolving;
+}
+
+export enum ConverterVersionResolving {
+    ALL = "all",
+    LAST = "last",
+}
+
 export class ApiDocToInterfaceConverter {
 
     constructor(
         private readonly interfaceGenerator: InterfaceGenerator,
         private readonly endpointParser: ApiDocEndpointParser,
+        private readonly options: ConverterOptions = {
+            versionResolving: ConverterVersionResolving.ALL,
+        },
     ) {
     }
 
     async convert(apiDocEndpoints: Array<IApiDocEndpoint>): Promise<Array<ConverterResult>> {
-        const newestEndpointsVersions = this.getLatestEndpointsVersions(apiDocEndpoints);
+        const latestEndpointsVersions = this.getLatestEndpointsVersions(apiDocEndpoints);
 
         return await Promise.all(apiDocEndpoints.map(async (endpoint) => {
+            if (this.shouldSkipEndpointVersion(endpoint, latestEndpointsVersions)) {
+                return this.createWarningResult(endpoint, `Skipping older version [${endpoint.version}]`);
+            }
+
             try {
-                return await this.createInterfaces(endpoint, newestEndpointsVersions);
+                return await this.createInterfaces(endpoint, latestEndpointsVersions);
             } catch (error) {
-                return this.createWarningResult(endpoint, error);
+                return this.createWarningResult(endpoint, error.message);
             }
         }));
     }
@@ -76,6 +92,16 @@ export class ApiDocToInterfaceConverter {
         };
     }
 
+    private shouldSkipEndpointVersion(
+        endpoint: IApiDocEndpoint,
+        latestEndpointsVersions: Record<string, string>,
+    ): boolean {
+        if (this.options.versionResolving !== ConverterVersionResolving.LAST) {
+            return false;
+        }
+        return endpoint.version !== latestEndpointsVersions[endpoint.name];
+    }
+
     private createInterfaceName(
         endpoint: IApiDocEndpoint,
         versionPostfix = "",
@@ -94,13 +120,13 @@ export class ApiDocToInterfaceConverter {
                : "";
     }
 
-    private createWarningResult(endpoint, error) {
+    private createWarningResult(endpoint, message) {
         return {
             metadata: endpoint as InterfaceMetadata,
             requestInterface: "",
             responseInterface: "",
             errorInterface: "",
-            warning: error.message,
+            warning: message,
         };
     }
 }

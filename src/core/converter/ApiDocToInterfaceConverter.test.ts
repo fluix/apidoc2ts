@@ -1,4 +1,4 @@
-import {ApiDocToInterfaceConverter} from "./ApiDocToInterfaceConverter";
+import {ApiDocToInterfaceConverter, ConverterVersionResolving} from "./ApiDocToInterfaceConverter";
 import {InterfaceGenerator} from "../generator/InterfaceGenerator";
 import {ApiDocEndpointParser} from "../parser/ApiDocEndpointParser";
 
@@ -72,17 +72,22 @@ const parserResultMock = {
 
 describe("ApiDoc to Interface converter", () => {
     const interfaceGenerator = new InterfaceGenerator();
-    const apiDocEndpoint: ApiDocEndpointParser = new ApiDocEndpointParser();
-    const parseEndpointSpy = jest.spyOn(apiDocEndpoint, "parseEndpoint");
+    const endpointParser = new ApiDocEndpointParser();
+    const parseEndpointSpy = jest.spyOn(endpointParser, "parseEndpoint");
 
-    let converter: ApiDocToInterfaceConverter;
+    const converter = new ApiDocToInterfaceConverter(interfaceGenerator, endpointParser);
+    const converterWithLatestOption = new ApiDocToInterfaceConverter(
+        interfaceGenerator,
+        endpointParser,
+        {
+            versionResolving: ConverterVersionResolving.LAST,
+        },
+    );
 
     beforeEach(() => {
         (interfaceGenerator.createInterface as jest.Mock).mockReset();
         parseEndpointSpy.mockReset();
         parseEndpointSpy.mockImplementation(() => parserResultMock);
-
-        converter = new ApiDocToInterfaceConverter(interfaceGenerator, apiDocEndpoint);
     });
 
     it("should return empty array for empty data", async () => {
@@ -114,7 +119,7 @@ describe("ApiDoc to Interface converter", () => {
         expect(interfaceGenerator.createInterface).toBeCalledTimes(apiDocDataFull.length * 3);
     });
 
-    it("should add version postfix to interface if it is not the latest one", async () => {
+    it("should add version postfix to interface name if it is not the latest one", async () => {
         await converter.convert([requestVersion1, requestVersion2, requestVersion3]);
         expect(interfaceGenerator.createInterface)
             .toBeCalledWith(expect.anything(), `${requestVersion1.name}_v${requestVersion1.version}`);
@@ -131,5 +136,19 @@ describe("ApiDoc to Interface converter", () => {
         const results = await converter.convert([requestVersion1, requestVersion2]);
         expect(results[0].warning).toBe("Mocked error while parsing");
         expect(results[1].warning).toBeUndefined();
+    });
+
+    it("should not create interfaces for older versions if version resolving option is set to 'latest'", async () => {
+        const results = await converterWithLatestOption.convert(apiDocDataFull);
+        expect(results[0].requestInterface).toBe("");
+        expect(results[1].requestInterface).toBe("");
+        expect(results[2].requestInterface).not.toBe("");
+    });
+
+    it("should create warnings for skipped older endpoints", async () => {
+        const results = await converterWithLatestOption.convert(apiDocDataFull);
+        expect(results[0].warning).toBe("Skipping older version [0.0.1]");
+        expect(results[1].warning).toBe("Skipping older version [0.0.2]");
+        expect(results[2].warning).toBeUndefined();
     });
 });
