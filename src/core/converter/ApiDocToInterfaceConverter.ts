@@ -21,23 +21,37 @@ export interface ConverterResult {
     warning?: string;
 }
 
-export interface ConverterOptions {
-    versionResolving: ConverterVersionResolving;
-}
-
 export enum ConverterVersionResolving {
     ALL = "all",
     LAST = "last",
 }
+
+export interface ConverterOptions {
+    versionResolving: ConverterVersionResolving;
+    requestPrefix: string;
+    requestPostfix: string;
+    responsePrefix: string;
+    responsePostfix: string;
+    errorPrefix: string;
+    errorPostfix: string;
+}
+
+export const converterDefaultOptions = {
+    versionResolving: ConverterVersionResolving.ALL,
+    requestPrefix: "",
+    requestPostfix: "",
+    responsePrefix: "",
+    responsePostfix: "Response",
+    errorPrefix: "",
+    errorPostfix: "Error",
+};
 
 export class ApiDocToInterfaceConverter {
 
     constructor(
         private readonly interfaceGenerator: InterfaceGenerator,
         private readonly endpointParser: ApiDocEndpointParser,
-        private readonly options: ConverterOptions = {
-            versionResolving: ConverterVersionResolving.ALL,
-        },
+        private readonly options: ConverterOptions = converterDefaultOptions,
     ) {
     }
 
@@ -75,20 +89,17 @@ export class ApiDocToInterfaceConverter {
         const {request, response, error} = this.endpointParser.parseEndpoint(endpoint);
         const versionPostfix = this.createVersionPostfix(endpoint, latestEndpointsVersions);
 
+        const {
+            requestInterfaceName,
+            responseInterfaceName,
+            errorInterfaceName,
+        } = this.createInterfacesNames(endpoint, versionPostfix);
+
         return {
             metadata: endpoint as InterfaceMetadata,
-            requestInterface: await this.interfaceGenerator.createInterface(
-                request,
-                this.createInterfaceName(endpoint, versionPostfix),
-            ),
-            responseInterface: await this.interfaceGenerator.createInterface(
-                response,
-                this.createInterfaceName(endpoint, versionPostfix, "Response"),
-            ),
-            errorInterface: await this.interfaceGenerator.createInterface(
-                error,
-                this.createInterfaceName(endpoint, versionPostfix, "Error"),
-            ),
+            requestInterface: await this.interfaceGenerator.createInterface(request, requestInterfaceName),
+            responseInterface: await this.interfaceGenerator.createInterface(response, responseInterfaceName),
+            errorInterface: await this.interfaceGenerator.createInterface(error, errorInterfaceName),
         };
     }
 
@@ -102,12 +113,24 @@ export class ApiDocToInterfaceConverter {
         return endpoint.version !== latestEndpointsVersions[endpoint.name];
     }
 
-    private createInterfaceName(
-        endpoint: IApiDocEndpoint,
-        versionPostfix = "",
-        postfix = "",
-        prefix = "",
-    ) {
+    private createInterfacesNames(endpoint: IApiDocEndpoint, versionPostfix = "") {
+        const {
+            requestPrefix,
+            requestPostfix,
+            responsePrefix,
+            responsePostfix,
+            errorPrefix,
+            errorPostfix,
+        } = this.options;
+
+        return {
+            requestInterfaceName: this.createInterfaceName(endpoint, versionPostfix, requestPrefix, requestPostfix),
+            responseInterfaceName: this.createInterfaceName(endpoint, versionPostfix, responsePrefix, responsePostfix),
+            errorInterfaceName: this.createInterfaceName(endpoint, versionPostfix, errorPrefix, errorPostfix),
+        };
+    }
+
+    private createInterfaceName(endpoint: IApiDocEndpoint, versionPostfix, prefix, postfix) {
         return `${prefix}${endpoint.name}${postfix}${versionPostfix}`;
     }
 
