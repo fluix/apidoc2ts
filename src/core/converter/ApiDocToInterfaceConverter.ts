@@ -46,6 +46,13 @@ export const converterDefaultOptions = {
     errorPostfix: "Error",
 };
 
+interface InterfaceNameOptions {
+    endpoint: IApiDocEndpoint;
+    versionPostfix: any;
+    prefix: any;
+    postfix: any;
+}
+
 export class ApiDocToInterfaceConverter {
 
     constructor(
@@ -114,24 +121,33 @@ export class ApiDocToInterfaceConverter {
     }
 
     private createInterfacesNames(endpoint: IApiDocEndpoint, versionPostfix = "") {
-        const {
-            requestPrefix,
-            requestPostfix,
-            responsePrefix,
-            responsePostfix,
-            errorPrefix,
-            errorPostfix,
-        } = this.options;
+        const commonParams = {
+            endpoint,
+            versionPostfix,
+        };
 
         return {
-            requestInterfaceName: this.createInterfaceName(endpoint, versionPostfix, requestPrefix, requestPostfix),
-            responseInterfaceName: this.createInterfaceName(endpoint, versionPostfix, responsePrefix, responsePostfix),
-            errorInterfaceName: this.createInterfaceName(endpoint, versionPostfix, errorPrefix, errorPostfix),
+            requestInterfaceName: this.createInterfaceName({
+                ...commonParams,
+                prefix: this.options.requestPrefix,
+                postfix: this.options.requestPostfix,
+            }),
+            responseInterfaceName: this.createInterfaceName({
+                ...commonParams,
+                prefix: this.options.responsePrefix,
+                postfix: this.options.responsePostfix,
+            }),
+            errorInterfaceName: this.createInterfaceName({
+                ...commonParams,
+                prefix: this.options.errorPrefix,
+                postfix: this.options.errorPostfix,
+            }),
         };
     }
 
-    private createInterfaceName(endpoint: IApiDocEndpoint, versionPostfix, prefix, postfix) {
-        return `${prefix}${endpoint.name}${postfix}${versionPostfix}`;
+    private createInterfaceName(options: InterfaceNameOptions): string {
+        const {prefix, endpoint, postfix, versionPostfix} = options;
+        return `${(prefix)}${endpoint.name}${(postfix)}${(versionPostfix)}`;
     }
 
     private createVersionPostfix(
