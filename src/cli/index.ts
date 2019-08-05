@@ -57,6 +57,30 @@ url - save all interfaces to corresponding url paths`,
             description: "List of custom types",
             helpValue: "type1 type2 type3",
         }),
+        ["request-prefix"]: flags.string({
+            required: false,
+            description: "Prefix for a request interface name",
+        }),
+        ["request-postfix"]: flags.string({
+            required: false,
+            description: "Postfix for a request interface name",
+        }),
+        ["response-prefix"]: flags.string({
+            required: false,
+            description: "Prefix for a response interface name",
+        }),
+        ["response-postfix"]: flags.string({
+            required: false,
+            description: "Postfix for a response interface name",
+        }),
+        ["error-prefix"]: flags.string({
+            required: false,
+            description: "Prefix for a error interface name",
+        }),
+        ["error-postfix"]: flags.string({
+            required: false,
+            description: "Postfix for a error interface name",
+        }),
     };
 
     async run() {
@@ -92,10 +116,16 @@ url - save all interfaces to corresponding url paths`,
         return apiDoc2InterfaceBuilder.build(builderOptions);
     }
 
-    private createBuilderOptions(passedFlags): BuilderOptions {
+    private createBuilderOptions(passedFlags: Record<keyof typeof Convert.flags, any>): Partial<BuilderOptions> {
         return {
             versionResolving: (passedFlags.version) as ConverterVersionResolving,
             customTypes: passedFlags["custom-types"],
+            requestPrefix: passedFlags["request-prefix"],
+            requestPostfix: passedFlags["request-postfix"],
+            responsePrefix: passedFlags["response-prefix"],
+            responsePostfix: passedFlags["response-postfix"],
+            errorPrefix: passedFlags["error-prefix"],
+            errorPostfix: passedFlags["error-postfix"],
         };
     }
 }

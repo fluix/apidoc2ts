@@ -81,6 +81,30 @@ describe("ApiDoc to Interface converter", () => {
         endpointParser,
         {
             versionResolving: ConverterVersionResolving.LAST,
+            requestPrefix: "",
+            requestPostfix: "",
+            responsePrefix: "",
+            responsePostfix: "",
+            errorPrefix: "",
+            errorPostfix: "",
+        },
+    );
+
+    const prefixPostfixOptions = {
+        requestPrefix: "requestPrefix",
+        requestPostfix: "requestPostfix",
+        responsePrefix: "responsePrefix",
+        responsePostfix: "responsePostfix",
+        errorPrefix: "errorPrefix",
+        errorPostfix: "errorPostfix",
+    };
+
+    const converterWithCustomPrefixPostfix = new ApiDocToInterfaceConverter(
+        interfaceGenerator,
+        endpointParser,
+        {
+            ...prefixPostfixOptions,
+            versionResolving: ConverterVersionResolving.ALL,
         },
     );
 
@@ -111,6 +135,19 @@ describe("ApiDoc to Interface converter", () => {
         expect(interfaceGenerator.createInterface).toBeCalledWith(expect.anything(), requestVersion1.name);
         expect(interfaceGenerator.createInterface).toBeCalledWith(expect.anything(), `${requestVersion1.name}Response`);
         expect(interfaceGenerator.createInterface).toBeCalledWith(expect.anything(), `${requestVersion1.name}Error`);
+    });
+
+    it("should call createInterface with passed in prefixes and postfixes", async () => {
+        await converterWithCustomPrefixPostfix.convert([requestVersion1]);
+        expect(interfaceGenerator.createInterface).toBeCalledWith(expect.anything(),
+            `${prefixPostfixOptions.requestPrefix}${requestVersion1.name}${prefixPostfixOptions.requestPostfix}`,
+        );
+        expect(interfaceGenerator.createInterface).toBeCalledWith(expect.anything(),
+            `${prefixPostfixOptions.responsePrefix}${requestVersion1.name}${prefixPostfixOptions.responsePostfix}`,
+        );
+        expect(interfaceGenerator.createInterface).toBeCalledWith(expect.anything(),
+            `${prefixPostfixOptions.errorPrefix}${requestVersion1.name}${prefixPostfixOptions.errorPostfix}`,
+        );
     });
 
     it("should call parseEndpoint and createInterface for every endpoint", async () => {

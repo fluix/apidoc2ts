@@ -3,9 +3,10 @@ import {ApiDocEndpointParser} from "./parser/ApiDocEndpointParser";
 import {
     ApiDocToInterfaceConverter,
     ConverterOptions,
-    ConverterVersionResolving,
+    converterDefaultOptions,
 } from "./converter/ApiDocToInterfaceConverter";
 import {ApiDoc2Interface} from "./ApiDoc2Interface";
+import * as _ from "lodash";
 
 export interface BuilderOptions extends ConverterOptions {
     customTypes: Array<string>;
@@ -14,9 +15,7 @@ export interface BuilderOptions extends ConverterOptions {
 export class ApiDoc2InterfaceBuilder {
     build(parameters: Partial<BuilderOptions>): ApiDoc2Interface {
         const generatorOptions = parameters.customTypes || [];
-        const converterOptions = {
-            versionResolving: parameters.versionResolving || ConverterVersionResolving.LAST,
-        };
+        const converterOptions: ConverterOptions = _.defaults(parameters, converterDefaultOptions);
 
         const generator = new InterfaceGenerator(generatorOptions);
         const parser = new ApiDocEndpointParser();

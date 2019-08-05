@@ -21,13 +21,36 @@ export interface ConverterResult {
     warning?: string;
 }
 
-export interface ConverterOptions {
-    versionResolving: ConverterVersionResolving;
-}
-
 export enum ConverterVersionResolving {
     ALL = "all",
     LAST = "last",
+}
+
+export interface ConverterOptions {
+    versionResolving: ConverterVersionResolving;
+    requestPrefix: string;
+    requestPostfix: string;
+    responsePrefix: string;
+    responsePostfix: string;
+    errorPrefix: string;
+    errorPostfix: string;
+}
+
+export const converterDefaultOptions = {
+    versionResolving: ConverterVersionResolving.ALL,
+    requestPrefix: "",
+    requestPostfix: "",
+    responsePrefix: "",
+    responsePostfix: "Response",
+    errorPrefix: "",
+    errorPostfix: "Error",
+};
+
+interface InterfaceNameOptions {
+    endpoint: IApiDocEndpoint;
+    versionPostfix: string;
+    prefix: string;
+    postfix: string;
 }
 
 export class ApiDocToInterfaceConverter {
@@ -35,9 +58,7 @@ export class ApiDocToInterfaceConverter {
     constructor(
         private readonly interfaceGenerator: InterfaceGenerator,
         private readonly endpointParser: ApiDocEndpointParser,
-        private readonly options: ConverterOptions = {
-            versionResolving: ConverterVersionResolving.ALL,
-        },
+        private readonly options: ConverterOptions = converterDefaultOptions,
     ) {
     }
 
@@ -73,22 +94,19 @@ export class ApiDocToInterfaceConverter {
         latestEndpointsVersions: Record<string, string>,
     ): Promise<ConverterResult> {
         const {request, response, error} = this.endpointParser.parseEndpoint(endpoint);
-        const versionPostfix = this.createVersionPostfix(endpoint, latestEndpointsVersions);
+        const isLatest = endpoint.version === latestEndpointsVersions[endpoint.name];
+
+        const {
+            requestInterfaceName,
+            responseInterfaceName,
+            errorInterfaceName,
+        } = this.createInterfacesNames(endpoint, isLatest);
 
         return {
             metadata: endpoint as InterfaceMetadata,
-            requestInterface: await this.interfaceGenerator.createInterface(
-                request,
-                this.createInterfaceName(endpoint, versionPostfix),
-            ),
-            responseInterface: await this.interfaceGenerator.createInterface(
-                response,
-                this.createInterfaceName(endpoint, versionPostfix, "Response"),
-            ),
-            errorInterface: await this.interfaceGenerator.createInterface(
-                error,
-                this.createInterfaceName(endpoint, versionPostfix, "Error"),
-            ),
+            requestInterface: await this.interfaceGenerator.createInterface(request, requestInterfaceName),
+            responseInterface: await this.interfaceGenerator.createInterface(response, responseInterfaceName),
+            errorInterface: await this.interfaceGenerator.createInterface(error, errorInterfaceName),
         };
     }
 
@@ -102,22 +120,34 @@ export class ApiDocToInterfaceConverter {
         return endpoint.version !== latestEndpointsVersions[endpoint.name];
     }
 
-    private createInterfaceName(
-        endpoint: IApiDocEndpoint,
-        versionPostfix = "",
-        postfix = "",
-        prefix = "",
-    ) {
-        return `${prefix}${endpoint.name}${postfix}${versionPostfix}`;
+    private createInterfacesNames(endpoint: IApiDocEndpoint, isLatest: boolean) {
+        const commonParams = {
+            endpoint,
+            versionPostfix: isLatest ? "" : `_v${endpoint.version}`,
+        };
+
+        return {
+            requestInterfaceName: this.createInterfaceName({
+                ...commonParams,
+                prefix: this.options.requestPrefix,
+                postfix: this.options.requestPostfix,
+            }),
+            responseInterfaceName: this.createInterfaceName({
+                ...commonParams,
+                prefix: this.options.responsePrefix,
+                postfix: this.options.responsePostfix,
+            }),
+            errorInterfaceName: this.createInterfaceName({
+                ...commonParams,
+                prefix: this.options.errorPrefix,
+                postfix: this.options.errorPostfix,
+            }),
+        };
     }
 
-    private createVersionPostfix(
-        endpoint: IApiDocEndpoint,
-        latestEndpointsVersions: Record<string, string>,
-    ) {
-        return endpoint.version !== latestEndpointsVersions[endpoint.name]
-               ? `_v${endpoint.version}`
-               : "";
+    private createInterfaceName(options: InterfaceNameOptions): string {
+        const {prefix, endpoint, postfix, versionPostfix} = options;
+        return `${prefix}${endpoint.name}${postfix}${versionPostfix}`;
     }
 
     private createWarningResult(endpoint, message) {

@@ -1,7 +1,10 @@
 import {ApiDoc2InterfaceBuilder, BuilderOptions} from "./ApiDoc2InterfaceBuilder";
 import {InterfaceGenerator} from "./generator/InterfaceGenerator";
 import {ApiDocEndpointParser} from "./parser/ApiDocEndpointParser";
-import {ApiDocToInterfaceConverter, ConverterVersionResolving} from "./converter/ApiDocToInterfaceConverter";
+import {
+    ApiDocToInterfaceConverter,
+    ConverterVersionResolving, converterDefaultOptions,
+} from "./converter/ApiDocToInterfaceConverter";
 import {ApiDoc2Interface} from "./ApiDoc2Interface";
 
 jest.mock("./generator/InterfaceGenerator");
@@ -14,6 +17,12 @@ describe("ApiDoc2InterfaceBuilder", () => {
     const parameters: Partial<BuilderOptions> = {
         customTypes: ["File", "URL"],
         versionResolving: ConverterVersionResolving.LAST,
+        requestPrefix: "RequestPrefix",
+        requestPostfix: "RequestPostfix",
+        responsePrefix: "ResponsePrefix",
+        responsePostfix: "ResponsePostfix",
+        errorPrefix: "ErrorPrefix",
+        errorPostfix: "ErrorPostfix",
     };
 
     it("should create parser during execution", () => {
@@ -45,7 +54,16 @@ describe("ApiDoc2InterfaceBuilder", () => {
         expect(ApiDocToInterfaceConverter).toBeCalledWith(
             expect.anything(),
             expect.anything(),
-            {versionResolving: parameters.versionResolving},
+            parameters,
+        );
+    });
+
+    it("should create converter with default values if no parameters are specified", () => {
+        builder.build({});
+        expect(ApiDocToInterfaceConverter).toBeCalledWith(
+            expect.anything(),
+            expect.anything(),
+            converterDefaultOptions,
         );
     });
 
