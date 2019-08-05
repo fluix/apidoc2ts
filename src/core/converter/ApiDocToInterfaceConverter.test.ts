@@ -81,6 +81,8 @@ describe("ApiDoc to Interface converter", () => {
         endpointParser,
         {
             versionResolving: ConverterVersionResolving.LAST,
+            staticPrefix: "",
+            staticPostfix: "",
             requestPrefix: "",
             requestPostfix: "",
             responsePrefix: "",
@@ -91,6 +93,8 @@ describe("ApiDoc to Interface converter", () => {
     );
 
     const prefixPostfixOptions = {
+        staticPrefix: "prefix",
+        staticPostfix: "postFix",
         requestPrefix: "requestPrefix",
         requestPostfix: "requestPostfix",
         responsePrefix: "responsePrefix",
@@ -139,14 +143,25 @@ describe("ApiDoc to Interface converter", () => {
 
     it("should call createInterface with passed in prefixes and postfixes", async () => {
         await converterWithCustomPrefixPostfix.convert([requestVersion1]);
+        const {
+            staticPrefix,
+            staticPostfix,
+            errorPostfix,
+            requestPostfix,
+            errorPrefix,
+            responsePostfix,
+            requestPrefix,
+            responsePrefix,
+        } = prefixPostfixOptions;
+
         expect(interfaceGenerator.createInterface).toBeCalledWith(expect.anything(),
-            `${prefixPostfixOptions.requestPrefix}${requestVersion1.name}${prefixPostfixOptions.requestPostfix}`,
+            `${staticPrefix}${requestPrefix}${requestVersion1.name}${requestPostfix}${staticPostfix}`,
         );
         expect(interfaceGenerator.createInterface).toBeCalledWith(expect.anything(),
-            `${prefixPostfixOptions.responsePrefix}${requestVersion1.name}${prefixPostfixOptions.responsePostfix}`,
+            `${staticPrefix}${responsePrefix}${requestVersion1.name}${responsePostfix}${staticPostfix}`,
         );
         expect(interfaceGenerator.createInterface).toBeCalledWith(expect.anything(),
-            `${prefixPostfixOptions.errorPrefix}${requestVersion1.name}${prefixPostfixOptions.errorPostfix}`,
+            `${staticPrefix}${errorPrefix}${requestVersion1.name}${errorPostfix}${staticPostfix}`,
         );
     });
 
@@ -156,7 +171,7 @@ describe("ApiDoc to Interface converter", () => {
         expect(interfaceGenerator.createInterface).toBeCalledTimes(apiDocDataFull.length * 3);
     });
 
-    it("should add version postfix to interface name if it is not the latest one", async () => {
+    it("should add version staticPostfix to interface name if it is not the latest one", async () => {
         await converter.convert([requestVersion1, requestVersion2, requestVersion3]);
         expect(interfaceGenerator.createInterface)
             .toBeCalledWith(expect.anything(), `${requestVersion1.name}_v${requestVersion1.version}`);
