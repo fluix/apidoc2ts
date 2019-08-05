@@ -50,6 +50,13 @@ url - save all interfaces to corresponding url paths`,
             default: ConverterVersionResolving.ALL,
             description: "Which versions should be processed",
         }),
+        ["custom-types"]: flags.string({
+            char: "t",
+            required: false,
+            multiple: true,
+            description: "List of custom types",
+            helpValue: "type1 type2 type3",
+        }),
     };
 
     async run() {
@@ -88,7 +95,7 @@ url - save all interfaces to corresponding url paths`,
     private createBuilderOptions(passedFlags): BuilderOptions {
         return {
             versionResolving: (passedFlags.version) as ConverterVersionResolving,
-            customTypes: [],
+            customTypes: passedFlags["custom-types"],
         };
     }
 }
