@@ -48,9 +48,9 @@ export const converterDefaultOptions = {
 
 interface InterfaceNameOptions {
     endpoint: IApiDocEndpoint;
-    versionPostfix: any;
-    prefix: any;
-    postfix: any;
+    versionPostfix: string;
+    prefix: string;
+    postfix: string;
 }
 
 export class ApiDocToInterfaceConverter {
@@ -147,7 +147,7 @@ export class ApiDocToInterfaceConverter {
 
     private createInterfaceName(options: InterfaceNameOptions): string {
         const {prefix, endpoint, postfix, versionPostfix} = options;
-        return `${(prefix)}${endpoint.name}${(postfix)}${(versionPostfix)}`;
+        return `${prefix}${endpoint.name}${postfix}${versionPostfix}`;
     }
 
     private createWarningResult(endpoint, message) {
