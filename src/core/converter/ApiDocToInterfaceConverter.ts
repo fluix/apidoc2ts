@@ -94,13 +94,13 @@ export class ApiDocToInterfaceConverter {
         latestEndpointsVersions: Record<string, string>,
     ): Promise<ConverterResult> {
         const {request, response, error} = this.endpointParser.parseEndpoint(endpoint);
-        const versionPostfix = this.createVersionPostfix(endpoint, latestEndpointsVersions);
+        const isLatest = endpoint.version === latestEndpointsVersions[endpoint.name];
 
         const {
             requestInterfaceName,
             responseInterfaceName,
             errorInterfaceName,
-        } = this.createInterfacesNames(endpoint, versionPostfix);
+        } = this.createInterfacesNames(endpoint, isLatest);
 
         return {
             metadata: endpoint as InterfaceMetadata,
@@ -120,10 +120,10 @@ export class ApiDocToInterfaceConverter {
         return endpoint.version !== latestEndpointsVersions[endpoint.name];
     }
 
-    private createInterfacesNames(endpoint: IApiDocEndpoint, versionPostfix = "") {
+    private createInterfacesNames(endpoint: IApiDocEndpoint, isLatest: boolean) {
         const commonParams = {
             endpoint,
-            versionPostfix,
+            versionPostfix: isLatest ? "" : `_v${endpoint.version}`,
         };
 
         return {
@@ -148,15 +148,6 @@ export class ApiDocToInterfaceConverter {
     private createInterfaceName(options: InterfaceNameOptions): string {
         const {prefix, endpoint, postfix, versionPostfix} = options;
         return `${(prefix)}${endpoint.name}${(postfix)}${(versionPostfix)}`;
-    }
-
-    private createVersionPostfix(
-        endpoint: IApiDocEndpoint,
-        latestEndpointsVersions: Record<string, string>,
-    ) {
-        return endpoint.version !== latestEndpointsVersions[endpoint.name]
-               ? `_v${endpoint.version}`
-               : "";
     }
 
     private createWarningResult(endpoint, message) {
