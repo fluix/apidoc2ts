@@ -171,7 +171,7 @@ describe("ApiDoc to Interface converter", () => {
         expect(interfaceGenerator.createInterface).toBeCalledTimes(apiDocDataFull.length * 3);
     });
 
-    it("should add version staticPostfix to interface name if it is not the latest one", async () => {
+    it("should add version postfix to interface name if it is not the latest one", async () => {
         await converter.convert([requestVersion1, requestVersion2, requestVersion3]);
         expect(interfaceGenerator.createInterface)
             .toBeCalledWith(expect.anything(), `${requestVersion1.name}_v${requestVersion1.version}`);
