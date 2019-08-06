@@ -28,6 +28,8 @@ export enum ConverterVersionResolving {
 
 export interface ConverterOptions {
     versionResolving: ConverterVersionResolving;
+    staticPrefix: string;
+    staticPostfix: string;
     requestPrefix: string;
     requestPostfix: string;
     responsePrefix: string;
@@ -36,8 +38,10 @@ export interface ConverterOptions {
     errorPostfix: string;
 }
 
-export const converterDefaultOptions = {
+export const converterDefaultOptions: ConverterOptions = {
     versionResolving: ConverterVersionResolving.ALL,
+    staticPrefix: "",
+    staticPostfix: "",
     requestPrefix: "",
     requestPostfix: "",
     responsePrefix: "",
@@ -49,6 +53,8 @@ export const converterDefaultOptions = {
 interface InterfaceNameOptions {
     endpoint: IApiDocEndpoint;
     versionPostfix: string;
+    staticPrefix: string;
+    staticPostfix: string;
     prefix: string;
     postfix: string;
 }
@@ -121,24 +127,26 @@ export class ApiDocToInterfaceConverter {
     }
 
     private createInterfacesNames(endpoint: IApiDocEndpoint, isLatest: boolean) {
-        const commonParams = {
+        const commonOptions = {
             endpoint,
+            staticPrefix: this.options.staticPrefix,
+            staticPostfix: this.options.staticPostfix,
             versionPostfix: isLatest ? "" : `_v${endpoint.version}`,
         };
 
         return {
             requestInterfaceName: this.createInterfaceName({
-                ...commonParams,
+                ...commonOptions,
                 prefix: this.options.requestPrefix,
                 postfix: this.options.requestPostfix,
             }),
             responseInterfaceName: this.createInterfaceName({
-                ...commonParams,
+                ...commonOptions,
                 prefix: this.options.responsePrefix,
                 postfix: this.options.responsePostfix,
             }),
             errorInterfaceName: this.createInterfaceName({
-                ...commonParams,
+                ...commonOptions,
                 prefix: this.options.errorPrefix,
                 postfix: this.options.errorPostfix,
             }),
@@ -146,8 +154,8 @@ export class ApiDocToInterfaceConverter {
     }
 
     private createInterfaceName(options: InterfaceNameOptions): string {
-        const {prefix, endpoint, postfix, versionPostfix} = options;
-        return `${prefix}${endpoint.name}${postfix}${versionPostfix}`;
+        const {staticPrefix, staticPostfix, prefix, endpoint, postfix, versionPostfix} = options;
+        return `${staticPrefix}${prefix}${endpoint.name}${postfix}${versionPostfix}${staticPostfix}`;
     }
 
     private createWarningResult(endpoint, message) {

@@ -57,6 +57,14 @@ url - save all interfaces to corresponding url paths`,
             description: "List of custom types",
             helpValue: "type1 type2 type3",
         }),
+        ["static-prefix"]: flags.string({
+            required: false,
+            description: "Prefix for all interfaces names",
+        }),
+        ["static-postfix"]: flags.string({
+            required: false,
+            description: "Postfix for all interfaces names",
+        }),
         ["request-prefix"]: flags.string({
             required: false,
             description: "Prefix for a request interface name",
@@ -120,6 +128,8 @@ url - save all interfaces to corresponding url paths`,
         return {
             versionResolving: (passedFlags.version) as ConverterVersionResolving,
             customTypes: passedFlags["custom-types"],
+            staticPrefix: passedFlags["static-prefix"],
+            staticPostfix: passedFlags["static-postfix"],
             requestPrefix: passedFlags["request-prefix"],
             requestPostfix: passedFlags["request-postfix"],
             responsePrefix: passedFlags["response-prefix"],

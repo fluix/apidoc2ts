@@ -81,6 +81,8 @@ describe("ApiDoc to Interface converter", () => {
         endpointParser,
         {
             versionResolving: ConverterVersionResolving.LAST,
+            staticPrefix: "",
+            staticPostfix: "",
             requestPrefix: "",
             requestPostfix: "",
             responsePrefix: "",
@@ -91,6 +93,8 @@ describe("ApiDoc to Interface converter", () => {
     );
 
     const prefixPostfixOptions = {
+        staticPrefix: "prefix",
+        staticPostfix: "postFix",
         requestPrefix: "requestPrefix",
         requestPostfix: "requestPostfix",
         responsePrefix: "responsePrefix",
@@ -139,14 +143,25 @@ describe("ApiDoc to Interface converter", () => {
 
     it("should call createInterface with passed in prefixes and postfixes", async () => {
         await converterWithCustomPrefixPostfix.convert([requestVersion1]);
+        const {
+            staticPrefix,
+            staticPostfix,
+            requestPrefix,
+            requestPostfix,
+            responsePrefix,
+            responsePostfix,
+            errorPrefix,
+            errorPostfix,
+        } = prefixPostfixOptions;
+
         expect(interfaceGenerator.createInterface).toBeCalledWith(expect.anything(),
-            `${prefixPostfixOptions.requestPrefix}${requestVersion1.name}${prefixPostfixOptions.requestPostfix}`,
+            `${staticPrefix}${requestPrefix}${requestVersion1.name}${requestPostfix}${staticPostfix}`,
         );
         expect(interfaceGenerator.createInterface).toBeCalledWith(expect.anything(),
-            `${prefixPostfixOptions.responsePrefix}${requestVersion1.name}${prefixPostfixOptions.responsePostfix}`,
+            `${staticPrefix}${responsePrefix}${requestVersion1.name}${responsePostfix}${staticPostfix}`,
         );
         expect(interfaceGenerator.createInterface).toBeCalledWith(expect.anything(),
-            `${prefixPostfixOptions.errorPrefix}${requestVersion1.name}${prefixPostfixOptions.errorPostfix}`,
+            `${staticPrefix}${errorPrefix}${requestVersion1.name}${errorPostfix}${staticPostfix}`,
         );
     });
 
