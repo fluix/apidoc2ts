@@ -4,24 +4,16 @@ import {InputParser} from "./InputParser";
 const emptyConfig = {};
 
 const configFlags = {
-    source: "source",
-    output: "output",
-    name: "name",
-    requestPostfix: "",
-    responsePrefix: "prefix",
+    source: "configSource",
+    output: "configOutput",
+    name: "configName",
 };
 
 const defaultConfigFlags = {
-    source: "source",
-    output: "output",
-    name: "name",
-    errorPrefix: "prefix",
-};
-
-const cliFlags = {
-    config: "/config.js",
-    "static-prefix": "prefix",
-    "request-postfix": "requestPostfix",
+    source: "defaultConfigSource",
+    output: "defaultConfigOutput",
+    name: "defaultConfigName",
+    staticPrefix: "defaultConfigStaticPrefix",
 };
 
 jest.mock(`${process.cwd()}/config.js`, () => (configFlags), {
@@ -53,21 +45,22 @@ describe("CLI InputParser", () => {
 
     it("should import config file from a default path if no path was specified", async () => {
         const result = await inputParser.parse(emptyConfig);
-        expect(result.builderOptions.errorPrefix).toEqual(defaultConfigFlags.errorPrefix);
+        expect(result.runParameters.name).toEqual(defaultConfigFlags.name);
     });
 
     it("should import config file from specified path", async () => {
-        const result = await inputParser.parse(cliFlags);
-        expect(result.builderOptions.responsePrefix).toEqual(configFlags.responsePrefix);
+        const result = await inputParser.parse({config: "/config.js"});
+        expect(result.runParameters.name).toEqual(configFlags.name);
     });
 
     it("should map kebab-case CLI flags to camelCase config parameters", async () => {
-        const result = await inputParser.parse(cliFlags);
-        expect(result.builderOptions.staticPrefix).toEqual(cliFlags["static-prefix"]);
+        const result = await inputParser.parse({"static-postfix": "postfix"});
+        expect(result.builderOptions.staticPostfix).toBe("postfix");
     });
 
     it("should rewrite config flags with CLI input flags", async () => {
-        const result = await inputParser.parse(cliFlags);
-        expect(result.builderOptions.requestPostfix).toEqual(cliFlags["request-postfix"]);
+        const result = await inputParser.parse({"static-prefix": "cliStaticPrefix"});
+        expect(result.builderOptions.staticPrefix).toEqual("cliStaticPrefix");
+        expect(result.builderOptions.staticPrefix).not.toEqual(defaultConfigFlags.staticPrefix);
     });
 });
