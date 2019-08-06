@@ -146,12 +146,12 @@ describe("ApiDoc to Interface converter", () => {
         const {
             staticPrefix,
             staticPostfix,
-            errorPostfix,
-            requestPostfix,
-            errorPrefix,
-            responsePostfix,
             requestPrefix,
+            requestPostfix,
             responsePrefix,
+            responsePostfix,
+            errorPrefix,
+            errorPostfix,
         } = prefixPostfixOptions;
 
         expect(interfaceGenerator.createInterface).toBeCalledWith(expect.anything(),
