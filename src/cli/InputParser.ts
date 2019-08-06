@@ -10,32 +10,32 @@ interface ConfigFlags extends BuilderOptions, ApiDoc2InterfaceParameters {}
 
 export class InputParser {
 
-    static requiredParametersKeys: Array<keyof CLIFlags> = ["source", "output", "name"];
+    static requiredFlagsKeys: Array<keyof CLIFlags> = ["source", "output", "name"];
     static configFileName = "apidoc2ts.config.js";
 
     async parse(flags: Partial<CLIFlags>): Promise<{
         builderOptions: Partial<BuilderOptions>,
         runParameters: ApiDoc2InterfaceParameters,
     }> {
-        const configParameters: ConfigFlags = this.getConfigParameters(flags.config);
-        const inputParameters: ConfigFlags = this.mapInputParameters(flags);
-        const combinedParameters = _.defaults(inputParameters, configParameters);
+        const configFlags: ConfigFlags = this.getConfigParameters(flags.config);
+        const mappedInputFlags: ConfigFlags = this.mapInputFlags(flags);
+        const combinedFlags = _.defaults(mappedInputFlags, configFlags);
 
-        this.validateInput(combinedParameters);
+        this.validateInput(combinedFlags);
 
         return {
-            builderOptions: combinedParameters,
-            runParameters: combinedParameters,
+            builderOptions: combinedFlags,
+            runParameters: combinedFlags,
         };
     }
 
     private getConfigParameters(configPath: string | undefined) {
         return configPath
-               ? this.readConfigParameters(configPath)
-               : this.readConfigParameters(InputParser.configFileName);
+               ? this.readConfigFlags(configPath)
+               : this.readConfigFlags(InputParser.configFileName);
     }
 
-    private readConfigParameters(config: string) {
+    private readConfigFlags(config: string) {
         const configPath = path.join(process.cwd(), config);
 
         if (!fs.existsSync(configPath)) {
@@ -46,7 +46,7 @@ export class InputParser {
     }
 
     private validateInput(combinedParameters) {
-        InputParser.requiredParametersKeys.forEach(key => {
+        InputParser.requiredFlagsKeys.forEach(key => {
             if (combinedParameters[key]) {
                 return;
             }
@@ -55,7 +55,7 @@ export class InputParser {
         });
     }
 
-    private mapInputParameters(flags: Partial<CLIFlags>): ConfigFlags {
+    private mapInputFlags(flags: Partial<CLIFlags>): ConfigFlags {
         return {
             customTypes: flags["custom-types"],
             staticPrefix: flags["static-prefix"],
