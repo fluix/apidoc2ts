@@ -3,26 +3,29 @@ import {BuilderOptions} from "../core/ApiDoc2InterfaceBuilder";
 import {ApiDoc2InterfaceParameters} from "../core/ApiDoc2Interface";
 import * as path from "path";
 import * as fs from "fs";
+import * as _ from "lodash";
 
 type CLIFlags = Record<keyof typeof Convert.flags, any>;
+interface ConfigFlags extends BuilderOptions, ApiDoc2InterfaceParameters {}
 
 export class InputParser {
 
-    static requiredParametersKeys = ["source", "output", "name"];
+    static requiredParametersKeys: Array<keyof CLIFlags> = ["source", "output", "name"];
     static configFileName = "apidoc2ts.config.js";
 
     async parse(flags: Partial<CLIFlags>): Promise<{
         builderOptions: Partial<BuilderOptions>,
         runParameters: ApiDoc2InterfaceParameters,
     }> {
-        const configParameters = this.getConfigParameters(flags.config);
-        const combinedParameters = Object.assign({}, configParameters, flags);
+        const configParameters: ConfigFlags = this.getConfigParameters(flags.config);
+        const inputParameters: ConfigFlags = this.mapInputParameters(flags);
+        const combinedParameters = _.defaults(inputParameters, configParameters);
 
         this.validateInput(combinedParameters);
 
         return {
-            builderOptions: combinedParameters as BuilderOptions,
-            runParameters: combinedParameters as ApiDoc2InterfaceParameters,
+            builderOptions: combinedParameters,
+            runParameters: combinedParameters,
         };
     }
 
@@ -50,5 +53,24 @@ export class InputParser {
 
             throw new Error(`Missing required flag '${key}'`);
         });
+    }
+
+    private mapInputParameters(flags: Partial<CLIFlags>): ConfigFlags {
+        return {
+            customTypes: flags["custom-types"],
+            staticPrefix: flags["static-prefix"],
+            staticPostfix: flags["static-postfix"],
+            requestPrefix: flags["request-prefix"],
+            requestPostfix: flags["request-postfix"],
+            responsePrefix: flags["response-prefix"],
+            responsePostfix: flags["response-postfix"],
+            errorPrefix: flags["error-prefix"],
+            errorPostfix: flags["error-postfix"],
+            versionResolving: flags.version,
+            source: flags.source,
+            name: flags.name,
+            output: flags.output,
+            grouping: flags.grouping,
+        };
     }
 }
