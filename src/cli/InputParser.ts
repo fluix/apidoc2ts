@@ -29,8 +29,9 @@ export class InputParser {
         };
     }
 
-    private getConfigParameters(configPath: string | undefined): ConfigFlags {
-        return this.readConfigFlags(configPath || InputParser.defaultConfigFileName);
+    private getConfigParameters(source?: string): ConfigFlags {
+        const configPath = source || InputParser.defaultConfigFileName;
+        return this.readConfigFlags(configPath);
     }
 
     private readConfigFlags(config: string) {
