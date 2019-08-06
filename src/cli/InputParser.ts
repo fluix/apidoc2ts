@@ -18,18 +18,12 @@ export class InputParser {
         const configParameters = this.getConfigParameters(flags.config);
         const combinedParameters = Object.assign({}, configParameters, flags);
 
-        return new Promise(((resolve, reject) => {
-            try {
-                this.validateInput(combinedParameters);
-            } catch (e) {
-                reject(e);
-            }
+        this.validateInput(combinedParameters);
 
-            resolve({
-                builderOptions: combinedParameters as BuilderOptions,
-                runParameters: combinedParameters as ApiDoc2InterfaceParameters,
-            });
-        }));
+        return {
+            builderOptions: combinedParameters as BuilderOptions,
+            runParameters: combinedParameters as ApiDoc2InterfaceParameters,
+        };
     }
 
     private getConfigParameters(configPath: string | undefined) {
