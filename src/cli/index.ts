@@ -81,7 +81,7 @@ url - save all interfaces to corresponding url paths`,
     async run() {
         const {args, flags: passedFlags} = this.parse(Convert);
 
-        this.parseInput(passedFlags)
+        return this.parseInput(passedFlags)
             .then(async ({builderOptions, runParameters}) => {
                 await this.convert(builderOptions, runParameters);
             })
