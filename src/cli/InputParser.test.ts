@@ -27,13 +27,18 @@ describe("CLI InputParser", () => {
     const parser = new InputParser();
     const existsSpy = jest.spyOn(fs, "existsSync");
 
-    beforeEach(() => {
+    beforeAll(() => {
+        existsSpy.mockReturnValue(true);
+    });
+
+    afterAll(() => {
+        // this is necessary for the correct jest tests execution when mocking fs.existsSync
+        // otherwise it will complain about obsolete snapshots
         existsSpy.mockReset();
-        existsSpy.mockImplementation(() => true);
     });
 
     it("should throw an error if some of required parameters are missing", async () => {
-        existsSpy.mockImplementationOnce(() => false);
+        existsSpy.mockReturnValueOnce(false);
         await expect(parser.parse({})).rejects.toThrow();
     });
 
