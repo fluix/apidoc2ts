@@ -1,11 +1,18 @@
-import {InputParser} from "./InputParser";
 import * as fs from "fs";
+import {InputParser} from "./InputParser";
 
 const configFlags = {
     source: "source",
     output: "output",
     name: "name",
     requestPostfix: "",
+    responsePrefix: "prefix",
+};
+
+const defaultConfigFlags = {
+    source: "source",
+    output: "output",
+    name: "name",
     errorPrefix: "prefix",
 };
 
@@ -19,7 +26,7 @@ jest.mock(`${process.cwd()}/config.js`, () => (configFlags), {
     virtual: true,
 });
 
-jest.mock(`${process.cwd()}/apidoc2ts.config.js`, () => (configFlags), {
+jest.mock(`${process.cwd()}/apidoc2ts.config.js`, () => (defaultConfigFlags), {
     virtual: true,
 });
 
@@ -44,12 +51,12 @@ describe("CLI InputParser", () => {
 
     it("should import config file from a default path if no path was specified", async () => {
         const result = await parser.parse({});
-        expect(result.builderOptions.errorPrefix).toEqual(configFlags.errorPrefix);
+        expect(result.builderOptions.errorPrefix).toEqual(defaultConfigFlags.errorPrefix);
     });
 
     it("should import config file from specified path", async () => {
         const result = await parser.parse(cliFlags);
-        expect(result.builderOptions.errorPrefix).toEqual(configFlags.errorPrefix);
+        expect(result.builderOptions.responsePrefix).toEqual(configFlags.responsePrefix);
     });
 
     it("should map CLI flags to config parameters", async () => {
