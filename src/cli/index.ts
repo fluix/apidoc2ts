@@ -8,6 +8,7 @@ import {
 import {ConverterVersionResolving} from "../core/converter/ApiDocToInterfaceConverter";
 import chalk from "chalk";
 import {ApiDoc2InterfaceBuilder, BuilderOptions} from "../core/ApiDoc2InterfaceBuilder";
+import {InputParser} from "./InputParser";
 
 class Convert extends Command {
     static description = "Tool for converting apiDoc documentation to Typescript interfaces";
@@ -16,43 +17,35 @@ class Convert extends Command {
         v: flags.version(),
         help: flags.help({char: "h"}),
 
+        config: flags.string({
+            char: "c",
+        }),
         source: flags.string({
             char: "s",
-            required: true,
-            default: "doc/api_data.json",
             description: "Path to the api_data.json",
         }),
         output: flags.string({
             char: "o",
-            required: true,
-            default: "./",
             description: "Path to the output directory",
         }),
         name: flags.string({
             char: "n",
-            required: true,
-            default: "interfaces.ts",
             description: "Name for generated file",
         }),
         grouping: flags.enum({
             char: "g",
-            required: true,
             options: [ApiDoc2InterfaceGroupingMode.SINGLE, ApiDoc2InterfaceGroupingMode.URL],
-            default: ApiDoc2InterfaceGroupingMode.SINGLE,
             description: `Change the way to save interfaces
 single - save all interfaces into one file
 url - save all interfaces to corresponding url paths`,
         }),
         version: flags.enum({
             char: "v",
-            required: true,
             options: [ConverterVersionResolving.ALL, ConverterVersionResolving.LAST],
-            default: ConverterVersionResolving.ALL,
             description: "Which versions should be processed",
         }),
         ["custom-types"]: flags.string({
             char: "t",
-            required: false,
             multiple: true,
             description: "List of custom types",
             helpValue: "type1 type2 type3",
@@ -66,27 +59,21 @@ url - save all interfaces to corresponding url paths`,
             description: "Postfix for all interfaces names",
         }),
         ["request-prefix"]: flags.string({
-            required: false,
             description: "Prefix for a request interface name",
         }),
         ["request-postfix"]: flags.string({
-            required: false,
             description: "Postfix for a request interface name",
         }),
         ["response-prefix"]: flags.string({
-            required: false,
             description: "Prefix for a response interface name",
         }),
         ["response-postfix"]: flags.string({
-            required: false,
             description: "Postfix for a response interface name",
         }),
         ["error-prefix"]: flags.string({
-            required: false,
             description: "Prefix for a error interface name",
         }),
         ["error-postfix"]: flags.string({
-            required: false,
             description: "Postfix for a error interface name",
         }),
     };
@@ -94,8 +81,19 @@ url - save all interfaces to corresponding url paths`,
     async run() {
         const {args, flags: passedFlags} = this.parse(Convert);
 
-        const apiDoc2interface = this.getApiDoc2Interface(passedFlags);
-        const result = await apiDoc2interface.run(passedFlags);
+        this.parseInput(passedFlags)
+            .then(async ({builderOptions, runParameters}) => {
+                await this.convert(builderOptions, runParameters);
+            })
+            .catch(err => {
+                this.log(chalk.redBright(err.message));
+                this.exit(1);
+            });
+    }
+
+    private async convert(builderOptions, runParameters) {
+        const apiDoc2interface = this.getApiDoc2Interface(builderOptions);
+        const result = await apiDoc2interface.run(runParameters);
 
         if (result.code === ApiDoc2InterfaceExitCode.FAIL) {
             this.onError(result);
@@ -104,39 +102,28 @@ url - save all interfaces to corresponding url paths`,
         this.onSuccess(result);
     }
 
+    private parseInput(passedFlags) {
+        const configParser = new InputParser();
+        return configParser.parse(passedFlags);
+    }
+
     private onSuccess(result: ApiDoc2InterfaceResult) {
         this.log(chalk.greenBright(result.message));
 
         result.warnings.forEach(warning => {
-            this.log(`${chalk.yellowBright("Warning:")} ${chalk.yellow(warning)}`);
+            this.log(`${chalk.bold.yellow("Warning:")} ${chalk.yellow(warning)}`);
         });
     }
 
     private onError(result: ApiDoc2InterfaceResult) {
-        this.error(chalk.redBright("Error while generating interfaces"));
-        this.error(chalk.red(result.message));
+        this.log(chalk.redBright("Error while generating interfaces"));
+        this.log(chalk.red(result.message));
         this.exit(1);
     }
 
-    private getApiDoc2Interface(passedFlags): ApiDoc2Interface {
-        const builderOptions = this.createBuilderOptions(passedFlags);
+    private getApiDoc2Interface(builderOptions): ApiDoc2Interface {
         const apiDoc2InterfaceBuilder = new ApiDoc2InterfaceBuilder();
         return apiDoc2InterfaceBuilder.build(builderOptions);
-    }
-
-    private createBuilderOptions(passedFlags: Record<keyof typeof Convert.flags, any>): Partial<BuilderOptions> {
-        return {
-            versionResolving: (passedFlags.version) as ConverterVersionResolving,
-            customTypes: passedFlags["custom-types"],
-            staticPrefix: passedFlags["static-prefix"],
-            staticPostfix: passedFlags["static-postfix"],
-            requestPrefix: passedFlags["request-prefix"],
-            requestPostfix: passedFlags["request-postfix"],
-            responsePrefix: passedFlags["response-prefix"],
-            responsePostfix: passedFlags["response-postfix"],
-            errorPrefix: passedFlags["error-prefix"],
-            errorPostfix: passedFlags["error-postfix"],
-        };
     }
 }
 
