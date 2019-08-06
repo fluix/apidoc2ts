@@ -10,9 +10,9 @@ const configParameters = {
 };
 
 const flags = {
-    output: "output",
     config: "/config.js",
-    requestPostfix: "requestPostfix",
+    "static-prefix": "prefix",
+    "request-postfix": "requestPostfix",
 };
 
 jest.mock(`${process.cwd()}/config.js`, () => (configParameters), {
@@ -47,14 +47,13 @@ describe("CLI InputParser", () => {
         expect(result.builderOptions.errorPrefix).toEqual(configParameters.errorPrefix);
     });
 
-    it("should rewrite config parameters with flags", async () => {
+    it("should map CLI flags to config parameters", async () => {
         const result = await parser.parse(flags);
-        expect(result.builderOptions.requestPostfix).toEqual(flags.requestPostfix);
+        expect(result.builderOptions.staticPrefix).toEqual(flags["static-prefix"]);
     });
 
-    it("should return parameters which can be used to run the tool", async () => {
+    it("should rewrite config parameters with flags", async () => {
         const result = await parser.parse(flags);
-        expect(result.runParameters.source).toEqual(configParameters.source);
-        expect(result.runParameters.output).toEqual(flags.output);
+        expect(result.builderOptions.requestPostfix).toEqual(flags["request-postfix"]);
     });
 });
