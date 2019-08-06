@@ -17,7 +17,7 @@ export class InputParser {
         builderOptions: Partial<BuilderOptions>,
         runParameters: ApiDoc2InterfaceParameters,
     }> {
-        const configFlags = this.getConfigParameters(flags.config);
+        const configFlags = this.getConfigFlags(flags.config);
         const mappedInputFlags = this.mapInputFlags(flags);
         const combinedFlags = _.defaults(mappedInputFlags, configFlags);
 
@@ -29,7 +29,7 @@ export class InputParser {
         };
     }
 
-    private getConfigParameters(source?: string): ConfigFlags {
+    private getConfigFlags(source?: string): ConfigFlags {
         const configPath = source || InputParser.defaultConfigFileName;
         return this.readConfigFlags(configPath);
     }
@@ -38,7 +38,7 @@ export class InputParser {
         const configPath = path.join(process.cwd(), config);
 
         if (!fs.existsSync(configPath)) {
-            return {};
+            throw new Error(`Could not find config file: ${configPath}`);
         }
 
         return require(configPath);

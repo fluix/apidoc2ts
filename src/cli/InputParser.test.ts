@@ -16,7 +16,13 @@ const defaultConfigFlags = {
     staticPrefix: "defaultConfigStaticPrefix",
 };
 
+const invalidConfigFlags = {};
+
 jest.mock(`${process.cwd()}/config.js`, () => (configFlags), {
+    virtual: true,
+});
+
+jest.mock(`${process.cwd()}/invalid-config.js`, () => (invalidConfigFlags), {
     virtual: true,
 });
 
@@ -38,9 +44,12 @@ describe("CLI InputParser", () => {
         existsSpy.mockReset();
     });
 
-    it("should throw an error if some of required flags are missing", async () => {
-        existsSpy.mockReturnValueOnce(false);
-        await expect(inputParser.parse(emptyConfig)).rejects.toThrow();
+    it("should throw an error if specified config file does not exist", async () => {
+        await expect(inputParser.parse({config: "/non-existing-config"})).rejects.toThrow();
+    });
+
+    it("should throw an error if any of required flags are missing", async () => {
+        await expect(inputParser.parse({config: "invalid-config.js"})).rejects.toThrow();
     });
 
     it("should import config file from a default path if no path was specified", async () => {
