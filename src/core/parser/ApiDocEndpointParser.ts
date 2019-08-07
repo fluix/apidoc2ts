@@ -11,7 +11,7 @@ export interface ParserResult {
 
 export class ApiDocEndpointParser {
     parseEndpoint(endpoint: IApiDocEndpoint): ParserResult {
-        if (!endpoint.parameter && !endpoint.success && !endpoint.error) {
+        if (this.isEmptyEndpoint(endpoint)) {
             throw new Error("Empty endpoint");
         }
 
@@ -22,8 +22,14 @@ export class ApiDocEndpointParser {
         };
     }
 
-    private parseFields(endpointPart: ApiDocEndpointPart | undefined): JsonSchema {
-        if (!endpointPart) {
+    private isEmptyEndpoint(endpoint: IApiDocEndpoint) {
+        return (!endpoint.parameter || !endpoint.parameter.fields)
+               && (!endpoint.success || !endpoint.success.fields)
+               && (!endpoint.error || !endpoint.error.fields);
+    }
+
+    private parseFields(endpointPart: IApiDocEndpointPart | undefined): JsonSchema {
+        if (!endpointPart || !endpointPart.fields) {
             return {};
         }
 

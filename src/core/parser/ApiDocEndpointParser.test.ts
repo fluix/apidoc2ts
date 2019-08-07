@@ -1,6 +1,6 @@
+import {JsonSchema} from "../JsonSchema";
 import {ApiDocEndpointParser} from "./ApiDocEndpointParser";
 import {ApiDocField} from "./ApiDocField";
-import {JsonSchema} from "../JsonSchema";
 
 const requiredField = {
     type: "string",
@@ -67,6 +67,23 @@ describe("apiDoc Endpoint", () => {
     it("should throw exception if endpoint has no parameters at all", () => {
         expect(() => {
             return new ApiDocEndpointParser().parseEndpoint(defaultEndpointMetadata);
+        }).toThrow();
+    });
+
+    it("should throw an exception if endpoint has examples only", () => {
+        expect(() => {
+            return new ApiDocEndpointParser().parseEndpoint({
+                ...defaultEndpointMetadata,
+                parameter: {
+                    examples: [],
+                },
+                success: {
+                    examples: [],
+                },
+                error: {
+                    examples: [],
+                },
+            });
         }).toThrow();
     });
 
