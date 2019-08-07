@@ -1,7 +1,13 @@
 import * as fs from "fs";
 import {InputParser} from "./InputParser";
 
-const emptyConfig = {};
+const emptyFlags = {};
+
+const cliFlags = {
+    source: "cliSource",
+    output: "cliOutput",
+    name: "cliName",
+};
 
 const configFlags = {
     source: "configSource",
@@ -34,7 +40,7 @@ describe("CLI InputParser", () => {
     const inputParser = new InputParser();
     const existsSpy = jest.spyOn(fs, "existsSync");
 
-    beforeAll(() => {
+    beforeEach(() => {
         existsSpy.mockReturnValue(true);
     });
 
@@ -48,12 +54,21 @@ describe("CLI InputParser", () => {
         await expect(inputParser.parse({config: "/non-existing-config"})).rejects.toThrow();
     });
 
+    it("should not throw an error if default config file does not exists", async () => {
+        existsSpy.mockReturnValue(false);
+        await expect(inputParser.parse({
+            source: "source",
+            output: "output",
+            name: "name",
+        })).resolves.not.toThrow();
+    });
+
     it("should throw an error if any of required flags are missing", async () => {
-        await expect(inputParser.parse({config: "invalid-config.js"})).rejects.toThrow();
+        await expect(inputParser.parse({config: "/invalid-config.js"})).rejects.toThrow();
     });
 
     it("should import config file from a default path if no path was specified", async () => {
-        const result = await inputParser.parse(emptyConfig);
+        const result = await inputParser.parse(emptyFlags);
         expect(result.runParameters.name).toEqual(defaultConfigFlags.name);
     });
 
@@ -63,13 +78,27 @@ describe("CLI InputParser", () => {
     });
 
     it("should map kebab-case CLI flags to camelCase config parameters", async () => {
-        const result = await inputParser.parse({"static-postfix": "postfix"});
+        existsSpy.mockReturnValue(false);
+        const result = await inputParser.parse({
+            ...cliFlags,
+            "static-postfix": "postfix",
+        });
         expect(result.builderOptions.staticPostfix).toBe("postfix");
     });
 
-    it("should rewrite config flags with CLI input flags", async () => {
-        const result = await inputParser.parse({"static-prefix": "cliStaticPrefix"});
-        expect(result.builderOptions.staticPrefix).toEqual("cliStaticPrefix");
-        expect(result.builderOptions.staticPrefix).not.toEqual(defaultConfigFlags.staticPrefix);
+    it("should ignore CLI flags if config is present", async () => {
+        const result = await inputParser.parse({
+            config: "/config.js",
+            "static-postfix": "cliStaticPostfix",
+        });
+        expect(result.builderOptions.staticPostfix).toBeUndefined();
+    });
+
+    it("should override default config flags with CLI flags", async () => {
+        const result = await inputParser.parse({
+            "static-prefix": "cliStaticPrefix",
+        });
+        expect(result.builderOptions.staticPrefix).toBe("cliStaticPrefix");
+        expect(result.builderOptions.staticPrefix).not.toBe(defaultConfigFlags.staticPrefix);
     });
 });

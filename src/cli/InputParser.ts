@@ -6,6 +6,7 @@ import {ApiDoc2InterfaceParameters} from "../core/ApiDoc2Interface";
 import {BuilderOptions} from "../core/ApiDoc2InterfaceBuilder";
 
 type CLIFlags = Record<keyof typeof Convert.flags, any>;
+
 interface ConfigFlags extends BuilderOptions, ApiDoc2InterfaceParameters {}
 
 export class InputParser {
@@ -13,40 +14,46 @@ export class InputParser {
     static requiredFlagsKeys: Array<keyof CLIFlags> = ["source", "output", "name"];
     static defaultConfigFileName = "apidoc2ts.config.js";
 
-    async parse(flags: Partial<CLIFlags>): Promise<{
+    async parse(cliFlags: Partial<CLIFlags>): Promise<{
         builderOptions: Partial<BuilderOptions>,
         runParameters: ApiDoc2InterfaceParameters,
     }> {
-        const configFlags = this.getConfigFlags(flags.config);
-        const mappedInputFlags = this.mapInputFlags(flags);
-        const combinedFlags = _.defaults(mappedInputFlags, configFlags);
-
-        this.validateInput(combinedFlags);
+        const flags = cliFlags.config
+                      ? await this.readConfigFlags(cliFlags.config)
+                      : await this.combineDefaultConfigAndCliFlags(cliFlags);
+        this.validateInput(flags);
 
         return {
-            builderOptions: combinedFlags,
-            runParameters: combinedFlags,
+            builderOptions: flags,
+            runParameters: flags,
         };
     }
 
-    private getConfigFlags(source?: string): ConfigFlags {
-        const configPath = source || InputParser.defaultConfigFileName;
-        return this.readConfigFlags(configPath);
+    private async combineDefaultConfigAndCliFlags(flags: Partial<CLIFlags>): Promise<ConfigFlags> {
+        const mappedCliFlags = this.mapInputFlags(flags);
+
+        return this.readConfigFlags(InputParser.defaultConfigFileName)
+                   .then(defaultConfigFlags => {
+                       return _.defaults(mappedCliFlags, defaultConfigFlags);
+                   })
+                   .catch(err => {
+                       return mappedCliFlags;
+                   });
     }
 
-    private readConfigFlags(config: string) {
+    private readConfigFlags(config: string): Promise<ConfigFlags> {
         const configPath = path.join(process.cwd(), config);
 
         if (!fs.existsSync(configPath)) {
-            throw new Error(`Could not find config file: ${configPath}`);
+            return Promise.reject(new Error(`Could not find config file: ${configPath}`));
         }
 
-        return require(configPath);
+        return Promise.resolve(require(configPath));
     }
 
-    private validateInput(combinedParameters) {
+    private validateInput(flags) {
         InputParser.requiredFlagsKeys.forEach(key => {
-            if (combinedParameters[key]) {
+            if (flags[key]) {
                 return;
             }
 

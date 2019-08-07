@@ -1,13 +1,13 @@
 import {Command, flags} from "@oclif/command";
+import chalk from "chalk";
 import {
     ApiDoc2Interface,
     ApiDoc2InterfaceExitCode,
     ApiDoc2InterfaceGroupingMode,
     ApiDoc2InterfaceResult,
 } from "../core/ApiDoc2Interface";
+import {ApiDoc2InterfaceBuilder} from "../core/ApiDoc2InterfaceBuilder";
 import {ConverterVersionResolving} from "../core/converter/ApiDocToInterfaceConverter";
-import chalk from "chalk";
-import {ApiDoc2InterfaceBuilder, BuilderOptions} from "../core/ApiDoc2InterfaceBuilder";
 import {InputParser} from "./InputParser";
 
 class Convert extends Command {
@@ -23,14 +23,17 @@ class Convert extends Command {
         source: flags.string({
             char: "s",
             description: "Path to the api_data.json",
+            exclusive: ["config"],
         }),
         output: flags.string({
             char: "o",
             description: "Path to the output directory",
+            exclusive: ["config"],
         }),
         name: flags.string({
             char: "n",
             description: "Name for generated file",
+            exclusive: ["config"],
         }),
         grouping: flags.enum({
             char: "g",
@@ -38,43 +41,54 @@ class Convert extends Command {
             description: `Change the way to save interfaces
 single - save all interfaces into one file
 url - save all interfaces to corresponding url paths`,
+            exclusive: ["config"],
         }),
         version: flags.enum({
             char: "v",
             options: [ConverterVersionResolving.ALL, ConverterVersionResolving.LAST],
             description: "Which versions should be processed",
+            exclusive: ["config"],
         }),
         ["custom-types"]: flags.string({
             char: "t",
             multiple: true,
             description: "List of custom types",
             helpValue: "type1 type2 type3",
+            exclusive: ["config"],
         }),
         ["static-prefix"]: flags.string({
             required: false,
             description: "Prefix for all interfaces names",
+            exclusive: ["config"],
         }),
         ["static-postfix"]: flags.string({
             required: false,
             description: "Postfix for all interfaces names",
+            exclusive: ["config"],
         }),
         ["request-prefix"]: flags.string({
             description: "Prefix for a request interface name",
+            exclusive: ["config"],
         }),
         ["request-postfix"]: flags.string({
             description: "Postfix for a request interface name",
+            exclusive: ["config"],
         }),
         ["response-prefix"]: flags.string({
             description: "Prefix for a response interface name",
+            exclusive: ["config"],
         }),
         ["response-postfix"]: flags.string({
             description: "Postfix for a response interface name",
+            exclusive: ["config"],
         }),
         ["error-prefix"]: flags.string({
             description: "Prefix for a error interface name",
+            exclusive: ["config"],
         }),
         ["error-postfix"]: flags.string({
             description: "Postfix for a error interface name",
+            exclusive: ["config"],
         }),
     };
 
