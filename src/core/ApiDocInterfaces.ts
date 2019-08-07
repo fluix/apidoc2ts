@@ -1,5 +1,3 @@
-export type ApiDocEndpointPart = IApiDocParameter | IApiDocSuccess | IApiDocError | IApiDocHeader;
-
 export interface IApiDocEndpoint {
     group: string;
     name: string;
@@ -11,30 +9,16 @@ export interface IApiDocEndpoint {
     description?: string;
     groupDescription?: Array<string>;
     permission?: IApiDocPermission | string;
-    parameter?: IApiDocParameter;
-    success?: IApiDocSuccess;
-    error?: IApiDocError;
-    header?: IApiDocHeader;
+    parameter?: IApiDocEndpointPart;
+    success?: IApiDocEndpointPart;
+    error?: IApiDocEndpointPart;
+    header?: IApiDocEndpointPart;
     examples?: Array<IApiDocExample>;
     sampleRequest?: Array<IApiDocSampleRequest>;
 }
 
-export interface IApiDocParameter {
-    fields: Record<string, Array<IApiDocField>>;
-}
-
-export interface IApiDocSuccess {
-    fields: Record<string, Array<IApiDocField>>;
-    examples?: Array<IApiDocExample>;
-}
-
-export interface IApiDocError {
-    fields: Record<string, Array<IApiDocField>>;
-    examples?: Array<IApiDocExample>;
-}
-
-export interface IApiDocHeader {
-    fields: Record<string, Array<IApiDocField>>;
+export interface IApiDocEndpointPart {
+    fields?: Record<string, Array<IApiDocField>>;
     examples?: Array<IApiDocExample>;
 }
 
