@@ -1,6 +1,6 @@
+import {JsonSchema} from "../JsonSchema";
 import {ApiDocEndpointParser} from "./ApiDocEndpointParser";
 import {ApiDocField} from "./ApiDocField";
-import {JsonSchema} from "../JsonSchema";
 
 const requiredField = {
     type: "string",
@@ -23,6 +23,19 @@ const arrayField = {
     group: "groupName",
     type: "string[]",
     optional: false,
+    field: "fieldName",
+};
+
+const arrayFieldWithAllowedValues = {
+    group: "groupName",
+    type: "string[]",
+    field: "fieldName",
+    allowedValues: ["value1", "value2"],
+};
+
+const literallyArrayField = {
+    group: "groupName",
+    type: "array",
     field: "fieldName",
 };
 
@@ -184,6 +197,18 @@ describe("apiDoc Endpoint", () => {
     it("should create array properties for array fields", () => {
         const apiDocField = new ApiDocField(arrayField);
         expect(ApiDocEndpointParser.toJsonSchemaProperty(apiDocField).type).toBe("array");
+    });
+
+    it("should create enum property in 'items' if allowed values are specified", () => {
+        const apiDocField = new ApiDocField(arrayFieldWithAllowedValues);
+        const jsonSchemaProperty = (ApiDocEndpointParser.toJsonSchemaProperty(apiDocField).items) as JsonSchema;
+        expect(jsonSchemaProperty.enum).toEqual(["value1", "value2"]);
+    });
+
+    it("should replace field type 'array' with 'string' in 'items'", () => {
+        const apiDocField = new ApiDocField(literallyArrayField);
+        const jsonSchemaProperty = (ApiDocEndpointParser.toJsonSchemaProperty(apiDocField).items) as JsonSchema;
+        expect(jsonSchemaProperty.type).toBe("string");
     });
 
     it("should create array property with the same items type as field", () => {
