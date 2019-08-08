@@ -71,6 +71,15 @@ describe("apiDoc Field", () => {
         expect(arrayField.isArray).toBeTruthy();
     });
 
+    it("should show that field is array if it's type is literally 'array'", () => {
+        const arrayField = new ApiDocField({
+            type: "array",
+            field: "fieldName",
+        });
+
+        expect(arrayField.isArray).toBeTruthy();
+    });
+
     it("should return field type without array notation", () => {
         const arrayField = new ApiDocField({
             type: "string[]",

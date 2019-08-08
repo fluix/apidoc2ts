@@ -1,5 +1,5 @@
-import {IApiDocField} from "../ApiDocInterfaces";
 import * as _ from "lodash";
+import {IApiDocField} from "../ApiDocInterfaces";
 
 export class ApiDocField {
     private readonly optional: boolean;
@@ -7,7 +7,6 @@ export class ApiDocField {
     private readonly allowedValues: Array<string>;
     private readonly _fieldName: string;
     private readonly _qualifiedName: Array<string>;
-    public readonly isArray: boolean;
 
     get required() {
         return !this.optional;
@@ -18,7 +17,7 @@ export class ApiDocField {
     }
 
     get type() {
-        return this._type;
+        return this._type.replace("[]", "");
     }
 
     get fieldName() {
@@ -33,9 +32,12 @@ export class ApiDocField {
         return this._qualifiedName.length !== 1;
     }
 
+    get isArray(): boolean {
+        return this._type.endsWith("[]") || this._type.toLowerCase() === "array";
+    }
+
     constructor(field: IApiDocField) {
-        this._type = field.type ? field.type.replace("[]", "") : "string";
-        this.isArray = field.type ? field.type.endsWith("[]") : false;
+        this._type = field.type ? field.type : "string";
         this._fieldName = field.field;
         this._qualifiedName = this._fieldName.split(".");
         this.optional = Boolean(field.optional);
