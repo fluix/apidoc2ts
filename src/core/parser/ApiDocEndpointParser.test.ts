@@ -83,6 +83,23 @@ describe("apiDoc Endpoint", () => {
         }).toThrow();
     });
 
+    it("should throw an exception if endpoint has examples only", () => {
+        expect(() => {
+            return new ApiDocEndpointParser().parseEndpoint({
+                ...defaultEndpointMetadata,
+                parameter: {
+                    examples: [],
+                },
+                success: {
+                    examples: [],
+                },
+                error: {
+                    examples: [],
+                },
+            });
+        }).toThrow();
+    });
+
     it("should return separate schemas for request/response/error", () => {
         const endpointData = {
             parameter: {
