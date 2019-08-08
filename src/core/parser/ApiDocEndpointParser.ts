@@ -104,7 +104,7 @@ export class ApiDocEndpointParser {
                 type: "array",
                 required: field.required,
                 items: {
-                    type: field.type.toLowerCase() === "array" ? "string" : field.type,
+                    type: field.type.toLowerCase() === "array" ? undefined : field.type,
                     enum: field.enum.length ? field.enum : undefined,
                 },
             };

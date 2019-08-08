@@ -204,10 +204,10 @@ describe("apiDoc Endpoint", () => {
         expect(jsonSchemaProperty.enum).toEqual(arrayFieldWithAllowedValues.allowedValues);
     });
 
-    it("should consider array items as strings if type is not specified", () => {
+    it("should not specify array items type if array is untyped", () => {
         const apiDocField = new ApiDocField(literallyArrayField);
         const jsonSchemaProperty = (ApiDocEndpointParser.toJsonSchemaProperty(apiDocField).items) as JsonSchema;
-        expect(jsonSchemaProperty.type).toBe("string");
+        expect(jsonSchemaProperty.type).toBeUndefined();
     });
 
     it("should create array property with the same items type as field", () => {
