@@ -1,5 +1,5 @@
 import * as _ from "lodash";
-import {IApiDocEndpoint, IApiDocEndpointPart, IApiDocField} from "../ApiDocInterfaces";
+import {IApiDocEndpoint, IApiDocEndpointPart, IApiDocEndpointPartWithFields, IApiDocField} from "../ApiDocInterfaces";
 import {JsonSchema, JsonSubSchemas} from "../JsonSchema";
 import {ApiDocField} from "./ApiDocField";
 
@@ -23,13 +23,17 @@ export class ApiDocEndpointParser {
     }
 
     private isEmptyEndpoint(endpoint: IApiDocEndpoint) {
-        return (!endpoint.parameter || !endpoint.parameter.fields)
-               && (!endpoint.success || !endpoint.success.fields)
-               && (!endpoint.error || !endpoint.error.fields);
+        return !this.isValidEndpointPart(endpoint.parameter)
+               && !this.isValidEndpointPart(endpoint.success)
+               && !this.isValidEndpointPart(endpoint.error);
+    }
+
+    private isValidEndpointPart(endpointPart?: IApiDocEndpointPart): endpointPart is IApiDocEndpointPartWithFields {
+        return Boolean(endpointPart && endpointPart.fields);
     }
 
     private parseFields(endpointPart: IApiDocEndpointPart | undefined): JsonSchema {
-        if (!endpointPart || !endpointPart.fields) {
+        if (!this.isValidEndpointPart(endpointPart)) {
             return {};
         }
 

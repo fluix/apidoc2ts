@@ -22,6 +22,10 @@ export interface IApiDocEndpointPart {
     examples?: Array<IApiDocExample>;
 }
 
+export interface IApiDocEndpointPartWithFields extends IApiDocEndpointPart {
+    fields: Record<string, Array<IApiDocField>>;
+}
+
 export interface IApiDocField {
     group?: string;
     type?: string;
