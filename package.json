@@ -9,7 +9,6 @@
   "scripts": {
     "start": "npm run lint && npm test && npm run build && npm run main",
     "monitor": "jest --watchAll --verbose",
-    "main": "node dist/index.js",
     "build": "tsc",
     "test": "jest --verbose --passWithNoTests",
     "lint": "tslint --force -t stylish -c tslint.json 'src/**/*.ts'",
@@ -42,6 +41,8 @@
     "@oclif/command": "^1.5.18",
     "@oclif/config": "^1.13.2",
     "@oclif/plugin-help": "^2.2.0",
+    "quicktype-core": "^6.0.44",
+    "lodash": "^4.17.14",
     "chalk": "^2.4.2",
     "tslib": "^1.10.0"
   },
@@ -52,9 +53,6 @@
     "ts-node": "^8.3.0",
     "husky": "^3.0.0",
     "jest": "^24.8.0",
-    "lodash": "^4.17.14",
-    "nodemon": "^1.19.1",
-    "quicktype-core": "^6.0.44",
     "ts-jest": "^24.0.2",
     "tslint": "^5.18.0",
     "tslint-config-airbnb": "5.11.1",
