@@ -2,6 +2,7 @@
   "name": "apidoc2ts-site",
   "version": "0.1.0",
   "private": true,
+  "homepage": "https://fluix.github.io/web-apidoc2ts",
   "dependencies": {
     "@types/jest": "24.0.17",
     "@types/node": "12.7.1",
@@ -17,7 +18,7 @@
     "build": "react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject",
-    "postbuild": "react-snap && mv build ../docs"
+    "postbuild": "react-snap && rm -rf ../docs && mv build ../docs"
   },
   "eslintConfig": {
     "extends": "react-app"

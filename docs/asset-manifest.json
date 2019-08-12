@@ -1,15 +1,15 @@
 {
   "files": {
-    "main.css": "/static/css/main.ae80000b.chunk.css",
-    "main.js": "/static/js/main.1cf19723.chunk.js",
-    "main.js.map": "/static/js/main.1cf19723.chunk.js.map",
-    "runtime~main.js": "/static/js/runtime~main.63753328.js",
-    "runtime~main.js.map": "/static/js/runtime~main.63753328.js.map",
-    "static/js/2.f24fecea.chunk.js": "/static/js/2.f24fecea.chunk.js",
-    "static/js/2.f24fecea.chunk.js.map": "/static/js/2.f24fecea.chunk.js.map",
-    "index.html": "/index.html",
-    "precache-manifest.41c626611ee3e408b6065e180bef9cfe.js": "/precache-manifest.41c626611ee3e408b6065e180bef9cfe.js",
-    "service-worker.js": "/service-worker.js",
-    "static/css/main.ae80000b.chunk.css.map": "/static/css/main.ae80000b.chunk.css.map"
+    "main.css": "/web-apidoc2ts/static/css/main.ae80000b.chunk.css",
+    "main.js": "/web-apidoc2ts/static/js/main.1cf19723.chunk.js",
+    "main.js.map": "/web-apidoc2ts/static/js/main.1cf19723.chunk.js.map",
+    "runtime~main.js": "/web-apidoc2ts/static/js/runtime~main.f15b53b3.js",
+    "runtime~main.js.map": "/web-apidoc2ts/static/js/runtime~main.f15b53b3.js.map",
+    "static/js/2.f24fecea.chunk.js": "/web-apidoc2ts/static/js/2.f24fecea.chunk.js",
+    "static/js/2.f24fecea.chunk.js.map": "/web-apidoc2ts/static/js/2.f24fecea.chunk.js.map",
+    "index.html": "/web-apidoc2ts/index.html",
+    "precache-manifest.f8c40b6457c4d6c62c0a269b738814f0.js": "/web-apidoc2ts/precache-manifest.f8c40b6457c4d6c62c0a269b738814f0.js",
+    "service-worker.js": "/web-apidoc2ts/service-worker.js",
+    "static/css/main.ae80000b.chunk.css.map": "/web-apidoc2ts/static/css/main.ae80000b.chunk.css.map"
   }
 }
