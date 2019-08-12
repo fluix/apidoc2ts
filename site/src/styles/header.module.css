@@ -1,0 +1,13 @@
+.Header {
+    height: 70px;
+    background: lightgray;
+    display: flex;
+    align-items: center;
+    padding-left: 5%;
+}
+
+.Header__text {
+    font-family: sans-serif;
+    font-size: 28px;
+    font-weight: bold;
+}
