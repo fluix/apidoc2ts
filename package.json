@@ -2,12 +2,15 @@
   "name": "apidoc2ts",
   "version": "0.1.0",
   "description": "Typescript interface generator based on ApiDoc",
+  "bin": {
+    "apidoc2ts": "./bin/run"
+  },
+  "main": "src/cli/index.ts",
   "scripts": {
     "start": "npm run lint && npm test && npm run build && npm run main",
-    "monitor": "nodemon",
-    "main": "node dist/index.js",
+    "monitor": "jest --watchAll --verbose",
     "build": "tsc",
-    "test": "jest --passWithNoTests",
+    "test": "jest --verbose --passWithNoTests",
     "lint": "tslint --force -t stylish -c tslint.json 'src/**/*.ts'",
     "lint-strict": "tslint -t stylish -c tslint.json 'src/**/*.ts'"
   },
@@ -17,7 +20,7 @@
   },
   "husky": {
     "hooks": {
-      "pre-commit": "npm run lint-strict && npm test"
+      "pre-commit": "node .git-scripts/check-branch-name.js && npm run lint-strict && npm test"
     }
   },
   "repository": {
@@ -30,14 +33,32 @@
     "url": "https://github.com/fluix/web-apidoc2ts/issues"
   },
   "homepage": "https://github.com/fluix/web-apidoc2ts#readme",
+  "files": [
+    "/bin",
+    "/dist"
+  ],
+  "dependencies": {
+    "@oclif/command": "^1.5.18",
+    "@oclif/config": "^1.13.2",
+    "@oclif/plugin-help": "^2.2.0",
+    "quicktype-core": "^6.0.44",
+    "lodash": "^4.17.14",
+    "chalk": "^2.4.2",
+    "tslib": "^1.10.0"
+  },
   "devDependencies": {
+    "@oclif/tslint": "^3.1.1",
+    "@types/node": "^10.14.13",
     "@types/jest": "^24.0.15",
+    "ts-node": "^8.3.0",
     "husky": "^3.0.0",
     "jest": "^24.8.0",
-    "nodemon": "^1.19.1",
     "ts-jest": "^24.0.2",
     "tslint": "^5.18.0",
     "tslint-config-airbnb": "5.11.1",
     "typescript": "^3.5.3"
-  }
+  },
+  "keywords": [
+    "apidoc2ts"
+  ]
 }
