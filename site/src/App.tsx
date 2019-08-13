@@ -1,6 +1,7 @@
 import React from "react";
 import Feature from "./components/feature/feature";
 import Header from "./components/header/header";
+import LinkButton from "./components/link-button/link-button";
 import QuickStart from "./components/quick-links/quick-start";
 import Terminal from "./components/terminal/terminal";
 import Title from "./components/title/title";
@@ -47,6 +48,7 @@ const App: React.FC = () => {
                 imageOnLeft={true}
             />
             <Terminal lines={["code line 1", "code line 2", "code line 3"]} />
+            <LinkButton text="GitHub" link="https://github.com/fluix/web-apidoc2ts" />
         </>
     );
 };

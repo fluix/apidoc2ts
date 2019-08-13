@@ -1,0 +1,12 @@
+.link_button {
+  display: block;
+  cursor: pointer;
+  background-color: lightseagreen;
+  padding: 16px;
+  text-decoration: none;
+
+  &__text {
+    color: black;
+    text-align: center;
+  }
+}
