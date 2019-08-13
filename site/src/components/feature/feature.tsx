@@ -14,7 +14,7 @@ export default class Feature extends PureComponent<FeatureProps, {}> {
             <div className={`feature ${modifier}`}>
                 <img className="feature__image"
                      src={this.props.image}
-                     alt=""/>
+                     alt="feature example"/>
                 <span className="feature__description">{this.props.description}</span>
             </div>
         );
