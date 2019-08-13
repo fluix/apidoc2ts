@@ -15,7 +15,10 @@ export default class LinkButton extends PureComponent<LinkButtonProps, {}> {
                href={this.props.link}
             >
                 <div className="link-button__text">{this.props.text}</div>
-                <img className="link-button__image" src={this.props.image} alt=""/>
+                <img className="link-button__image"
+                     src={this.props.image}
+                     alt={`${this.props.text} image`}
+                />
             </a>
         );
     }
