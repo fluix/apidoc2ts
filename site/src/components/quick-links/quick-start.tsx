@@ -11,17 +11,17 @@ interface QuickStartProps {
 export default class QuickStart extends PureComponent<QuickStartProps, {}> {
     render() {
         return (
-            <div className="quick_start">
-                <code className="quick_start__command">{this.props.installCommand}</code>
-                <a className="quick_start__link"
+            <div className="quick-start">
+                <code className="quick-start__command">{this.props.installCommand}</code>
+                <a className="quick-start__link"
                    href={this.props.githubLink}>
-                    <img className="quick_start__image"
+                    <img className="quick-start__image"
                          src={template_image}
                          alt="link"/>
                 </a>
-                <a className="quick_start__link"
+                <a className="quick-start__link"
                    href={this.props.npmLink}>
-                    <img className="quick_start__image"
+                    <img className="quick-start__image"
                          src={template_image}
                          alt="link"/>
                 </a>
