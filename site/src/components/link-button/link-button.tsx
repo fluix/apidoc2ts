@@ -10,12 +10,12 @@ interface LinkButtonProps {
 export default class LinkButton extends PureComponent<LinkButtonProps, {}> {
     render() {
         return (
-            <a className="link_button"
+            <a className="link-button"
                target="_blank"
                href={this.props.link}
             >
-                <div className="link_button__text">{this.props.text}</div>
-                <img className="link_button__image" src={this.props.image} alt=""/>
+                <div className="link-button__text">{this.props.text}</div>
+                <img className="link-button__image" src={this.props.image} alt=""/>
             </a>
         );
     }
