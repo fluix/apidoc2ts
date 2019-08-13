@@ -2,6 +2,7 @@ import React from "react";
 import Feature from "./components/feature/feature";
 import Header from "./components/header/header";
 import QuickStart from "./components/quick-links/quick-start";
+import Terminal from "./components/terminal/terminal";
 import Title from "./components/title/title";
 import {features} from "./features";
 import template_image from "./images/gray-box.png";
