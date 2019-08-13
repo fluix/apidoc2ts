@@ -1,13 +1,9 @@
 import React from "react";
-import "./App.css";
+import Header from "./components/header/header";
 
 const App: React.FC = () => {
     return (
-        <header>
-            <div>
-                <h2>apiDoc2ts</h2>
-            </div>
-        </header>
+        <Header>ApiDoc2ts</Header>
     );
 };
 
