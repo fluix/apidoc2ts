@@ -2,6 +2,7 @@ import React from "react";
 import Feature from "./components/feature/feature";
 import Header from "./components/header/header";
 import QuickStart from "./components/quick-links/quick-start";
+import Terminal from "./components/terminal/terminal";
 import Title from "./components/title/title";
 import template_image from "./images/gray-box.png";
 
@@ -45,6 +46,7 @@ const App: React.FC = () => {
                 image={template_image}
                 imageOnLeft={true}
             />
+            <Terminal lines={["code line 1", "code line 2", "code line 3"]} />
         </>
     );
 };

@@ -1,0 +1,11 @@
+.terminal {
+  background-color: lightsalmon;
+
+  &__line {
+    display: block;
+  }
+
+  &__controls_image {
+    height: 20px;
+  }
+}
