@@ -9,19 +9,13 @@ interface FeatureProps {
 
 export default class Feature extends PureComponent<FeatureProps, {}> {
     render() {
-        const image = <img className="feature__image"
-                           src={this.props.image}
-                           alt=""/>;
-
-        const description = <span className="feature__description">{this.props.description}</span>;
-
-        const feature = this.props.imageOnLeft
-                        ? <>{image}{description}</>
-                        : <>{description}{image}</>;
-
+        const modifier = this.props.imageOnLeft ? "" : "feature--image-on-right";
         return (
-            <div className="feature">
-                {feature}
+            <div className={`feature ${modifier}`}>
+                <img className="feature__image"
+                     src={this.props.image}
+                     alt=""/>
+                <span className="feature__description">{this.props.description}</span>
             </div>
         );
     }

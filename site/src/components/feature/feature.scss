@@ -12,4 +12,8 @@
   &__description {
     width: 50%;
   }
+
+  &--image-on-right {
+    flex-direction: row-reverse;
+  }
 }
