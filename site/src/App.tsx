@@ -1,7 +1,9 @@
 import React from "react";
+import Feature from "./components/feature/feature";
 import Header from "./components/header/header";
 import QuickStart from "./components/quick-links/quick-start";
 import Title from "./components/title/title";
+import {features} from "./features";
 import template_image from "./images/gray-box.png";
 
 const App: React.FC = () => {
@@ -17,6 +19,13 @@ const App: React.FC = () => {
                 githubLink="https://github.com/fluix/web-apidoc2ts"
                 npmLink="https://www.npmjs.com/package/apidoc2ts"
             />
+            {features.map((feature, index) => (
+                <Feature image={feature.image}
+                         description={feature.description}
+                         imageOnLeft={feature.imageOnLeft}
+                         key={index}
+                />
+            ))}
         </>
     );
 };
