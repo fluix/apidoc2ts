@@ -29,3 +29,8 @@ export const features = [
         imageOnLeft: true,
     },
 ];
+
+export const links = {
+    github: "https://github.com/fluix/web-apidoc2ts",
+    npm: "https://www.npmjs.com/package/apidoc2ts",
+};
