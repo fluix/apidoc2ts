@@ -47,8 +47,17 @@ const App: React.FC = () => {
                 image={template_image}
                 imageOnLeft={true}
             />
-            <Terminal lines={["code line 1", "code line 2", "code line 3"]} />
-            <LinkButton text="GitHub" link="https://github.com/fluix/web-apidoc2ts" />
+            <Terminal lines={["code line 1", "code line 2", "code line 3"]}/>
+            <LinkButton
+                text="GitHub"
+                image={template_image}
+                link="https://github.com/fluix/web-apidoc2ts"
+            />
+            <LinkButton
+                text="npm"
+                image={template_image}
+                link="https://www.npmjs.com/package/apidoc2ts"
+            />
         </>
     );
 };

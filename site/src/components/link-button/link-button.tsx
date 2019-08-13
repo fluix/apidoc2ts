@@ -4,6 +4,7 @@ import "./link-button.scss";
 interface LinkButtonProps {
     text: string;
     link: string;
+    image: string;
 }
 
 export default class LinkButton extends PureComponent<LinkButtonProps, {}> {
@@ -14,6 +15,7 @@ export default class LinkButton extends PureComponent<LinkButtonProps, {}> {
                href={this.props.link}
             >
                 <div className="link_button__text">{this.props.text}</div>
+                <img className="link_button__image" src={this.props.image} alt=""/>
             </a>
         );
     }
