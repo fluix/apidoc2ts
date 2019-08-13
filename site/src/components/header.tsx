@@ -8,11 +8,11 @@ interface HeaderProps {
 export default class Header extends PureComponent<HeaderProps, {}> {
     render() {
         return (
-            <div className={styles.header}>
+            <header className={styles.header}>
                 <span className={styles.header__text}>
                     {this.props.title}
                 </span>
-            </div>
+            </header>
         );
     }
 }
