@@ -1,0 +1,16 @@
+.title {
+  display: flex;
+  align-items: center;
+  justify-content: space-evenly;
+  padding: 16px;
+  background: palegreen;
+
+  &__image {
+    max-height: 250px;
+  }
+
+  &__text {
+    width: 30%;
+    text-align: center;
+  }
+}
