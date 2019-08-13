@@ -13,7 +13,7 @@ const App: React.FC = () => {
                 image={template_image}
             />
             <QuickStart
-                installCommand="$ npm install apidoc2ts -g"
+                installCommand="npm install apidoc2ts -g"
                 githubLink="https://github.com/fluix/web-apidoc2ts"
                 npmLink="https://www.npmjs.com/package/apidoc2ts"
             />
