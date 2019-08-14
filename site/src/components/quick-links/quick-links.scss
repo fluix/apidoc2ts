@@ -1,0 +1,21 @@
+.quick-start {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: lightblue;
+
+  &__command {
+    background-color: lightcyan;
+    line-height: 30px;
+    padding: 0 8px;
+  }
+
+  &__link {
+    height: 30px;
+    padding-left: 8px;
+  }
+
+  &__image {
+    max-height: 30px;
+  }
+}

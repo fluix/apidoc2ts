@@ -1,0 +1,19 @@
+.feature {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background-color: lightyellow;
+
+  &__image {
+    max-width: 150px;
+    flex-grow: 1;
+  }
+
+  &__description {
+    width: 50%;
+  }
+
+  &--image-on-right {
+    flex-direction: row-reverse;
+  }
+}
