@@ -1,13 +1,22 @@
+@import "../../colors";
+@import "../../fonts";
+
 .link-button {
   display: flex;
   align-items: center;
-  justify-content: center;
+  justify-content: space-between;
   cursor: pointer;
-  padding: 8px;
+  padding: 8px 32px;
   text-decoration: none;
+  background-color: $light-gray;
+  border: 1px solid $dark-gray;
+  border-radius: 8px;
+  width: 125px;
 
   &__text {
-    color: black;
+    font-family: $font-main;
+    font-weight: 700;
+    color: $darkest-gray;
     text-align: center;
   }
 

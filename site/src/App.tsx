@@ -1,4 +1,5 @@
 import React from "react";
+import ButtonsGroup from "./components/buttons-group/buttons-group";
 import FeaturesGroup from "./components/features-group/features-group";
 import Header from "./components/header/header";
 import LinkButton from "./components/link-button/link-button";
@@ -23,16 +24,18 @@ const App: React.FC = () => {
             />
             <FeaturesGroup features={features}/>
             <Terminal lines={["code line 1", "code line 2", "code line 3"]}/>
-            <LinkButton
-                text="GitHub"
-                image={template_image}
-                link={links.github}
-            />
-            <LinkButton
-                text="npm"
-                image={template_image}
-                link={links.npm}
-            />
+            <ButtonsGroup>
+                <LinkButton
+                    text="GitHub"
+                    image={template_image}
+                    link={links.github}
+                />
+                <LinkButton
+                    text="npm"
+                    image={template_image}
+                    link={links.npm}
+                />
+            </ButtonsGroup>
         </>
     );
 };
