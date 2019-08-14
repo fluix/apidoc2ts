@@ -17,7 +17,7 @@ const App: React.FC = () => {
                 image={template_image}
             />
             <QuickStart
-                installCommand="$ npm install apidoc2ts -g"
+                installCommand="npm install apidoc2ts -g"
                 githubLink={links.github}
                 npmLink={links.npm}
             />

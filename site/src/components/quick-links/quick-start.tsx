@@ -12,18 +12,19 @@ export default class QuickStart extends PureComponent<QuickStartProps, {}> {
     render() {
         return (
             <div className="quick-start">
-                <code className="quick-start__command">{this.props.installCommand}</code>
+                <code className="quick-start__command">$ {this.props.installCommand}</code>
                 <a className="quick-start__link"
                    href={this.props.githubLink}>
                     <img className="quick-start__image"
                          src={template_image}
-                         alt="link"/>
+                         alt="github logo"/>
                 </a>
                 <a className="quick-start__link"
+                   target="_blank"
                    href={this.props.npmLink}>
                     <img className="quick-start__image"
                          src={template_image}
-                         alt="link"/>
+                         alt="npm logo"/>
                 </a>
             </div>
         );
