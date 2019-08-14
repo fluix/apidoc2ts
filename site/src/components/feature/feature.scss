@@ -1,15 +1,19 @@
+@import "../../fonts";
+
 .feature {
   display: flex;
   justify-content: space-between;
   align-items: center;
 
   &__image {
-    max-width: 150px;
+    max-width: 200px;
     flex-grow: 1;
   }
 
   &__description {
-    width: 50%;
+    width: 20em;
+    line-height: 1.5em;
+    font-family: $font-main;
   }
 
   &--image-on-right {

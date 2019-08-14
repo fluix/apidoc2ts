@@ -1,2 +1,11 @@
+@import "../../colors";
+
 .features-group {
+  margin: 0 auto;
+  padding: 64px 0;
+  background-color: $gray;
+
+  .content-wrapper {
+    max-width: 700px;
+  }
 }
