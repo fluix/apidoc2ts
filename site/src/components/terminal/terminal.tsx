@@ -1,5 +1,5 @@
 import React, {PureComponent} from "react";
-import template_image from "../../images/gray-box.png";
+import controlsImage from "../../images/traffic-lights.svg";
 import ContentWrapper from "../content-wrapper/content-wrapper";
 import "./terminal.scss";
 
@@ -16,7 +16,7 @@ export default class Terminal extends PureComponent<TerminalProps, {}> {
         return (
             <div className="terminal">
                 <ContentWrapper>
-                    <img className="terminal__controls-image" src={template_image} alt="terminal controls"/>
+                    <img className="terminal__controls-image" src={controlsImage} alt="terminal controls"/>
                     <div>{lines}</div>
                 </ContentWrapper>
             </div>
