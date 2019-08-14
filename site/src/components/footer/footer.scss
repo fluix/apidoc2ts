@@ -1,0 +1,16 @@
+@import "../../colors";
+
+.footer {
+  height: 70px;
+  background-color: $darkest-gray;
+
+  .content-wrapper {
+
+  }
+
+  &__text {
+    color: rgba(255, 255, 255, 0.4);
+    font-size: 14px;
+    line-height: 70px;
+  }
+}

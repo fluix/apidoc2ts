@@ -1,6 +1,7 @@
 import React from "react";
 import ButtonsGroup from "./components/buttons-group/buttons-group";
 import FeaturesGroup from "./components/features-group/features-group";
+import Footer from "./components/footer/footer";
 import Header from "./components/header/header";
 import LinkButton from "./components/link-button/link-button";
 import QuickStart from "./components/quick-links/quick-start";
@@ -36,6 +37,7 @@ const App: React.FC = () => {
                     link={links.npm}
                 />
             </ButtonsGroup>
+            <Footer/>
         </>
     );
 };
