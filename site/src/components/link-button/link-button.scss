@@ -1,0 +1,19 @@
+.link-button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  background-color: lightseagreen;
+  padding: 8px;
+  text-decoration: none;
+
+  &__text {
+    color: black;
+    text-align: center;
+  }
+
+  &__image {
+    max-height: 30px;
+    padding-left: 16px;
+  }
+}
