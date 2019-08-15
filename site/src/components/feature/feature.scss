@@ -1,9 +1,11 @@
 @import "../../fonts";
+@import "../../colors";
 
 .feature {
     display: flex;
     justify-content: center;
     align-items: center;
+    padding: 16px 0;
 
     &__image {
         flex: 0 0 auto;
@@ -12,11 +14,25 @@
     }
 
     &__description {
+        display: flex;
+        flex-flow: column;
+        margin: 0 96px;
+    }
+
+    &__header {
         flex: 0 0 auto;
+        font-weight: 700;
+        font-size: 24px;
+        line-height: 2em;
+    }
+
+    &__text {
+        flex: 0 0 auto;
+        color: $dark-gray;
+        font-size: 18px;
         width: 20em;
         line-height: 1.5em;
         font-family: $font-main;
-        margin: 0 96px;
     }
 
     &--image-on-right {

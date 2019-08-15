@@ -3,6 +3,7 @@ import "./feature.scss";
 
 export interface FeatureProps {
     image: string;
+    header: string;
     description: string;
     imageOnLeft: boolean;
 }
@@ -15,7 +16,10 @@ export default class Feature extends PureComponent<FeatureProps, {}> {
                 <img className="feature__image"
                      src={this.props.image}
                      alt="feature example"/>
-                <span className="feature__description">{this.props.description}</span>
+                <div className="feature__description">
+                    <span className="feature__header">{this.props.header}</span>
+                    <span className="feature__text">{this.props.description}</span>
+                </div>
             </div>
         );
     }

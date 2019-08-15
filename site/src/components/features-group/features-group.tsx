@@ -14,6 +14,7 @@ export default class FeaturesGroup extends PureComponent<FeaturesGroupProps, {}>
                 <ContentWrapper>
                     {this.props.features.map((feature, index) => (
                         <Feature image={feature.image}
+                                 header={feature.header}
                                  description={feature.description}
                                  imageOnLeft={feature.imageOnLeft}
                                  key={index}
