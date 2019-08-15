@@ -1,8 +1,9 @@
 @import "../../colors";
 @import "../../fonts";
+@import "../../dimensions";
 
 .header {
-    height: 70px;
+    height: $header-size;
     background: $dark-gray;
 
     &__text {
@@ -10,6 +11,6 @@
         font-family: $font-accent;
         font-size: 28px;
         font-weight: bold;
-        line-height: 70px;
+        line-height: $header-size;
     }
 }
