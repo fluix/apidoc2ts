@@ -9,14 +9,15 @@ import Terminal from "./components/terminal/terminal";
 import Title from "./components/title/title";
 import {features, links} from "./config";
 import template_image from "./images/gray-box.png";
+import titleImage from "./images/title_image.png";
 
 const App: React.FC = () => {
     return (
         <>
             <Header>ApiDoc2ts</Header>
             <Title
-                text="Get rid of boring day-to-day manual retyping and mechanical mistakes"
-                image={template_image}
+                text="Get rid of boring day to day manual retyping"
+                image={titleImage}
             />
             <QuickStart
                 installCommand="npm install apidoc2ts -g"

@@ -3,21 +3,18 @@
 
 .title {
     padding: 96px 0;
-
-    .content-wrapper {
-        display: flex;
-        align-items: center;
-        justify-content: space-between;
-    }
+    display: flex;
+    align-items: center;
+    justify-content: space-evenly;
 
     &__image {
-        width: 400px;
+        width: 600px;
     }
 
     &__text {
-        width: 600px;
+        width: 400px;
         font-family: $font-accent;
         font-size: 48px;
-        text-align: center;
+        font-weight: 700;
     }
 }
