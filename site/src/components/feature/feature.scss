@@ -2,18 +2,20 @@
 
 .feature {
     display: flex;
-    justify-content: space-between;
+    justify-content: center;
     align-items: center;
 
     &__image {
         max-width: 200px;
         flex-grow: 1;
+        margin: 0 96px;
     }
 
     &__description {
         width: 20em;
         line-height: 1.5em;
         font-family: $font-main;
+        margin: 0 96px;
     }
 
     &--image-on-right {
