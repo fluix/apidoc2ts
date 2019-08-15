@@ -6,12 +6,13 @@
     align-items: center;
 
     &__image {
+        flex: 0 0 auto;
         max-width: 200px;
-        flex-grow: 1;
         margin: 0 96px;
     }
 
     &__description {
+        flex: 0 0 auto;
         width: 20em;
         line-height: 1.5em;
         font-family: $font-main;
