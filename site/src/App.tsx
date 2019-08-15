@@ -8,7 +8,8 @@ import QuickStart from "./components/quick-links/quick-start";
 import Terminal from "./components/terminal/terminal";
 import Title from "./components/title/title";
 import {features, links} from "./config";
-import template_image from "./images/gray-box.png";
+import githubLogo from "./images/github-logo.png";
+import npmLogo from "./images/npm-logo.png";
 import titleImage from "./images/title_image.png";
 
 const App: React.FC = () => {
@@ -29,12 +30,12 @@ const App: React.FC = () => {
             <ButtonsGroup>
                 <LinkButton
                     text="GitHub"
-                    image={template_image}
+                    image={githubLogo}
                     link={links.github}
                 />
                 <LinkButton
                     text="npm"
-                    image={template_image}
+                    image={npmLogo}
                     link={links.npm}
                 />
             </ButtonsGroup>

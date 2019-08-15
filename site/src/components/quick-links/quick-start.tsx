@@ -1,5 +1,6 @@
 import React, {PureComponent} from "react";
-import template_image from "../../images/gray-box.png";
+import githubLogo from "../../images/github-logo.png";
+import npmLogo from "../../images/npm-logo.png";
 import ContentWrapper from "../content-wrapper/content-wrapper";
 import "./quick-links.scss";
 
@@ -18,7 +19,7 @@ export default class QuickStart extends PureComponent<QuickStartProps, {}> {
                     <a className="quick-start__link"
                        href={this.props.githubLink}>
                         <img className="quick-start__image"
-                             src={template_image}
+                             src={githubLogo}
                              alt="github logo"/>
                     </a>
                     <a className="quick-start__link"
@@ -26,7 +27,7 @@ export default class QuickStart extends PureComponent<QuickStartProps, {}> {
                        rel="noreferrer noopener"
                        href={this.props.npmLink}>
                         <img className="quick-start__image"
-                             src={template_image}
+                             src={npmLogo}
                              alt="npm logo"/>
                     </a>
                 </ContentWrapper>
