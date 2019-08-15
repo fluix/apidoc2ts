@@ -2,27 +2,27 @@
 @import "../../fonts";
 
 .quick-start {
-  padding: 32px 0;
+    padding: 32px 0;
 
-  .content-wrapper {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-  }
+    .content-wrapper {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
 
-  &__command {
-    font-family: $font-code;
-    background-color: $gray;
-    line-height: 40px;
-    padding: 0 8px;
-  }
+    &__command {
+        font-family: $font-code;
+        background-color: $gray;
+        line-height: 40px;
+        padding: 0 8px;
+    }
 
-  &__link {
-    height: 40px;
-    padding-left: 8px;
-  }
+    &__link {
+        height: 40px;
+        padding-left: 8px;
+    }
 
-  &__image {
-    max-height: 40px;
-  }
+    &__image {
+        max-height: 40px;
+    }
 }

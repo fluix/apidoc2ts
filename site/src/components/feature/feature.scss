@@ -1,22 +1,22 @@
 @import "../../fonts";
 
 .feature {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
 
-  &__image {
-    max-width: 200px;
-    flex-grow: 1;
-  }
+    &__image {
+        max-width: 200px;
+        flex-grow: 1;
+    }
 
-  &__description {
-    width: 20em;
-    line-height: 1.5em;
-    font-family: $font-main;
-  }
+    &__description {
+        width: 20em;
+        line-height: 1.5em;
+        font-family: $font-main;
+    }
 
-  &--image-on-right {
-    flex-direction: row-reverse;
-  }
+    &--image-on-right {
+        flex-direction: row-reverse;
+    }
 }

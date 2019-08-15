@@ -2,26 +2,26 @@
 @import "../../fonts";
 
 .link-button {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  cursor: pointer;
-  padding: 8px 32px;
-  text-decoration: none;
-  background-color: $light-gray;
-  border: 1px solid $dark-gray;
-  border-radius: 8px;
-  width: 125px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    cursor: pointer;
+    padding: 8px 32px;
+    text-decoration: none;
+    background-color: $light-gray;
+    border: 1px solid $dark-gray;
+    border-radius: 8px;
+    width: 125px;
 
-  &__text {
-    font-family: $font-main;
-    font-weight: 700;
-    color: $darkest-gray;
-    text-align: center;
-  }
+    &__text {
+        font-family: $font-main;
+        font-weight: 700;
+        color: $darkest-gray;
+        text-align: center;
+    }
 
-  &__image {
-    max-height: 30px;
-    padding-left: 16px;
-  }
+    &__image {
+        max-height: 30px;
+        padding-left: 16px;
+    }
 }

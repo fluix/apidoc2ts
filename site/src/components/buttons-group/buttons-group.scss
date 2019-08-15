@@ -1,11 +1,11 @@
 @import "../../colors";
 
 .buttons-group {
-  background-color: $gray;
-  padding: 16px 0;
+    background-color: $gray;
+    padding: 16px 0;
 
-  .content-wrapper {
-    display: flex;
-    justify-content: space-evenly;
-  }
+    .content-wrapper {
+        display: flex;
+        justify-content: space-evenly;
+    }
 }

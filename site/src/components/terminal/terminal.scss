@@ -3,25 +3,25 @@
 
 .terminal {
 
-  padding: 32px 0;
+    padding: 32px 0;
 
-  .content-wrapper {
-    max-width: 768px;
-    border-radius: 8px;
-    padding: 16px 16px;
-    background-color: $darkest-gray;
-    box-shadow: 0 10px 20px rgba(0,0,0,.3);
-  }
+    .content-wrapper {
+        max-width: 768px;
+        border-radius: 8px;
+        padding: 16px;
+        background-color: $darkest-gray;
+        box-shadow: 0 10px 20px rgba(0, 0, 0, 0.3);
+    }
 
-  &__line {
-    color: white;
-    font-family: $font-code;
-    line-height: 1.5em;
-    display: block;
-  }
+    &__line {
+        color: white;
+        font-family: $font-code;
+        line-height: 1.5em;
+        display: block;
+    }
 
-  &__controls-image {
-    max-height: 16px;
-    margin-bottom: 8px;
-  }
+    &__controls-image {
+        max-height: 16px;
+        margin-bottom: 8px;
+    }
 }

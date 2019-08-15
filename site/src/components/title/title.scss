@@ -2,22 +2,22 @@
 @import "../../fonts";
 
 .title {
-  padding: 96px 0;
+    padding: 96px 0;
 
-  .content-wrapper {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-  }
+    .content-wrapper {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+    }
 
-  &__image {
-    max-height: 350px;
-  }
+    &__image {
+        max-height: 350px;
+    }
 
-  &__text {
-    width: 60%;
-    font-family: $font-accent;
-    font-size: 48px;
-    text-align: center;
-  }
+    &__text {
+        width: 60%;
+        font-family: $font-accent;
+        font-size: 48px;
+        text-align: center;
+    }
 }

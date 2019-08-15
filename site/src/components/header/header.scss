@@ -2,14 +2,14 @@
 @import "../../fonts";
 
 .header {
-  height: 70px;
-  background: $dark-gray;
+    height: 70px;
+    background: $dark-gray;
 
-  &__text {
-    color: white;
-    font-family: $font-accent;
-    font-size: 28px;
-    font-weight: bold;
-    line-height: 70px;
-  }
+    &__text {
+        color: white;
+        font-family: $font-accent;
+        font-size: 28px;
+        font-weight: bold;
+        line-height: 70px;
+    }
 }
