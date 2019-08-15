@@ -16,8 +16,10 @@ export default class Terminal extends PureComponent<TerminalProps, {}> {
         return (
             <div className="terminal">
                 <ContentWrapper>
-                    <img className="terminal__controls-image" src={controlsImage} alt="terminal controls"/>
-                    <div>{lines}</div>
+                    <div className="terminal__window">
+                        <img className="terminal__controls-image" src={controlsImage} alt="terminal controls"/>
+                        <div>{lines}</div>
+                    </div>
                 </ContentWrapper>
             </div>
         );

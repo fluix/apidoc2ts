@@ -5,8 +5,9 @@
 
     padding: 32px 0;
 
-    .content-wrapper {
+    &__window {
         max-width: 768px;
+        margin: 0 auto;
         border-radius: 8px;
         padding: 16px;
         background-color: $darkest-gray;
