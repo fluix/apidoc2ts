@@ -12,6 +12,7 @@ export default class LinkButton extends PureComponent<LinkButtonProps, {}> {
         return (
             <a className="link-button"
                target="_blank"
+               rel="noreferrer noopener"
                href={this.props.link}
             >
                 <div className="link-button__text">{this.props.text}</div>

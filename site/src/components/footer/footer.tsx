@@ -14,6 +14,7 @@ export default class Footer extends PureComponent {
                         <p className="footer__text">
                             Licensed under <a className="footer__link"
                                               target="_blank"
+                                              rel="noreferrer noopener"
                                               href="https://opensource.org/licenses/MIT">
                             MIT license</a>
                         </p>

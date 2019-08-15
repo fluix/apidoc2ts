@@ -23,6 +23,7 @@ export default class QuickStart extends PureComponent<QuickStartProps, {}> {
                     </a>
                     <a className="quick-start__link"
                        target="_blank"
+                       rel="noreferrer noopener"
                        href={this.props.npmLink}>
                         <img className="quick-start__image"
                              src={template_image}
