@@ -7,7 +7,17 @@ export default class Footer extends PureComponent {
         return (
             <div className="footer">
                 <ContentWrapper>
-                    <span className="footer__text">Copyright (c) 2019 Fluix Limited</span>
+                    <div className="footer__group">
+                        <p className="footer__text">
+                            This is an open-source project. Contributing is highly appreciated.
+                        </p>
+                        <p className="footer__text">
+                            Licensed under <a className="footer__link"
+                                              target="_blank"
+                                              href="https://opensource.org/licenses/MIT">
+                            MIT license</a>
+                        </p>
+                    </div>
                 </ContentWrapper>
             </div>
         );
