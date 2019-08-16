@@ -1,5 +1,6 @@
 @import "../../colors";
 @import "../../fonts";
+@import "../../breakpoints";
 
 .title {
     padding: 96px 0;
@@ -13,10 +14,18 @@
 
     &__image + &__group {
         margin: 0 96px;
+
+        @media (max-width: $breakpoint-large) {
+            margin: 0 48px;
+        }
     }
 
     &__image {
         width: 550px;
+
+        @media (max-width: $breakpoint-large) {
+            width: 450px;
+        }
     }
 
     &__text {
@@ -24,5 +33,9 @@
         font-family: $font-accent;
         font-size: 48px;
         font-weight: 700;
+
+        @media (max-width: $breakpoint-large) {
+            font-size: 36px;
+        }
     }
 }

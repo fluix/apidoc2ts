@@ -1,4 +1,10 @@
+@import "../../breakpoints";
+
 .content-wrapper {
     max-width: 1200px;
     margin: 0 auto;
+
+    @media (max-width: $breakpoint-large) {
+        max-width: 900px;
+    }
 }
