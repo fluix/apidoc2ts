@@ -6,7 +6,7 @@ import Header from "./components/header/header";
 import LinkButton from "./components/link-button/link-button";
 import Terminal from "./components/terminal/terminal";
 import Title from "./components/title/title";
-import {features, links} from "./config";
+import {features, links, terminalLines} from "./config";
 import githubLogo from "./images/github-logo.png";
 import npmLogo from "./images/npm-logo.png";
 import titleImage from "./images/title_image.png";
@@ -20,7 +20,7 @@ const App: React.FC = () => {
                 image={titleImage}
             />
             <FeaturesGroup features={features}/>
-            <Terminal lines={["code line 1", "code line 2", "code line 3"]}/>
+            <Terminal lines={terminalLines}/>
             <ButtonsGroup>
                 <LinkButton
                     text="GitHub"
