@@ -5,18 +5,21 @@
     display: flex;
     justify-content: center;
     align-items: center;
-    padding: 16px 0;
+
+    & + & {
+        margin: 96px 0;
+    }
 
     &__image {
         flex: 0 0 auto;
-        max-width: 200px;
-        margin: 0 96px;
+        max-width: 400px;
+        margin: 0 32px;
     }
 
     &__description {
         display: flex;
         flex-flow: column;
-        margin: 0 96px;
+        margin: 0 32px;
         width: 360px;
     }
 

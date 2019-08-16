@@ -1,38 +1,42 @@
-import template_image from "./images/gray-box.png";
+import featureCustomizing from "./images/feature_customizing.png";
+import featureEnums from "./images/feature_enums.png";
+import featureNestedFields from "./images/feature_nested.png";
+import featureUrlGrouping from "./images/feature_url.png";
+import featureVersions from "./images/feature_versions.png";
 
 export const features = [
     {
         header: "Grouping by URL",
         description: `Group your interfaces into files placed in directories
         according to the URL structure of the endpoint`,
-        image: template_image,
-        imageOnLeft: true,
+        image: featureUrlGrouping,
+        imageOnLeft: false,
     },
     {
         header: "Enumerations",
         description: "Create enumerations from specified allowed values an your documentation",
-        image: template_image,
-        imageOnLeft: false,
+        image: featureEnums,
+        imageOnLeft: true,
     },
     {
         header: "Customizing",
         description: `Customize interface names by specifying general prefix/postfix or separate
         prefixes/postfixes for request, response and error response`,
-        image: template_image,
-        imageOnLeft: true,
+        image: featureCustomizing,
+        imageOnLeft: false,
     },
     {
         header: "Versions",
         description: `Choose which versions should be used to generate interfaces. You can generate
         interfaces for all versions or only the latest ones`,
-        image: template_image,
-        imageOnLeft: false,
+        image: featureVersions,
+        imageOnLeft: true,
     },
     {
         header: "Nested fields",
         description: "Automatically get separate interfaces for nested fields",
-        image: template_image,
-        imageOnLeft: true,
+        image: featureNestedFields,
+        imageOnLeft: false,
     },
 ];
 
