@@ -1,39 +1,39 @@
 @import "../../colors";
 @import "../../fonts";
 
+$quick-start-height: 40px;
+$quick-start-spacing: 16px;
+
 .quick-start {
     padding: 32px 0;
     background-color: $main-dark;
-
-    .content-wrapper {
-        display: flex;
-        align-items: center;
-        justify-content: center;
-    }
+    display: flex;
+    align-items: center;
+    justify-content: center;
 
     &__command {
         flex: 0 0 auto;
         font-family: $font-code;
         background-color: $main;
-        line-height: 40px;
+        line-height: $quick-start-height;
         padding: 0 8px;
         border-radius: 4px;
     }
 
     &__link {
         flex: 0 0 auto;
-        height: 40px;
+        height: $quick-start-height;
 
         & + & {
-            margin-left: 8px;
+            margin-left: $quick-start-spacing;
         }
     }
 
     &__image {
-        max-height: 40px;
+        max-height: $quick-start-height;
     }
 
     &__command + &__link {
-        margin-left: 8px;
+        margin-left: $quick-start-spacing;
     }
 }
