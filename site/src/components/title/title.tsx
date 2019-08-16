@@ -1,7 +1,7 @@
 import React, {PureComponent} from "react";
 import {links} from "../../config";
 import ContentWrapper from "../content-wrapper/content-wrapper";
-import QuickStart from "../quick-links/quick-start";
+import QuickStart from "../quick-start/quick-start";
 import "./title.scss";
 
 interface TitleProps {

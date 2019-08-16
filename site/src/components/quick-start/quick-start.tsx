@@ -1,7 +1,7 @@
 import React, {PureComponent} from "react";
 import githubLogo from "../../images/github-logo.png";
 import npmLogo from "../../images/npm-logo.png";
-import "./quick-links.scss";
+import "./quick-start.scss";
 
 interface QuickStartProps {
     installCommand: string;
