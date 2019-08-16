@@ -17,6 +17,7 @@
         display: flex;
         flex-flow: column;
         margin: 0 96px;
+        width: 360px;
     }
 
     &__header {
@@ -26,11 +27,14 @@
         line-height: 2em;
     }
 
+    &__header + &__text {
+        margin-top: 12px;
+    }
+
     &__text {
         flex: 0 0 auto;
         color: $dark-gray;
         font-size: 18px;
-        width: 20em;
         line-height: 1.5em;
         font-family: $font-main;
     }
