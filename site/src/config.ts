@@ -2,29 +2,35 @@ import template_image from "./images/gray-box.png";
 
 export const features = [
     {
-        description: `Lorem ipsum dolor sit amet, consectetur adipiscing elit.
-                Aenean tincidunt metus ac ligula tempor, eget lobortis velit blandit.
-                Ut suscipit augue eget nibh rutrum, non lobortis turpis mattis.
-                Cras vel mauris faucibus, hendrerit ex non, vehicula massa.
-                Nullam iaculis turpis eget leo mollis finibus.`,
+        header: "Grouping by URL",
+        description: `Group your interfaces into files placed in directories
+        according to the URL structure of the endpoint`,
         image: template_image,
         imageOnLeft: true,
     },
     {
-        description: `Lorem ipsum dolor sit amet, consectetur adipiscing elit.
-                Aenean tincidunt metus ac ligula tempor, eget lobortis velit blandit.
-                Ut suscipit augue eget nibh rutrum, non lobortis turpis mattis.
-                Cras vel mauris faucibus, hendrerit ex non, vehicula massa.
-                Nullam iaculis turpis eget leo mollis finibus.`,
+        header: "Enumerations",
+        description: "Create enumerations from specified allowed values an your documentation",
         image: template_image,
         imageOnLeft: false,
     },
     {
-        description: `Lorem ipsum dolor sit amet, consectetur adipiscing elit.
-                Aenean tincidunt metus ac ligula tempor, eget lobortis velit blandit.
-                Ut suscipit augue eget nibh rutrum, non lobortis turpis mattis.
-                Cras vel mauris faucibus, hendrerit ex non, vehicula massa.
-                Nullam iaculis turpis eget leo mollis finibus.`,
+        header: "Customizing",
+        description: `Customize interface names by specifying general prefix/postfix or separate
+        prefixes/postfixes for request, response and error response`,
+        image: template_image,
+        imageOnLeft: true,
+    },
+    {
+        header: "Versions",
+        description: `Choose which versions should be used to generate interfaces. You can generate
+        interfaces for all versions or only the latest ones`,
+        image: template_image,
+        imageOnLeft: false,
+    },
+    {
+        header: "Nested fields",
+        description: "Automatically get separate interfaces for nested fields",
         image: template_image,
         imageOnLeft: true,
     },

@@ -1,21 +1,37 @@
+@import "../../colors";
+@import "../../fonts";
+
 .quick-start {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  background: lightblue;
+    padding: 32px 0;
 
-  &__command {
-    background-color: lightcyan;
-    line-height: 30px;
-    padding: 0 8px;
-  }
+    .content-wrapper {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
 
-  &__link {
-    height: 30px;
-    padding-left: 8px;
-  }
+    &__command {
+        flex: 0 0 auto;
+        font-family: $font-code;
+        background-color: $gray;
+        line-height: 40px;
+        padding: 0 8px;
+    }
 
-  &__image {
-    max-height: 30px;
-  }
+    &__link {
+        flex: 0 0 auto;
+        height: 40px;
+
+        & + & {
+            margin-left: 8px;
+        }
+    }
+
+    &__image {
+        max-height: 40px;
+    }
+
+    &__command + &__link {
+        margin-left: 8px;
+    }
 }

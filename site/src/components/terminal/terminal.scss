@@ -1,11 +1,28 @@
+@import "../../colors";
+@import "../../fonts";
+
 .terminal {
-  background-color: lightsalmon;
 
-  &__line {
-    display: block;
-  }
+    padding: 32px 0;
 
-  &__controls-image {
-    height: 20px;
-  }
+    &__window {
+        max-width: 768px;
+        margin: 0 auto;
+        border-radius: 8px;
+        padding: 16px;
+        background-color: $darkest-gray;
+        box-shadow: 0 10px 20px rgba(0, 0, 0, 0.3);
+    }
+
+    &__line {
+        color: white;
+        font-family: $font-code;
+        line-height: 1.5em;
+        display: block;
+    }
+
+    &__controls-image {
+        height: 16px;
+        margin-bottom: 8px;
+    }
 }

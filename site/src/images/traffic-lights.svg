@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="47px" height="13px" viewBox="0 0 47 13" version="1.1" xmlns="http://www.w3.org/2000/svg">
+    <title>traffic-lights</title>
+    <g id="traffic-lights">
+        <circle id="red" fill="#F3475C" cx="6.5" cy="6.5" r="6.5"/>
+        <circle id="yellow" fill="#EBB153" cx="23.5" cy="6.5" r="6.5"/>
+        <circle id="green" fill="#85D032" cx="40.5" cy="6.5" r="6.5"/>
+    </g>
+</svg>

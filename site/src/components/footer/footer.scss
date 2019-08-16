@@ -1,0 +1,23 @@
+@import "../../colors";
+
+.footer {
+    background-color: $darkest-gray;
+
+    &__group {
+        height: 64px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+    }
+
+    &__text {
+        color: $darker-gray;
+        font-size: 14px;
+    }
+
+    &__link {
+        text-decoration: none;
+        border-bottom: 1px solid $dark-gray;
+        color: $darker-gray;
+    }
+}

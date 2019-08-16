@@ -1,19 +1,45 @@
+@import "../../fonts";
+@import "../../colors";
+
 .feature {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  background-color: lightyellow;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 16px 0;
 
-  &__image {
-    max-width: 150px;
-    flex-grow: 1;
-  }
+    &__image {
+        flex: 0 0 auto;
+        max-width: 200px;
+        margin: 0 96px;
+    }
 
-  &__description {
-    width: 50%;
-  }
+    &__description {
+        display: flex;
+        flex-flow: column;
+        margin: 0 96px;
+        width: 360px;
+    }
 
-  &--image-on-right {
-    flex-direction: row-reverse;
-  }
+    &__header {
+        flex: 0 0 auto;
+        font-weight: 700;
+        font-size: 24px;
+        line-height: 2em;
+    }
+
+    &__header + &__text {
+        margin-top: 12px;
+    }
+
+    &__text {
+        flex: 0 0 auto;
+        color: $dark-gray;
+        font-size: 18px;
+        line-height: 1.5em;
+        font-family: $font-main;
+    }
+
+    &--image-on-right {
+        flex-direction: row-reverse;
+    }
 }
