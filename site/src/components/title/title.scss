@@ -29,6 +29,10 @@
         @media (max-width: $breakpoint-small) {
             position: relative;
         }
+
+        @media (max-width: $breakpoint-small) {
+            width: 400px;
+        }
     }
 
     &__image + &__group {

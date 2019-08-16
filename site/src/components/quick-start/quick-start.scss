@@ -21,6 +21,10 @@ $quick-start-spacing: 16px;
         @media (max-width: $breakpoint-small) {
             font-size: 24px;
         }
+
+        @media (max-width: $breakpoint-mobile) {
+            font-size: 18px;
+        }
     }
 
     &__link {
