@@ -4,7 +4,6 @@ import FeaturesGroup from "./components/features-group/features-group";
 import Footer from "./components/footer/footer";
 import Header from "./components/header/header";
 import LinkButton from "./components/link-button/link-button";
-import QuickStart from "./components/quick-links/quick-start";
 import Terminal from "./components/terminal/terminal";
 import Title from "./components/title/title";
 import {features, links} from "./config";
@@ -19,11 +18,6 @@ const App: React.FC = () => {
             <Title
                 text="Get rid of boring day to day manual retyping"
                 image={titleImage}
-            />
-            <QuickStart
-                installCommand="npm install apidoc2ts -g"
-                githubLink={links.github}
-                npmLink={links.npm}
             />
             <FeaturesGroup features={features}/>
             <Terminal lines={["code line 1", "code line 2", "code line 3"]}/>

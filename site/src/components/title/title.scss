@@ -3,16 +3,24 @@
 
 .title {
     padding: 96px 0;
-    display: flex;
-    align-items: center;
-    justify-content: space-evenly;
+    background-color: $main-dark;
+
+    .content-wrapper {
+        display: flex;
+        align-items: center;
+        justify-content: space-evenly;
+    }
+
+    &__image + &__group {
+        margin: 0 96px;
+    }
 
     &__image {
-        width: 600px;
+        width: 550px;
     }
 
     &__text {
-        width: 400px;
+        color: $main-lightest;
         font-family: $font-accent;
         font-size: 48px;
         font-weight: 700;
