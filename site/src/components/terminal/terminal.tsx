@@ -7,8 +7,10 @@ interface TerminalProps {
     lines: Array<TerminalLine>;
 }
 
+type TerminalLineType = "command" | "response";
+
 export interface TerminalLine {
-    type: "command" | "response";
+    type: TerminalLineType;
     text: string;
 }
 
