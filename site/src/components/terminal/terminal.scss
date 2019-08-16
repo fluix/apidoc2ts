@@ -9,7 +9,7 @@
         max-width: 768px;
         margin: 0 auto;
         border-radius: 8px;
-        padding: 16px;
+        padding: 24px;
         background-color: $main-darkest;
         box-shadow: 0 10px 20px rgba(0, 0, 0, 0.3);
     }
@@ -18,12 +18,14 @@
         color: white;
         font-family: $font-code;
         line-height: 1.5em;
+        margin-bottom: 0;
     }
 
     &__response {
         color: hsl(0, 0%, 60%);
         font-family: $font-code;
         line-height: 1.5em;
+        margin-bottom: 0;
     }
 
     &__controls-image {
