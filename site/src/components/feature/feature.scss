@@ -1,5 +1,6 @@
 @import "../../fonts";
 @import "../../colors";
+@import "../../breakpoints";
 
 .feature {
     display: flex;
@@ -8,6 +9,10 @@
 
     & + & {
         margin: 96px 0;
+
+        @media (max-width: $breakpoint-medium) {
+            margin: 48px 0;
+        }
     }
 
     &__image {
