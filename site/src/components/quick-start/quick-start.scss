@@ -1,5 +1,6 @@
 @import "../../colors";
 @import "../../fonts";
+@import "../../breakpoints";
 
 $quick-start-height: 40px;
 $quick-start-spacing: 16px;
@@ -16,6 +17,10 @@ $quick-start-spacing: 16px;
         line-height: $quick-start-height;
         padding: 0 18px;
         border-radius: 4px;
+
+        @media (max-width: $breakpoint-small) {
+            font-size: 24px;
+        }
     }
 
     &__link {

@@ -25,6 +25,10 @@
             text-align: center;
             width: 600px;
         }
+
+        @media (max-width: $breakpoint-small) {
+            position: relative;
+        }
     }
 
     &__image + &__group {
@@ -48,6 +52,15 @@
 
         @media (max-width: $breakpoint-medium) {
             width: 400px;
+        }
+
+        @media (max-width: $breakpoint-small) {
+            position: absolute;
+        }
+
+        @media (max-width: $breakpoint-small) {
+            opacity: 0.1;
+            width: 450px;
         }
     }
 

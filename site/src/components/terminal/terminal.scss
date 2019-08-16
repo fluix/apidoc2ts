@@ -1,5 +1,6 @@
 @import "../../colors";
 @import "../../fonts";
+@import "../../breakpoints";
 
 .terminal {
 
@@ -19,6 +20,11 @@
         font-family: $font-code;
         line-height: 1.5em;
         margin-bottom: 0;
+
+        @media (max-width: $breakpoint-small) {
+            white-space: pre-wrap;
+            word-break: break-word;
+        }
     }
 
     &__line--response {
