@@ -3,7 +3,7 @@
 
 .title {
     padding: 96px 0;
-    background-color: $dark-gray;
+    background-color: $main-dark;
 
     .content-wrapper {
         display: flex;
@@ -20,7 +20,7 @@
     }
 
     &__text {
-        color: $lightest-gray;
+        color: $main-lightest;
         font-family: $font-accent;
         font-size: 48px;
         font-weight: 700;

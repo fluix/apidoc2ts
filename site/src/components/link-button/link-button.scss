@@ -8,8 +8,8 @@
     cursor: pointer;
     padding: 8px 32px;
     text-decoration: none;
-    background-color: $light-gray;
-    border: 1px solid $dark-gray;
+    background-color: $main-light;
+    border: 1px solid $main-dark;
     border-radius: 8px;
     min-width: 125px;
     box-sizing: border-box;
@@ -18,7 +18,7 @@
         flex: 0 0 auto;
         font-family: $font-main;
         font-weight: 700;
-        color: $darkest-gray;
+        color: $main-darkest;
         text-align: center;
     }
 

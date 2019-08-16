@@ -1,7 +1,7 @@
 @import "../../colors";
 
 .footer {
-    background-color: $darkest-gray;
+    background-color: $main-darkest;
 
     &__group {
         height: 64px;
@@ -11,13 +11,13 @@
     }
 
     &__text {
-        color: $darker-gray;
+        color: $main-darker;
         font-size: 14px;
     }
 
     &__link {
         text-decoration: none;
-        border-bottom: 1px solid $dark-gray;
-        color: $darker-gray;
+        border-bottom: 1px solid $main-dark;
+        color: $main-darker;
     }
 }
