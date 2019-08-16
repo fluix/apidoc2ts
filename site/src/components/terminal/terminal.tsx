@@ -15,10 +15,10 @@ export interface TerminalLine {
 export default class Terminal extends PureComponent<TerminalProps, {}> {
     render() {
         const lines = this.props.lines.map((line, index) => {
-            const className = line.type === "command" ? "terminal__command" : "terminal__response";
+            const modifier = line.type === "command" ? "" : "terminal__line--response";
             const linePrefix = line.type === "command" ? "$ " : "";
 
-            return <pre className={className}
+            return <pre className={`terminal__line ${modifier}`}
                         key={index}>
                 {linePrefix}{line.text}
             </pre>;
