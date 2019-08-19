@@ -1,2 +1,0 @@
-(window["webpackJsonpapidoc2ts-site"]=window["webpackJsonpapidoc2ts-site"]||[]).push([[0],[,,,function(e,t,n){e.exports=n(10)},,,,,function(e,t,n){},function(e,t,n){},function(e,t,n){"use strict";n.r(t);var a=n(0),c=n.n(a),l=n(1),o=(n(8),function(){return c.a.createElement("header",null,c.a.createElement("div",null,c.a.createElement("h2",null,"apiDoc2ts")))}),r=(n(9),document.getElementById("root"));r&&r.hasChildNodes()?Object(l.hydrate)(c.a.createElement(o,null),r):Object(l.render)(c.a.createElement(o,null),r)}],[[3,1,2]]]);
-//# sourceMappingURL=main.1cf19723.chunk.js.map
