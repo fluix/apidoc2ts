@@ -4,7 +4,7 @@
     max-width: 1200px;
     margin: 0 auto;
 
-    @include for-desktop-big {
+    @include for-desktop {
         max-width: 900px;
     }
 

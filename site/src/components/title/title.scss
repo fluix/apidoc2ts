@@ -7,7 +7,7 @@
     padding: 96px 0;
     background-color: $main-dark;
 
-    @include for-desktop {
+    @include for-desktop-small {
         padding: 48px 0;
     }
 
@@ -16,13 +16,13 @@
         align-items: center;
         justify-content: space-evenly;
 
-        @include for-desktop {
+        @include for-desktop-small {
             flex-direction: column;
         }
     }
 
     &__group {
-        @include for-desktop {
+        @include for-desktop-small {
             text-align: center;
             width: 600px;
         }
@@ -39,11 +39,11 @@
     &__image + &__group {
         margin: 0 96px;
 
-        @include for-desktop-big {
+        @include for-desktop {
             margin: 0 0 0 48px;
         }
 
-        @include for-desktop {
+        @include for-desktop-small {
             margin: 32px 0 0;
         }
     }
@@ -52,11 +52,11 @@
         width: 550px;
         flex: 0 0 auto;
 
-        @include for-desktop-big {
+        @include for-desktop {
             width: 500px;
         }
 
-        @include for-desktop {
+        @include for-desktop-small {
             width: 400px;
         }
 
@@ -82,7 +82,7 @@
         font-size: 48px;
         font-weight: 700;
 
-        @include for-desktop-big {
+        @include for-desktop {
             font-size: 36px;
         }
 
@@ -92,7 +92,7 @@
     }
 
     .quick-start {
-        @include for-desktop {
+        @include for-desktop-small {
             justify-content: center;
             padding: 0;
             margin: 32px 0 0;

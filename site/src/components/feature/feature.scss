@@ -14,7 +14,7 @@
     & + & {
         margin-top: 96px;
 
-        @include for-desktop {
+        @include for-desktop-small {
             margin-top: 48px;
         }
 
@@ -58,7 +58,7 @@
         margin: 0 32px;
         width: 360px;
 
-        @include for-desktop {
+        @include for-desktop-small {
             width: 450px;
         }
 
