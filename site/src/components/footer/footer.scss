@@ -9,7 +9,7 @@
         justify-content: space-between;
         align-items: center;
 
-        @media (max-width: $breakpoint-mobile-scaled) {
+        @include for-mobile {
             flex-direction: column;
         }
     }
@@ -18,7 +18,7 @@
         color: $main-darker;
         font-size: 14px;
 
-        @media (max-width: $breakpoint-mobile-scaled) {
+        @include for-mobile {
             text-align: center;
         }
     }

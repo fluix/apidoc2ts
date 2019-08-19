@@ -8,7 +8,7 @@ $header-size: 64px;
     height: $header-size;
     background: $accent;
 
-    @media (max-width: $breakpoint-mobile-scaled) {
+    @include for-mobile {
         height: 48px;
     }
 
@@ -19,7 +19,7 @@ $header-size: 64px;
         font-weight: 600;
         line-height: $header-size;
 
-        @media (max-width: $breakpoint-mobile-scaled) {
+        @include for-mobile {
             font-size: 24px;
             line-height: 48px;
         }

@@ -4,19 +4,19 @@
     max-width: 1200px;
     margin: 0 auto;
 
-    @media (max-width: $breakpoint-large) {
+    @include for-desktop-big {
         max-width: 900px;
     }
 
-    @media (max-width: $breakpoint-small) {
+    @include for-tablet {
         max-width: 640px;
     }
 
-    @media (max-width: $breakpoint-mobile) {
+    @include for-tablet-small {
         max-width: 480px;
     }
 
-    @media (max-width: $breakpoint-mobile-scaled) {
+    @include for-mobile {
         max-width: 320px;
     }
 }

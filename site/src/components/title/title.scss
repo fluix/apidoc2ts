@@ -6,7 +6,7 @@
     padding: 96px 0;
     background-color: $main-dark;
 
-    @media (max-width: $breakpoint-medium) {
+    @include for-desktop {
         padding: 48px 0;
     }
 
@@ -15,24 +15,22 @@
         align-items: center;
         justify-content: space-evenly;
 
-        @media (max-width: $breakpoint-medium) {
+        @include for-desktop {
             flex-direction: column;
         }
     }
 
     &__group {
-        position: relative;
-
-        @media (max-width: $breakpoint-medium) {
+        @include for-desktop {
             text-align: center;
             width: 600px;
         }
 
-        @media (max-width: $breakpoint-small) {
+        @include for-tablet {
             width: 400px;
         }
 
-        @media (max-width: $breakpoint-mobile-scaled) {
+        @include for-mobile {
             width: 320px;
         }
     }
@@ -40,11 +38,11 @@
     &__image + &__group {
         margin: 0 96px;
 
-        @media (max-width: $breakpoint-large) {
+        @include for-desktop-big {
             margin: 0 48px;
         }
 
-        @media (max-width: $breakpoint-medium) {
+        @include for-desktop {
             margin: 32px 0 0;
         }
     }
@@ -52,21 +50,21 @@
     &__image {
         width: 550px;
 
-        @media (max-width: $breakpoint-large) {
+        @include for-desktop-big {
             width: 500px;
         }
 
-        @media (max-width: $breakpoint-medium) {
+        @include for-desktop {
             width: 400px;
         }
 
-        @media (max-width: $breakpoint-small) {
+        @include for-tablet {
             position: absolute;
             opacity: 0.1;
             width: 450px;
         }
 
-        @media (max-width: $breakpoint-mobile-scaled) {
+        @include for-mobile {
             max-width: 250px;
         }
     }
@@ -77,17 +75,17 @@
         font-size: 48px;
         font-weight: 700;
 
-        @media (max-width: $breakpoint-large) {
+        @include for-desktop-big {
             font-size: 36px;
         }
 
-        @media (max-width: $breakpoint-mobile-scaled) {
+        @include for-mobile {
             font-size: 24px;
         }
     }
 
     .quick-start {
-        @media (max-width: $breakpoint-medium) {
+        @include for-desktop {
             justify-content: center;
             padding: 0;
             margin: 32px 0 0;

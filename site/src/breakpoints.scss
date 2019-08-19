@@ -1,5 +1,29 @@
-$breakpoint-large: 1400px;
-$breakpoint-medium: 1100px;
-$breakpoint-small: 960px;
-$breakpoint-mobile: 768px;
-$breakpoint-mobile-scaled: 480px;
+@mixin for-desktop-big {
+    @media (max-width: 1400px) {
+        @content;
+    }
+}
+
+@mixin for-desktop {
+    @media (max-width: 1100px) {
+        @content;
+    }
+}
+
+@mixin for-tablet {
+    @media (max-width: 960px) {
+        @content;
+    }
+}
+
+@mixin for-tablet-small {
+    @media (max-width: 768px) {
+        @content;
+    }
+}
+
+@mixin for-mobile {
+    @media (max-width: 520px) {
+        @content;
+    }
+}

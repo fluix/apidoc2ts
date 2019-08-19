@@ -14,7 +14,7 @@
         background-color: $main-darkest;
         box-shadow: 0 10px 20px rgba(0, 0, 0, 0.3);
 
-        @media (max-width: $breakpoint-small) {
+        @include for-tablet {
             max-width: 400px;
         }
     }
@@ -25,12 +25,12 @@
         line-height: 1.5em;
         margin-bottom: 0;
 
-        @media (max-width: $breakpoint-small) {
+        @include for-tablet {
             white-space: pre-wrap;
             word-break: break-word;
         }
 
-        @media (max-width: $breakpoint-mobile-scaled) {
+        @include for-mobile {
             font-size: 14px;
         }
     }
