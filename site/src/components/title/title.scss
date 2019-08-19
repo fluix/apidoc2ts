@@ -22,6 +22,8 @@
     }
 
     &__group {
+        position: relative;
+
         @include for-desktop-small {
             text-align: center;
             width: 600px;
