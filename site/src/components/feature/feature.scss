@@ -40,6 +40,10 @@
         @include for-mobile {
             max-width: 320px;
         }
+
+        @include for-mobile-small {
+            max-width: 280px;
+        }
     }
 
     &__image + &__description {
@@ -64,6 +68,10 @@
 
         @include for-mobile {
             width: 320px;
+        }
+
+        @include for-mobile-small {
+            width: 280px;
         }
     }
 

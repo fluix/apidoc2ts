@@ -42,5 +42,9 @@
     &__controls-image {
         height: 16px;
         margin-bottom: 8px;
+
+        @include for-mobile-small {
+            height: 12px;
+        }
     }
 }

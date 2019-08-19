@@ -19,4 +19,8 @@
     @include for-mobile {
         max-width: 320px;
     }
+
+    @include for-mobile-small {
+        max-width: 280px;
+    }
 }

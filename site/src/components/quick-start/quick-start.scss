@@ -26,6 +26,10 @@ $quick-start-spacing: 16px;
             font-size: 14px;
             line-height: 32px;
         }
+
+        @include for-mobile-small {
+            font-size: 12px;
+        }
     }
 
     &__link {
@@ -41,6 +45,10 @@ $quick-start-spacing: 16px;
 
             @include for-mobile {
                 margin-left: 8px;
+            }
+
+            @include for-mobile-small {
+                margin-left: 4px;
             }
         }
     }
@@ -58,6 +66,10 @@ $quick-start-spacing: 16px;
 
         @include for-mobile {
             margin-left: 8px;
+        }
+
+        @include for-mobile-small {
+            margin-left: 4px;
         }
     }
 }
