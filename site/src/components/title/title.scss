@@ -21,13 +21,11 @@
     }
 
     &__group {
+        position: relative;
+
         @media (max-width: $breakpoint-medium) {
             text-align: center;
             width: 600px;
-        }
-
-        @media (max-width: $breakpoint-small) {
-            position: relative;
         }
 
         @media (max-width: $breakpoint-small) {
