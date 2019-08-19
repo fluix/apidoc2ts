@@ -15,4 +15,8 @@
     @media (max-width: $breakpoint-mobile) {
         max-width: 480px;
     }
+
+    @media (max-width: $breakpoint-mobile-scaled) {
+        max-width: 320px;
+    }
 }

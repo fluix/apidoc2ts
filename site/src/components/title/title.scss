@@ -33,6 +33,10 @@
         @media (max-width: $breakpoint-small) {
             width: 400px;
         }
+
+        @media (max-width: $breakpoint-mobile-scaled) {
+            width: 320px;
+        }
     }
 
     &__image + &__group {
@@ -66,6 +70,10 @@
             opacity: 0.1;
             width: 450px;
         }
+
+        @media (max-width: $breakpoint-mobile-scaled) {
+            max-width: 250px;
+        }
     }
 
     &__text {
@@ -76,6 +84,10 @@
 
         @media (max-width: $breakpoint-large) {
             font-size: 36px;
+        }
+
+        @media (max-width: $breakpoint-mobile-scaled) {
+            font-size: 24px;
         }
     }
 

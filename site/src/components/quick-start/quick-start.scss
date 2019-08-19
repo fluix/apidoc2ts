@@ -25,22 +25,46 @@ $quick-start-spacing: 16px;
         @media (max-width: $breakpoint-mobile) {
             font-size: 18px;
         }
+
+        @media (max-width: $breakpoint-mobile-scaled) {
+            font-size: 14px;
+        }
+
+        @media (max-width: $breakpoint-mobile-scaled) {
+            line-height: 32px;
+        }
     }
 
     &__link {
         flex: 0 0 auto;
         height: $quick-start-height;
 
+        @media (max-width: $breakpoint-mobile-scaled) {
+            height: 32px;
+        }
+
         & + & {
             margin-left: $quick-start-spacing;
+
+            @media (max-width: $breakpoint-mobile-scaled) {
+                margin-left: 8px;
+            }
         }
     }
 
     &__image {
         max-height: $quick-start-height;
+
+        @media (max-width: $breakpoint-mobile-scaled) {
+            height: 32px;
+        }
     }
 
     &__command + &__link {
         margin-left: $quick-start-spacing;
+
+        @media (max-width: $breakpoint-mobile-scaled) {
+            margin-left: 8px;
+        }
     }
 }

@@ -36,6 +36,10 @@
             margin: 0;
             max-width: 450px;
         }
+
+        @media (max-width: $breakpoint-mobile-scaled) {
+            max-width: 320px;
+        }
     }
 
     &__image + &__description {
@@ -56,6 +60,10 @@
 
         @media (max-width: $breakpoint-medium) {
             width: 450px;
+        }
+
+        @media (max-width: $breakpoint-mobile-scaled) {
+            width: 320px;
         }
     }
 

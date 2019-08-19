@@ -1,5 +1,6 @@
 @import "../../colors";
 @import "../../fonts";
+@import "../../breakpoints";
 
 $header-size: 64px;
 
@@ -7,11 +8,20 @@ $header-size: 64px;
     height: $header-size;
     background: $accent;
 
+    @media (max-width: $breakpoint-mobile-scaled) {
+        height: 48px;
+    }
+
     &__text {
         color: black;
         font-family: $font-main;
         font-size: 28px;
         font-weight: 600;
         line-height: $header-size;
+
+        @media (max-width: $breakpoint-mobile-scaled) {
+            font-size: 24px;
+            line-height: 48px;
+        }
     }
 }
