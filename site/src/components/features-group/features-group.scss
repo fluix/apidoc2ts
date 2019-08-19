@@ -1,0 +1,11 @@
+@import "../../colors";
+@import "../../breakpoints";
+
+.features-group {
+    padding: 64px 0;
+    background-color: $main-lightest;
+
+    @include for-desktop-small {
+        padding: 32px 0;
+    }
+}

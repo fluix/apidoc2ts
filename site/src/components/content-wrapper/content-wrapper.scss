@@ -1,0 +1,26 @@
+@import "../../breakpoints";
+
+.content-wrapper {
+    max-width: 1200px;
+    margin: 0 auto;
+
+    @include for-desktop {
+        max-width: 900px;
+    }
+
+    @include for-tablet {
+        max-width: 640px;
+    }
+
+    @include for-tablet-small {
+        max-width: 480px;
+    }
+
+    @include for-mobile {
+        max-width: 320px;
+    }
+
+    @include for-mobile-small {
+        max-width: 280px;
+    }
+}

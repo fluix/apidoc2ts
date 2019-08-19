@@ -1,0 +1,75 @@
+@import "../../colors";
+@import "../../fonts";
+@import "../../breakpoints";
+
+$quick-start-height: 40px;
+$quick-start-spacing: 16px;
+
+.quick-start {
+    padding: 32px 0;
+    display: flex;
+    align-items: center;
+
+    &__command {
+        flex: 0 0 auto;
+        font-family: $font-code;
+        background-color: $main;
+        line-height: $quick-start-height;
+        padding: 0 18px;
+        border-radius: 4px;
+
+        @include for-tablet-small {
+            font-size: 18px;
+        }
+
+        @include for-mobile {
+            font-size: 14px;
+            line-height: 32px;
+        }
+
+        @include for-mobile-small {
+            font-size: 12px;
+        }
+    }
+
+    &__link {
+        flex: 0 0 auto;
+        height: $quick-start-height;
+
+        @include for-mobile {
+            height: 32px;
+        }
+
+        & + & {
+            margin-left: $quick-start-spacing;
+
+            @include for-mobile {
+                margin-left: 8px;
+            }
+
+            @include for-mobile-small {
+                margin-left: 4px;
+            }
+        }
+    }
+
+    &__image {
+        max-height: $quick-start-height;
+
+        @include for-mobile {
+            height: 32px;
+        }
+    }
+
+    &__command + &__link {
+        margin-left: $quick-start-spacing;
+
+        @include for-mobile {
+            margin-left: 8px;
+        }
+
+        @include for-mobile-small {
+            margin-left: 4px;
+        }
+    }
+}

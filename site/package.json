@@ -8,6 +8,7 @@
     "@types/node": "12.7.1",
     "@types/react": "16.9.1",
     "@types/react-dom": "16.8.5",
+    "node-sass": "^4.12.0",
     "react": "^16.9.0",
     "react-dom": "^16.9.0",
     "react-scripts": "3.1.0",
@@ -18,6 +19,7 @@
     "build": "react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject",
+    "lint-style": "stylelint '**/*.scss' --config stylelint.config.js",
     "postbuild": "react-snap && rm -rf ../docs && mv build ../docs"
   },
   "eslintConfig": {
@@ -30,12 +32,11 @@
       "not op_mini all"
     ],
     "development": [
-      "last 1 chrome version",
-      "last 1 firefox version",
-      "last 1 safari version"
+      "last 1 version"
     ]
   },
   "devDependencies": {
-    "react-snap": "^1.23.0"
+    "react-snap": "^1.23.0",
+    "stylelint": "^10.1.0"
   }
 }

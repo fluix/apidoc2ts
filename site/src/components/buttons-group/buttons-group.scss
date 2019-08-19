@@ -1,0 +1,15 @@
+@import "../../colors";
+
+.buttons-group {
+    background-color: $accent;
+    padding: 16px 0;
+
+    .content-wrapper {
+        display: flex;
+        justify-content: center;
+    }
+
+    .link-button + .link-button {
+        margin-left: 32px;
+    }
+}
