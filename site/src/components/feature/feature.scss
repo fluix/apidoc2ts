@@ -1,19 +1,59 @@
 @import "../../fonts";
 @import "../../colors";
+@import "../../breakpoints";
 
 .feature {
     display: flex;
     justify-content: center;
     align-items: center;
 
+    @include for-tablet {
+        flex-direction: column-reverse;
+    }
+
     & + & {
-        margin: 96px 0;
+        margin-top: 96px;
+
+        @include for-desktop-small {
+            margin-top: 48px;
+        }
+
+        @include for-tablet {
+            margin-top: 24px;
+        }
+
+        @include for-tablet-small {
+            margin-top: 24px;
+        }
     }
 
     &__image {
         flex: 0 0 auto;
         max-width: 400px;
         margin: 0 32px;
+
+        @include for-tablet {
+            margin: 0;
+            max-width: 450px;
+        }
+
+        @include for-mobile {
+            max-width: 320px;
+        }
+
+        @include for-mobile-small {
+            max-width: 280px;
+        }
+    }
+
+    &__image + &__description {
+        @include for-tablet {
+            margin: 0 0 24px;
+        }
+
+        @include for-tablet-small {
+            margin: 0 0 12px;
+        }
     }
 
     &__description {
@@ -21,6 +61,18 @@
         flex-flow: column;
         margin: 0 32px;
         width: 360px;
+
+        @include for-desktop-small {
+            width: 450px;
+        }
+
+        @include for-mobile {
+            width: 320px;
+        }
+
+        @include for-mobile-small {
+            width: 280px;
+        }
     }
 
     &__header {
@@ -28,10 +80,18 @@
         font-weight: 700;
         font-size: 24px;
         line-height: 2em;
+
+        @include for-tablet-small {
+            font-size: 20px;
+        }
     }
 
     &__header + &__text {
         margin-top: 12px;
+
+        @include for-tablet-small {
+            margin-top: 0;
+        }
     }
 
     &__text {
@@ -40,9 +100,17 @@
         font-size: 18px;
         line-height: 1.5em;
         font-family: $font-main;
+
+        @include for-tablet-small {
+            font-size: 16px;
+        }
     }
 
     &--image-on-right {
         flex-direction: row-reverse;
+
+        @include for-tablet {
+            flex-direction: column-reverse;
+        }
     }
 }

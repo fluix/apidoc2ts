@@ -1,18 +1,26 @@
 @import "../../colors";
+@import "../../breakpoints";
 
 .footer {
     background-color: $main-darkest;
 
     &__group {
-        height: 64px;
         display: flex;
         justify-content: space-between;
         align-items: center;
+
+        @include for-mobile {
+            flex-direction: column;
+        }
     }
 
     &__text {
         color: $main-darker;
         font-size: 14px;
+
+        @include for-mobile {
+            text-align: center;
+        }
     }
 
     &__link {

@@ -1,5 +1,6 @@
 @import "../../colors";
 @import "../../fonts";
+@import "../../breakpoints";
 
 .terminal {
 
@@ -12,6 +13,10 @@
         padding: 24px;
         background-color: $main-darkest;
         box-shadow: 0 10px 20px rgba(0, 0, 0, 0.3);
+
+        @include for-tablet {
+            max-width: 400px;
+        }
     }
 
     &__line {
@@ -19,6 +24,15 @@
         font-family: $font-code;
         line-height: 1.5em;
         margin-bottom: 0;
+
+        @include for-tablet {
+            white-space: pre-wrap;
+            word-break: break-word;
+        }
+
+        @include for-mobile {
+            font-size: 14px;
+        }
     }
 
     &__line--response {
@@ -28,5 +42,9 @@
     &__controls-image {
         height: 16px;
         margin-bottom: 8px;
+
+        @include for-mobile-small {
+            height: 12px;
+        }
     }
 }

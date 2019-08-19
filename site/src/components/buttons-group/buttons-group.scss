@@ -6,6 +6,10 @@
 
     .content-wrapper {
         display: flex;
-        justify-content: space-evenly;
+        justify-content: center;
+    }
+
+    .link-button + .link-button {
+        margin-left: 32px;
     }
 }
