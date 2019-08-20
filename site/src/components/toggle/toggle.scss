@@ -7,10 +7,9 @@
     &__button {
         font-family: $font-main;
         font-size: 14px;
-        flex-grow: 1;
+        flex: 1 0 auto;
         background-color: $main;
         border: none;
-
         line-height: 36px;
     }
 

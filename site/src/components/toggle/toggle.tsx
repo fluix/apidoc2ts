@@ -6,14 +6,14 @@ interface ToggleProps {
         value: string;
         label: string;
     }>;
-    onToggle: (toggled: string) => void;
-    toggled: string;
+    onToggle: (value: string) => void;
+    activeOption: string;
 }
 
 export default class Toggle extends PureComponent<ToggleProps, {}> {
 
     private onButtonClick = (value: string) => {
-        if (value === this.props.toggled) {
+        if (value === this.props.activeOption) {
             return;
         }
 
@@ -22,7 +22,7 @@ export default class Toggle extends PureComponent<ToggleProps, {}> {
 
     render() {
         const buttons = this.props.items.map(item => {
-            const buttonModifier = this.props.toggled === item.value ? "toggle__button--toggled" : "";
+            const buttonModifier = this.props.activeOption === item.value ? "toggle__button--toggled" : "";
 
             return <button
                 key={item.value}
