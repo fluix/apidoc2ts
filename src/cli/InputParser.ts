@@ -2,7 +2,7 @@ import Convert = require("./index");
 import * as fs from "fs";
 import * as _ from "lodash";
 import * as path from "path";
-import {ApiDoc2InterfaceParameters} from "../core/ApiDoc2Interface";
+import {ApiDoc2InterfaceGroupingMode, ApiDoc2InterfaceParameters} from "../core/ApiDoc2Interface";
 import {BuilderOptions} from "../core/ApiDoc2InterfaceBuilder";
 
 type CLIFlags = Record<keyof typeof Convert.flags, any>;
@@ -54,6 +54,10 @@ export class InputParser {
     private validateInput(flags) {
         InputParser.requiredFlagsKeys.forEach(key => {
             if (flags[key]) {
+                return;
+            }
+
+            if (key === "name" && flags.grouping === ApiDoc2InterfaceGroupingMode.URL) {
                 return;
             }
 
