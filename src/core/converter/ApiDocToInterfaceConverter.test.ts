@@ -250,6 +250,6 @@ describe("ApiDoc to Interface converter", () => {
         const apiDocEndpoints = [requestVersion1, otherRequest];
         await converterWithWhitelist.convert(apiDocEndpoints);
         expect(parseEndpointSpy).toBeCalledTimes(1);
-        expect(interfaceGenerator.createInterface).toBeCalledTimes(interfacesPerEndpoint);
+        expect(interfaceGenerator.createInterface).toBeCalledTimes(1 * interfacesPerEndpoint);
     });
 });
