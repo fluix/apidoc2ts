@@ -41,9 +41,10 @@
     "@oclif/command": "^1.5.18",
     "@oclif/config": "^1.13.2",
     "@oclif/plugin-help": "^2.2.0",
-    "quicktype-core": "^6.0.44",
-    "lodash": "^4.17.14",
     "chalk": "^2.4.2",
+    "lodash": "^4.17.14",
+    "make-dir": "^3.0.0",
+    "quicktype-core": "^6.0.44",
     "tslib": "^1.10.0"
   },
   "devDependencies": {
