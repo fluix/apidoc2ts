@@ -1,9 +1,9 @@
 import {TerminalLine} from "./components/terminal/terminal";
-import featureCustomizing from "./images/feature_customizing.png";
-import featureEnums from "./images/feature_enums.png";
-import featureNestedFields from "./images/feature_nested.png";
-import featureUrlGrouping from "./images/feature_url.png";
-import featureVersions from "./images/feature_versions.png";
+import featureCustomizing from "./images/feature_customizing.svg";
+import featureEnums from "./images/feature_enums.svg";
+import featureNestedFields from "./images/feature_nested.svg";
+import featureUrlGrouping from "./images/feature_url.svg";
+import featureVersions from "./images/feature_versions.svg";
 
 export const features = [
     {

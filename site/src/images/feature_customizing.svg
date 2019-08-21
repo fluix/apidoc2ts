@@ -1,0 +1,60 @@
+<svg id="Layer_1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1500 500">
+    <defs>
+        <style>
+            .cls-1 {
+                fill-opacity: 0;
+            }
+
+            .cls-2 {
+                fill: #f2f2f2;
+            }
+
+            .cls-3 {
+                fill: #ccc;
+            }
+
+            .cls-4 {
+                fill: #ff3034;
+            }
+
+            .cls-5 {
+                fill: #ffbb34;
+            }
+
+            .cls-6 {
+                fill: #85cd34;
+            }
+
+            .cls-7 {
+                fill: #4cb8db;
+            }
+
+            .cls-8 {
+                fill: #333;
+            }
+        </style>
+    </defs>
+    <title>Feature customizing</title>
+    <rect class="cls-1" width="1500" height="500" rx="20" ry="20"/>
+    <rect class="cls-2" x="48.8" y="61.88" width="404.61" height="365.72" rx="19.57" ry="19.57"/>
+    <rect class="cls-3" x="122.93" y="110.35" width="256.37" height="58.17" rx="13.66" ry="13.66"/>
+    <rect class="cls-3" x="122.93" y="214.91" width="256.37" height="58.17" rx="13.66" ry="13.66"/>
+    <rect class="cls-3" x="122.93" y="319.46" width="256.37" height="58.17" rx="13.66" ry="13.66"/>
+    <rect class="cls-2" x="614.25" y="61.88" width="827.81" height="365.72" rx="28" ry="28"/>
+    <rect class="cls-3" x="899.97" y="110.35" width="256.37" height="58.17" rx="13.66" ry="13.66"/>
+    <rect class="cls-3" x="899.97" y="214.91" width="256.37" height="58.17" rx="13.66" ry="13.66"/>
+    <rect class="cls-3" x="899.97" y="319.46" width="256.37" height="58.17" rx="13.66" ry="13.66"/>
+    <rect class="cls-4" x="785.73" y="110.35" width="84.88" height="58.17" rx="7.86" ry="7.86"/>
+    <rect class="cls-5" x="785.73" y="214.91" width="84.88" height="58.17" rx="7.86" ry="7.86"/>
+    <rect class="cls-6" x="785.73" y="319.46" width="84.88" height="58.17" rx="7.86" ry="7.86"/>
+    <rect class="cls-7" x="674.14" y="110.35" width="84.88" height="58.17" rx="7.86" ry="7.86"/>
+    <rect class="cls-7" x="674.14" y="214.91" width="84.88" height="58.17" rx="7.86" ry="7.86"/>
+    <rect class="cls-7" x="674.14" y="319.46" width="84.88" height="58.17" rx="7.86" ry="7.86"/>
+    <rect class="cls-7" x="1299.54" y="110.35" width="84.88" height="58.17" rx="7.86" ry="7.86"/>
+    <rect class="cls-7" x="1299.54" y="214.91" width="84.88" height="58.17" rx="7.86" ry="7.86"/>
+    <rect class="cls-7" x="1299.54" y="319.46" width="84.88" height="58.17" rx="7.86" ry="7.86"/>
+    <rect class="cls-4" x="1187.95" y="110.35" width="84.88" height="58.17" rx="7.86" ry="7.86"/>
+    <rect class="cls-5" x="1187.95" y="214.91" width="84.88" height="58.17" rx="7.86" ry="7.86"/>
+    <rect class="cls-6" x="1187.95" y="319.46" width="84.88" height="58.17" rx="7.86" ry="7.86"/>
+    <polygon class="cls-8" points="516.49 281.25 570.62 250 516.49 218.75 516.49 281.25"/>
+</svg>
