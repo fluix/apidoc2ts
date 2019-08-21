@@ -95,51 +95,32 @@ describe("ApiDoc to Interface converter", () => {
     const parseEndpointSpy = jest.spyOn(endpointParser, "parseEndpoint");
 
     const converter = new ApiDocToInterfaceConverter(interfaceGenerator, endpointParser);
-    const converterWithLatestOption = new ApiDocToInterfaceConverter(
-        interfaceGenerator,
-        endpointParser,
+    const defaultOptions = {
+        versionResolving: ConverterVersionResolving.ALL,
+        staticPrefix: "",
+        staticPostfix: "",
+        requestPrefix: "",
+        requestPostfix: "",
+        responsePrefix: "",
+        responsePostfix: "",
+        errorPrefix: "",
+        errorPostfix: "",
+        whitelist: [],
+    };
+    const converterWithLatestOption = new ApiDocToInterfaceConverter(interfaceGenerator, endpointParser,
         {
+            ...defaultOptions,
             versionResolving: ConverterVersionResolving.LAST,
-            staticPrefix: "",
-            staticPostfix: "",
-            requestPrefix: "",
-            requestPostfix: "",
-            responsePrefix: "",
-            responsePostfix: "",
-            errorPrefix: "",
-            errorPostfix: "",
-            whitelist: [],
         },
     );
-    const converterWithEmptyWhitelist = new ApiDocToInterfaceConverter(
-        interfaceGenerator,
-        endpointParser,
+    const converterWithEmptyWhitelist = new ApiDocToInterfaceConverter(interfaceGenerator, endpointParser,
         {
-            versionResolving: ConverterVersionResolving.ALL,
-            staticPrefix: "",
-            staticPostfix: "",
-            requestPrefix: "",
-            requestPostfix: "",
-            responsePrefix: "",
-            responsePostfix: "",
-            errorPrefix: "",
-            errorPostfix: "",
-            whitelist: [],
+            ...defaultOptions,
         },
     );
-    const converterWithWhitelist = new ApiDocToInterfaceConverter(
-        interfaceGenerator,
-        endpointParser,
+    const converterWithWhitelist = new ApiDocToInterfaceConverter(interfaceGenerator, endpointParser,
         {
-            versionResolving: ConverterVersionResolving.ALL,
-            staticPrefix: "",
-            staticPostfix: "",
-            requestPrefix: "",
-            requestPostfix: "",
-            responsePrefix: "",
-            responsePostfix: "",
-            errorPrefix: "",
-            errorPostfix: "",
+            ...defaultOptions,
             whitelist: ["PostBook"],
         },
     );
