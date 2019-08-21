@@ -77,6 +77,7 @@ export class InputParser {
             name: flags.name,
             output: flags.output,
             grouping: flags.grouping,
+            whitelist: flags.whitelist,
         };
     }
 }
