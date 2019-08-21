@@ -1,6 +1,6 @@
 import {IApiDocEndpoint} from "../ApiDocInterfaces";
-import {ApiDocEndpointParser} from "../parser/ApiDocEndpointParser";
 import {InterfaceGenerator} from "../generator/InterfaceGenerator";
+import {ApiDocEndpointParser} from "../parser/ApiDocEndpointParser";
 
 export interface InterfaceMetadata {
     type: string;
@@ -36,6 +36,7 @@ export interface ConverterOptions {
     responsePostfix: string;
     errorPrefix: string;
     errorPostfix: string;
+    whitelist: Array<string>;
 }
 
 export const converterDefaultOptions: ConverterOptions = {
@@ -48,6 +49,7 @@ export const converterDefaultOptions: ConverterOptions = {
     responsePostfix: "Response",
     errorPrefix: "",
     errorPostfix: "Error",
+    whitelist: [],
 };
 
 interface InterfaceNameOptions {
@@ -69,9 +71,10 @@ export class ApiDocToInterfaceConverter {
     }
 
     async convert(apiDocEndpoints: Array<IApiDocEndpoint>): Promise<Array<ConverterResult>> {
-        const latestEndpointsVersions = this.getLatestEndpointsVersions(apiDocEndpoints);
+        const whitelistedEndpoints = this.getWhitelistedEndpoints(apiDocEndpoints);
+        const latestEndpointsVersions = this.getLatestEndpointsVersions(whitelistedEndpoints);
 
-        return await Promise.all(apiDocEndpoints.map(async (endpoint) => {
+        return await Promise.all(whitelistedEndpoints.map(async (endpoint) => {
             if (this.shouldSkipEndpointVersion(endpoint, latestEndpointsVersions)) {
                 return this.createWarningResult(endpoint, `Skipping older version [${endpoint.version}]`);
             }
@@ -82,6 +85,14 @@ export class ApiDocToInterfaceConverter {
                 return this.createWarningResult(endpoint, error.message);
             }
         }));
+    }
+
+    private getWhitelistedEndpoints(apiDocEndpoints: Array<IApiDocEndpoint>): Array<IApiDocEndpoint> {
+        if (this.options.whitelist.length === 0) {
+            return apiDocEndpoints;
+        }
+
+        return apiDocEndpoints.filter(endpoint => this.options.whitelist.includes(endpoint.name));
     }
 
     private getLatestEndpointsVersions(apiDocEndpoints: Array<IApiDocEndpoint>) {
