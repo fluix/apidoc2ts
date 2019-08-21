@@ -49,6 +49,12 @@ url - save all interfaces to corresponding url paths`,
             description: "Which versions should be processed",
             exclusive: ["config"],
         }),
+        whitelist: flags.string({
+            char: "w",
+            multiple: true,
+            description: "Specify list of endpoints names which should be processed",
+            exclusive: ["config"],
+        }),
         ["custom-types"]: flags.string({
             char: "t",
             multiple: true,
