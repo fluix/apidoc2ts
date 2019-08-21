@@ -21,6 +21,8 @@ export class InputParser {
         const flags = cliFlags.config
                       ? await this.readConfigFlags(cliFlags.config)
                       : await this.combineDefaultConfigAndCliFlags(cliFlags);
+
+        flags.output = flags.output || "./";
         this.validateInput(flags);
 
         return {
