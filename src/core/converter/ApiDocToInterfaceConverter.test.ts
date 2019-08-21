@@ -81,13 +81,15 @@ const otherRequest = {
 jest.mock("../parser/ApiDocEndpointParser");
 jest.mock("../generator/InterfaceGenerator");
 
-const apiDocDataFull = [requestVersion1, requestVersion2, requestVersion3];
+const threeEndpoints = [requestVersion1, requestVersion2, requestVersion3];
 
 const parserResultMock = {
     request: {type: "requestMock"},
     response: {type: "responseMock"},
     error: {type: "errorMock"},
 };
+
+const interfacesPerEndpoint = 3; // request, success response, error response
 
 describe("ApiDoc to Interface converter", () => {
     const interfaceGenerator = new InterfaceGenerator();
@@ -200,9 +202,9 @@ describe("ApiDoc to Interface converter", () => {
     });
 
     it("should call parseEndpoint and createInterface for every endpoint", async () => {
-        await converter.convert(apiDocDataFull);
-        expect(parseEndpointSpy).toBeCalledTimes(apiDocDataFull.length);
-        expect(interfaceGenerator.createInterface).toBeCalledTimes(apiDocDataFull.length * 3);
+        await converter.convert(threeEndpoints);
+        expect(parseEndpointSpy).toBeCalledTimes(threeEndpoints.length);
+        expect(interfaceGenerator.createInterface).toBeCalledTimes(threeEndpoints.length * interfacesPerEndpoint);
     });
 
     it("should add version postfix to interface name if it is not the latest one", async () => {
@@ -225,29 +227,29 @@ describe("ApiDoc to Interface converter", () => {
     });
 
     it("should not create interfaces for older versions if version resolving option is set to 'latest'", async () => {
-        const results = await converterWithLatestOption.convert(apiDocDataFull);
+        const results = await converterWithLatestOption.convert(threeEndpoints);
         expect(results[0].requestInterface).toBe("");
         expect(results[1].requestInterface).toBe("");
         expect(results[2].requestInterface).not.toBe("");
     });
 
     it("should create warnings for skipped older endpoints", async () => {
-        const results = await converterWithLatestOption.convert(apiDocDataFull);
+        const results = await converterWithLatestOption.convert(threeEndpoints);
         expect(results[0].warning).toBe("Skipping older version [0.0.1]");
         expect(results[1].warning).toBe("Skipping older version [0.0.2]");
         expect(results[2].warning).toBeUndefined();
     });
 
     it("should create interfaces for all endpoints if whitelist is not specified", async () => {
-        await converterWithEmptyWhitelist.convert(apiDocDataFull);
-        expect(parseEndpointSpy).toBeCalledTimes(apiDocDataFull.length);
-        expect(interfaceGenerator.createInterface).toBeCalledTimes(apiDocDataFull.length * 3);
+        await converterWithEmptyWhitelist.convert(threeEndpoints);
+        expect(parseEndpointSpy).toBeCalledTimes(threeEndpoints.length);
+        expect(interfaceGenerator.createInterface).toBeCalledTimes(threeEndpoints.length * interfacesPerEndpoint);
     });
 
     it("should create interfaces only for whitelisted endpoints", async () => {
         const apiDocEndpoints = [requestVersion1, otherRequest];
         await converterWithWhitelist.convert(apiDocEndpoints);
         expect(parseEndpointSpy).toBeCalledTimes(1);
-        expect(interfaceGenerator.createInterface).toBeCalledTimes(3);
+        expect(interfaceGenerator.createInterface).toBeCalledTimes(interfacesPerEndpoint);
     });
 });
