@@ -8,13 +8,13 @@ export class ApiDocExamplesParser {
     private rendererOptions = {"just-types": "true"};
     private targetLanguage = new TypeScriptTargetLanguage();
 
-    async parse(name: string, endpointPart?: IApiDocEndpointPart): Promise<string> {
+    async parse(endpointPart?: IApiDocEndpointPart, interfaceName = "Generated"): Promise<string> {
         if (!isEndpointPartWithExamples(endpointPart)) {
             return "";
         }
 
         const samples = this.getExamplesJson(endpointPart.examples);
-        const inputData = await this.createInputData(samples, name);
+        const inputData = await this.createInputData(samples, interfaceName);
         const quicktypeOptions = this.getQuicktypeOptions(inputData);
 
         const result = await quicktype(quicktypeOptions);
@@ -24,8 +24,8 @@ export class ApiDocExamplesParser {
 
     private getExamplesJson(examples: Array<IApiDocExample>) {
         return examples.map(example => {
-            const match = example.content.match(this.regex);
-            return match ? match[0] : "";
+            const jsonMatch = example.content.match(this.regex);
+            return jsonMatch ? jsonMatch[0] : "";
         });
     }
 

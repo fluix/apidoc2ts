@@ -164,9 +164,9 @@ export class ApiDocToInterfaceConverter {
 
         return {
             metadata: endpoint,
-            requestInterface: await this.examplesParser.parse(requestInterfaceName, endpoint.parameter),
-            responseInterface: await this.examplesParser.parse(responseInterfaceName, endpoint.success),
-            errorInterface: await this.examplesParser.parse(errorInterfaceName, endpoint.error),
+            requestInterface: await this.examplesParser.parse(endpoint.parameter, requestInterfaceName),
+            responseInterface: await this.examplesParser.parse(endpoint.success, responseInterfaceName),
+            errorInterface: await this.examplesParser.parse(endpoint.error, errorInterfaceName),
         };
     }
 
