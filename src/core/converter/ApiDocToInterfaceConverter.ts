@@ -38,6 +38,7 @@ export interface ConverterOptions {
     errorPrefix: string;
     errorPostfix: string;
     whitelist: Array<string>;
+    parseExamples: boolean;
 }
 
 export const converterDefaultOptions: ConverterOptions = {
@@ -51,6 +52,7 @@ export const converterDefaultOptions: ConverterOptions = {
     errorPrefix: "",
     errorPostfix: "Error",
     whitelist: [],
+    parseExamples: false,
 };
 
 interface InterfaceNameOptions {
@@ -92,7 +94,7 @@ export class ApiDocToInterfaceConverter {
                        return result;
                    })
                    .catch(err => {
-                       if (!this.examplesParser) {
+                       if (!this.options.parseExamples || !this.examplesParser) {
                            return this.createWarningResult(endpoint, err.message);
                        }
                        return this.createInterfacesFromExamples(endpoint, isLatest);

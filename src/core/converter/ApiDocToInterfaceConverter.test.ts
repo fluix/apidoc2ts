@@ -140,6 +140,7 @@ describe("ApiDoc to Interface converter", () => {
         errorPrefix: "",
         errorPostfix: "",
         whitelist: [],
+        parseExamples: false,
     };
     const converterWithLatestOption = new ApiDocToInterfaceConverter(interfaceGenerator, endpointParser,
         {
@@ -159,7 +160,10 @@ describe("ApiDoc to Interface converter", () => {
     const converterWithExamplesParser = new ApiDocToInterfaceConverter(
         interfaceGenerator,
         endpointParser,
-        defaultOptions,
+        {
+            ...defaultOptions,
+            parseExamples: true,
+        },
         examplesParser,
     );
 
@@ -178,9 +182,8 @@ describe("ApiDoc to Interface converter", () => {
         interfaceGenerator,
         endpointParser,
         {
+            ...defaultOptions,
             ...prefixPostfixOptions,
-            versionResolving: ConverterVersionResolving.ALL,
-            whitelist: [],
         },
     );
 
