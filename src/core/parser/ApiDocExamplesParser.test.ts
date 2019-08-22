@@ -16,20 +16,20 @@ const simpleEndpointPart: IApiDocEndpointPart = {
 };
 
 describe("ApiDocExamplesParser", () => {
-    const parser = new ApiDocExamplesParser();
+    const examplesParser = new ApiDocExamplesParser();
 
     it("should return empty string if there are no examples", async () => {
-        const interfaceString = await parser.parse(emptyEndpointPart);
+        const interfaceString = await examplesParser.parse(emptyEndpointPart);
         expect(interfaceString).toBe("");
     });
 
     it("should create interface with passed name", async () => {
-        const interfaceString = await parser.parse(simpleEndpointPart, "User");
+        const interfaceString = await examplesParser.parse(simpleEndpointPart, "User");
         expect(interfaceString).toContain("interface User");
     });
 
     it("should create fields for simple example", async () => {
-        const interfaceString = await parser.parse(simpleEndpointPart);
+        const interfaceString = await examplesParser.parse(simpleEndpointPart);
         expect(interfaceString).toContain("name: string;");
         expect(interfaceString).toContain("age: number;");
     });
