@@ -67,6 +67,22 @@ describe("CLI InputParser", () => {
         await expect(inputParser.parse({config: "/invalid-config.js"})).rejects.toThrow();
     });
 
+    it("should replace missing 'output' flag with default value", async () => {
+        existsSpy.mockReturnValue(false);
+        const result = await inputParser.parse({
+            source: "source",
+            name: "name",
+        });
+        expect(result.runParameters.output).toBe("./");
+    });
+
+    it("should not throw an error if 'name' is not specified and grouping is set to 'url'", async () => {
+        existsSpy.mockReturnValue(false);
+        await expect(inputParser.parse({
+            source: "source", output: "output", grouping: "url",
+        })).resolves.not.toThrow();
+    });
+
     it("should import config file from a default path if no path was specified", async () => {
         const result = await inputParser.parse(emptyFlags);
         expect(result.runParameters.name).toEqual(defaultConfigFlags.name);

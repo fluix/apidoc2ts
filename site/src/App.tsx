@@ -9,7 +9,7 @@ import Title from "./components/title/title";
 import {features, links, terminalLines} from "./config";
 import githubLogo from "./images/github-logo.png";
 import npmLogo from "./images/npm-logo.png";
-import titleImage from "./images/title_image.png";
+import titleImage from "./images/title_image.svg";
 
 const App: React.FC = () => {
     return (

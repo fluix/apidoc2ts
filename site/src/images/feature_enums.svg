@@ -1,0 +1,75 @@
+<svg id="Layer_1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1500 500">
+    <defs>
+        <style>
+            .cls-1 {
+                fill-opacity: 0;
+            }
+
+            .cls-2 {
+                fill: #f2f2f2;
+            }
+
+            .cls-3 {
+                fill: #333;
+            }
+
+            .cls-4 {
+                fill: #ccc;
+            }
+
+            .cls-5 {
+                font-size: 24px;
+            }
+
+            .cls-10, .cls-5 {
+                font-family: PTMono-Regular, PT Mono;
+            }
+
+            .cls-6 {
+                fill: #ffbb34;
+            }
+
+            .cls-7 {
+                fill: #85cd34;
+            }
+
+            .cls-8 {
+                fill: #ff3034;
+            }
+
+            .cls-9 {
+                fill: #4cb8db;
+            }
+
+            .cls-10 {
+                font-size: 44px;
+            }
+        </style>
+    </defs>
+    <title>Feature enums</title>
+    <rect class="cls-1" width="1500" height="500" rx="20" ry="20"/>
+    <rect class="cls-2" x="50" y="60" width="809.35" height="365.72" rx="20" ry="20"/>
+    <rect class="cls-2" x="1059.29" y="61.88" width="382.78" height="365.72" rx="19.04" ry="19.04"/>
+    <rect class="cls-3" x="85.23" y="124.74" width="731.33" height="63.44" rx="8.03" ry="8.03"/>
+    <rect class="cls-4" x="211.21" y="218.74" width="505.37" height="35.47" rx="8.58" ry="8.58"/>
+    <rect class="cls-4" x="211.21" y="269.71" width="505.37" height="35.47" rx="8.58" ry="8.58"/>
+    <rect class="cls-4" x="211.21" y="320.69" width="505.37" height="35.47" rx="8.58" ry="8.58"/>
+    <rect class="cls-4" x="85.23" y="218.74" width="111.92" height="35.47" rx="7.2" ry="7.2"/>
+    <rect class="cls-9" x="85.23" y="269.71" width="111.92" height="35.47" rx="7.2" ry="7.2"/>
+    <rect class="cls-4" x="85.23" y="320.69" width="111.92" height="35.47" rx="7.2" ry="7.2"/>
+    <text class="cls-5" transform="translate(227.44 295.23)">
+        <tspan xml:space="preserve">allowed values:    ,    ,</tspan>
+    </text>
+    <polygon class="cls-3" points="925.02 281.25 979.15 250 925.02 218.75 925.02 281.25"/>
+    <rect class="cls-6" x="521.68" y="275.83" width="53.2" height="23.19" rx="3.93" ry="3.93"/>
+    <rect class="cls-7" x="593.75" y="275.83" width="53.2" height="23.19" rx="3.93" ry="3.93"/>
+    <rect class="cls-8" x="448.26" y="275.83" width="53.2" height="23.19" rx="3.93" ry="3.93"/>
+    <rect class="cls-8" x="1171.52" y="200.62" width="92.19" height="36.24" rx="6.46" ry="6.46"/>
+    <rect class="cls-9" x="1243.93" y="138.34" width="105.46" height="36.24" rx="6.91" ry="6.91"/>
+    <rect class="cls-6" x="1171.52" y="252.73" width="92.19" height="36.24" rx="6.46" ry="6.46"/>
+    <rect class="cls-7" x="1171.52" y="304.84" width="92.19" height="36.24" rx="6.46" ry="6.46"/>
+    <text class="cls-10" transform="translate(1121.9 167.55)">
+        <tspan xml:space="preserve">enum     {</tspan>
+    </text>
+    <text class="cls-10" transform="translate(1121.9 387.78)">}</text>
+</svg>

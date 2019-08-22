@@ -1,0 +1,80 @@
+<svg id="Layer_1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1500 500">
+    <defs>
+        <style>
+            .cls-1 {
+                fill-opacity: 0;
+            }
+
+            .cls-2 {
+                fill: #f2f2f2;
+            }
+
+            .cls-3 {
+                opacity: 0.3;
+            }
+
+            .cls-4 {
+                font-size: 44px;
+                font-family: PTMono-Regular, PT Mono;
+            }
+
+            .cls-5 {
+                fill: #ccc;
+            }
+
+            .cls-6 {
+                fill: #333;
+            }
+
+            .cls-7 {
+                fill: #afd0db;
+            }
+
+            .cls-8 {
+                fill: #4cb8db;
+            }
+
+            .cls-9 {
+                font-size: 24px;
+                fill: #ff3034;
+                font-family: PTMono-Bold, PT Mono;
+                font-weight: 700;
+            }
+
+            .cls-10 {
+                fill: none;
+                stroke: #ff3034;
+                stroke-miterlimit: 10;
+                stroke-width: 6px;
+            }
+        </style>
+    </defs>
+    <title>Feature versions</title>
+    <rect class="cls-1" width="1500" height="500" rx="20" ry="20"/>
+    <rect class="cls-2" x="140" y="41.88" width="600" height="410.25" rx="24.36" ry="24.36"/>
+    <rect class="cls-2" x="883.38" y="41.88" width="558.68" height="410.25" rx="24.36" ry="24.36"/>
+    <g class="cls-3">
+        <text class="cls-4" transform="translate(935.23 115.06)">
+            <tspan xml:space="preserve">interface       {</tspan>
+        </text>
+        <text class="cls-4" transform="translate(935.23 231.09)">}</text>
+        <rect class="cls-5" x="984.85" y="148.13" width="331.13" height="36.24" rx="6.31" ry="6.31"/>
+        <rect class="cls-6" x="1192.06" y="85.86" width="146.93" height="36.24" rx="8.16" ry="8.16"/>
+    </g>
+    <text class="cls-4" transform="translate(935.23 314.11)">
+        <tspan xml:space="preserve">interface       {</tspan>
+    </text>
+    <text class="cls-4" transform="translate(935.23 430.14)">}</text>
+    <rect class="cls-7" x="984.85" y="347.18" width="331.13" height="36.24" rx="6.31" ry="6.31"/>
+    <rect class="cls-8" x="1192.06" y="284.91" width="146.93" height="36.24" rx="8.16" ry="8.16"/>
+    <rect class="cls-6" x="170.75" y="79.47" width="515.34" height="55.64" rx="6.31" ry="6.31"/>
+    <rect class="cls-5" x="170.75" y="161.92" width="427.84" height="31.11" rx="6.31" ry="6.31"/>
+    <rect class="cls-8" x="170.75" y="300.51" width="515.34" height="55.64" rx="6.31" ry="6.31"/>
+    <rect class="cls-7" x="170.75" y="382.96" width="427.84" height="31.11" rx="6.31" ry="6.31"/>
+    <polygon class="cls-6" points="790.91 373.43 845.04 342.18 790.91 310.92 790.91 373.43"/>
+    <polygon class="cls-6" points="790.91 175.19 845.04 143.94 790.91 112.68 790.91 175.19"/>
+    <text class="cls-9" transform="translate(52.79 202.95)">v1.0</text>
+    <text class="cls-9" transform="translate(52.79 424.07)">v2.0</text>
+    <line class="cls-10" x1="774.67" y1="166.38" x2="852.43" y2="121.49"/>
+    <line class="cls-10" x1="852.43" y1="166.38" x2="774.67" y2="121.49"/>
+</svg>
