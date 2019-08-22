@@ -107,7 +107,11 @@ export class ApiDocToInterfaceConverter {
                    });
     }
 
-    private async combineInterfaces(endpoint: IApiDocEndpoint, isLatest: boolean, interfacesFromFields) {
+    private async combineInterfaces(
+        endpoint: IApiDocEndpoint,
+        isLatest: boolean,
+        interfacesFromFields: ConverterResult,
+    ): Promise<ConverterResult> {
         const interfacesFromExamples = await this.createInterfacesFromExamples(endpoint, isLatest);
         return {
             metadata: endpoint,
@@ -182,8 +186,8 @@ export class ApiDocToInterfaceConverter {
         };
     }
 
-    private shouldParseExamples() {
-        return this.options.parseExamples && this.examplesParser;
+    private shouldParseExamples(): boolean {
+        return Boolean(this.options.parseExamples && this.examplesParser);
     }
 
     private shouldSkipEndpointVersion(
