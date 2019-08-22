@@ -81,12 +81,13 @@ export class ApiDocToInterfaceConverter {
                 return this.createWarningResult(endpoint, `Skipping older version [${endpoint.version}]`);
             }
 
-            return this.createInterfaces(endpoint, latestEndpointsVersions);
+            const isLatest = endpoint.version === latestEndpointsVersions[endpoint.name];
+            return this.createInterfaces(endpoint, isLatest);
         }));
     }
 
-    private createInterfaces(endpoint: IApiDocEndpoint, latestEndpointsVersions): Promise<ConverterResult> {
-        return this.createInterfacesFromParameters(endpoint, latestEndpointsVersions)
+    private createInterfaces(endpoint: IApiDocEndpoint, isLatest: boolean): Promise<ConverterResult> {
+        return this.createInterfacesFromParameters(endpoint, isLatest)
                    .then(result => {
                        return result;
                    })
@@ -94,7 +95,7 @@ export class ApiDocToInterfaceConverter {
                        if (!this.examplesParser) {
                            return this.createWarningResult(endpoint, err.message);
                        }
-                       return this.createInterfacesFromExamples(endpoint, latestEndpointsVersions);
+                       return this.createInterfacesFromExamples(endpoint, isLatest);
                    })
                    .then(result => {
                        return result;
@@ -125,10 +126,9 @@ export class ApiDocToInterfaceConverter {
 
     private async createInterfacesFromParameters(
         endpoint: IApiDocEndpoint,
-        latestEndpointsVersions: Record<string, string>,
+        isLatest: boolean,
     ): Promise<ConverterResult> {
         const {request, response, error} = this.endpointParser.parseEndpoint(endpoint);
-        const isLatest = endpoint.version === latestEndpointsVersions[endpoint.name];
 
         const {
             requestInterfaceName,
@@ -146,7 +146,7 @@ export class ApiDocToInterfaceConverter {
 
     private async createInterfacesFromExamples(
         endpoint: IApiDocEndpoint,
-        latestEndpointsVersions: Record<string, string>,
+        isLatest: boolean,
     ): Promise<ConverterResult> {
         if (!this.examplesParser) {
             throw new Error("No examples parser");
@@ -156,7 +156,6 @@ export class ApiDocToInterfaceConverter {
             throw new Error("Endpoint has no examples");
         }
 
-        const isLatest = endpoint.version === latestEndpointsVersions[endpoint.name];
         const {
             requestInterfaceName,
             responseInterfaceName,
