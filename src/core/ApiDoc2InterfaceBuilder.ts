@@ -1,12 +1,13 @@
-import {InterfaceGenerator} from "./generator/InterfaceGenerator";
-import {ApiDocEndpointParser} from "./parser/ApiDocEndpointParser";
+import * as _ from "lodash";
+import {ApiDoc2Interface} from "./ApiDoc2Interface";
 import {
     ApiDocToInterfaceConverter,
-    ConverterOptions,
     converterDefaultOptions,
+    ConverterOptions,
 } from "./converter/ApiDocToInterfaceConverter";
-import {ApiDoc2Interface} from "./ApiDoc2Interface";
-import * as _ from "lodash";
+import {InterfaceGenerator} from "./generator/InterfaceGenerator";
+import {ApiDocEndpointParser} from "./parser/ApiDocEndpointParser";
+import {ApiDocExamplesParser} from "./parser/ApiDocExamplesParser";
 
 export interface BuilderOptions extends ConverterOptions {
     customTypes: Array<string>;
@@ -19,7 +20,8 @@ export class ApiDoc2InterfaceBuilder {
 
         const generator = new InterfaceGenerator(generatorOptions);
         const parser = new ApiDocEndpointParser();
-        const converter = new ApiDocToInterfaceConverter(generator, parser, converterOptions);
+        const examplesParser = new ApiDocExamplesParser();
+        const converter = new ApiDocToInterfaceConverter(generator, parser, converterOptions, examplesParser);
         return new ApiDoc2Interface(converter);
     }
 }

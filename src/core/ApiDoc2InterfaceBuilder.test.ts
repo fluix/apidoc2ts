@@ -1,14 +1,17 @@
+import {ApiDoc2Interface} from "./ApiDoc2Interface";
 import {ApiDoc2InterfaceBuilder, BuilderOptions} from "./ApiDoc2InterfaceBuilder";
-import {InterfaceGenerator} from "./generator/InterfaceGenerator";
-import {ApiDocEndpointParser} from "./parser/ApiDocEndpointParser";
 import {
     ApiDocToInterfaceConverter,
-    ConverterVersionResolving, converterDefaultOptions,
+    converterDefaultOptions,
+    ConverterVersionResolving,
 } from "./converter/ApiDocToInterfaceConverter";
-import {ApiDoc2Interface} from "./ApiDoc2Interface";
+import {InterfaceGenerator} from "./generator/InterfaceGenerator";
+import {ApiDocEndpointParser} from "./parser/ApiDocEndpointParser";
+import {ApiDocExamplesParser} from "./parser/ApiDocExamplesParser";
 
 jest.mock("./generator/InterfaceGenerator");
 jest.mock("./parser/ApiDocEndpointParser");
+jest.mock("./parser/ApiDocExamplesParser");
 jest.mock("./converter/ApiDocToInterfaceConverter");
 jest.mock("./ApiDoc2Interface");
 
@@ -46,6 +49,7 @@ describe("ApiDoc2InterfaceBuilder", () => {
             (InterfaceGenerator as jest.Mock).mock.instances[0],
             (ApiDocEndpointParser as unknown as jest.Mock).mock.instances[0],
             expect.anything(),
+            expect.anything(),
         );
     });
 
@@ -55,6 +59,7 @@ describe("ApiDoc2InterfaceBuilder", () => {
             expect.anything(),
             expect.anything(),
             parameters,
+            expect.anything(),
         );
     });
 
@@ -64,6 +69,17 @@ describe("ApiDoc2InterfaceBuilder", () => {
             expect.anything(),
             expect.anything(),
             converterDefaultOptions,
+            expect.anything(),
+        );
+    });
+
+    it("should create converter with default examples parser", () => {
+        builder.build(parameters);
+        expect(ApiDocToInterfaceConverter).toBeCalledWith(
+            expect.anything(),
+            expect.anything(),
+            expect.anything(),
+            (ApiDocExamplesParser as jest.Mock).mock.instances[0],
         );
     });
 
