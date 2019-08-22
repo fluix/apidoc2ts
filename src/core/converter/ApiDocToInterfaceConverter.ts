@@ -90,17 +90,11 @@ export class ApiDocToInterfaceConverter {
 
     private createInterfaces(endpoint: IApiDocEndpoint, isLatest: boolean): Promise<ConverterResult> {
         return this.createInterfacesFromParameters(endpoint, isLatest)
-                   .then(result => {
-                       return result;
-                   })
                    .catch(err => {
                        if (!this.options.parseExamples || !this.examplesParser) {
                            return this.createWarningResult(endpoint, err.message);
                        }
                        return this.createInterfacesFromExamples(endpoint, isLatest);
-                   })
-                   .then(result => {
-                       return result;
                    })
                    .catch(err => {
                        return this.createWarningResult(endpoint, "Endpoint has no parameters nor examples");
