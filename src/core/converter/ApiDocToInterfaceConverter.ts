@@ -90,8 +90,14 @@ export class ApiDocToInterfaceConverter {
 
     private createInterfaces(endpoint: IApiDocEndpoint, isLatest: boolean): Promise<ConverterResult> {
         return this.createInterfacesFromParameters(endpoint, isLatest)
+                   .then(async interfacesFromFields => {
+                       if (!this.shouldParseExamples()) {
+                           return interfacesFromFields;
+                       }
+                       return await this.combineInterfaces(endpoint, isLatest, interfacesFromFields);
+                   })
                    .catch(err => {
-                       if (!this.options.parseExamples || !this.examplesParser) {
+                       if (!this.shouldParseExamples()) {
                            return this.createWarningResult(endpoint, err.message);
                        }
                        return this.createInterfacesFromExamples(endpoint, isLatest);
@@ -99,6 +105,16 @@ export class ApiDocToInterfaceConverter {
                    .catch(err => {
                        return this.createWarningResult(endpoint, "Endpoint has no parameters nor examples");
                    });
+    }
+
+    private async combineInterfaces(endpoint: IApiDocEndpoint, isLatest: boolean, interfacesFromFields) {
+        const interfacesFromExamples = await this.createInterfacesFromExamples(endpoint, isLatest);
+        return {
+            metadata: endpoint,
+            requestInterface: interfacesFromFields.requestInterface || interfacesFromExamples.requestInterface,
+            responseInterface: interfacesFromFields.responseInterface || interfacesFromExamples.responseInterface,
+            errorInterface: interfacesFromFields.errorInterface || interfacesFromExamples.errorInterface,
+        };
     }
 
     private getWhitelistedEndpoints(apiDocEndpoints: Array<IApiDocEndpoint>): Array<IApiDocEndpoint> {
@@ -164,6 +180,10 @@ export class ApiDocToInterfaceConverter {
             responseInterface: await this.examplesParser.parse(endpoint.success, responseInterfaceName),
             errorInterface: await this.examplesParser.parse(endpoint.error, errorInterfaceName),
         };
+    }
+
+    private shouldParseExamples() {
+        return this.options.parseExamples && this.examplesParser;
     }
 
     private shouldSkipEndpointVersion(

@@ -99,6 +99,34 @@ const requestWithExamples = {
     },
 };
 
+const requestWithFieldsAndExamplesInDifferentParts = {
+    type: "get",
+    url: "/book",
+    version: "0.1.0",
+    name: "GetBook",
+    group: "Book",
+    filename: "source/example_full/example.js",
+    parameter: {
+        fields: {
+            Parameter: [
+                {
+                    type: "string",
+                    field: "name",
+                },
+            ],
+        },
+    },
+    success: {
+        examples: [
+            {
+                title: "title",
+                type: "json",
+                content: requestExample,
+            },
+        ],
+    },
+};
+
 const emptyRequest = {
     type: "get",
     url: "/book",
@@ -311,5 +339,20 @@ describe("ApiDoc to Interface converter", () => {
         });
         const results = await converterWithExamplesParser.convert([emptyRequest]);
         expect(results[0].warning).toBe("Endpoint has no parameters nor examples");
+    });
+
+    it("should combine interfaces got from fields and from examples", async () => {
+        (interfaceGenerator.createInterface as jest.Mock).mockReturnValueOnce("mock fields interface");
+        (examplesParser.parse as jest.Mock)
+            .mockReturnValueOnce("")
+            .mockReturnValueOnce("mock examples interface");
+
+        const results = await converterWithExamplesParser.convert(
+            [requestWithFieldsAndExamplesInDifferentParts],
+        );
+
+        expect(results[0].requestInterface).toBeDefined();
+        expect(results[0].responseInterface).toBeDefined();
+        expect(results[0].errorInterface).toBeUndefined();
     });
 });
