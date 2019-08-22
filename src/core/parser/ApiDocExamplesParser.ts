@@ -3,7 +3,7 @@ import {IApiDocEndpointPart, IApiDocExample, isEndpointPartWithExamples} from ".
 import {removeFieldsAligningSpaces} from "../StringUtils";
 
 export class ApiDocExamplesParser {
-    private regex = /\[(?:\[[^[]*}|[^[]*)*]|{(?:{[^{}]*}|[^{}])*}/;
+    private matchingOuterBracketsRegex = /\[(?:\[[^[]*}|[^[]*)*]|{(?:{[^{}]*}|[^{}])*}/;
 
     private rendererOptions = {"just-types": "true"};
     private targetLanguage = new TypeScriptTargetLanguage();
@@ -24,7 +24,7 @@ export class ApiDocExamplesParser {
 
     private getExamplesJson(examples: Array<IApiDocExample>) {
         return examples.map(example => {
-            const jsonMatch = example.content.match(this.regex);
+            const jsonMatch = example.content.match(this.matchingOuterBracketsRegex);
             return jsonMatch ? jsonMatch[0] : "";
         });
     }
