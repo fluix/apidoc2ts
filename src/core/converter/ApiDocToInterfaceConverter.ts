@@ -1,4 +1,4 @@
-import {IApiDocEndpoint} from "../ApiDocInterfaces";
+import {endpointHasExamples, IApiDocEndpoint} from "../ApiDocInterfaces";
 import {InterfaceGenerator} from "../generator/InterfaceGenerator";
 import {ApiDocEndpointParser} from "../parser/ApiDocEndpointParser";
 import {ApiDocExamplesParser} from "../parser/ApiDocExamplesParser";
@@ -152,12 +152,8 @@ export class ApiDocToInterfaceConverter {
             throw new Error("No examples parser");
         }
 
-        if (
-            (!endpoint.parameter || !endpoint.parameter.examples)
-            && (!endpoint.success || !endpoint.success.examples)
-            && (!endpoint.error || !endpoint.error.examples)
-        ) {
-            throw new Error("No examples");
+        if (!endpointHasExamples(endpoint)) {
+            throw new Error("Endpoint has no examples");
         }
 
         const isLatest = endpoint.version === latestEndpointsVersions[endpoint.name];

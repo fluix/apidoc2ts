@@ -1,3 +1,25 @@
+export function isEndpointPartWithFields(endpointPart?: IApiDocEndpointPart)
+    : endpointPart is IApiDocEndpointPartWithFields {
+    return Boolean(endpointPart && endpointPart.fields);
+}
+
+export function isEndpointPartWithExamples(endpointPart?: IApiDocEndpointPart)
+    : endpointPart is IApiDocEndpointPartWithExamples {
+    return Boolean(endpointPart && endpointPart.examples);
+}
+
+export function endpointHasFields(endpoint: IApiDocEndpoint): boolean {
+    return isEndpointPartWithFields(endpoint.parameter)
+           || isEndpointPartWithFields(endpoint.success)
+           || isEndpointPartWithFields(endpoint.error);
+}
+
+export function endpointHasExamples(endpoint: IApiDocEndpoint): boolean {
+    return isEndpointPartWithExamples(endpoint.parameter)
+           || isEndpointPartWithExamples(endpoint.success)
+           || isEndpointPartWithExamples(endpoint.error);
+}
+
 export interface IApiDocEndpoint {
     group: string;
     name: string;
@@ -24,6 +46,10 @@ export interface IApiDocEndpointPart {
 
 export interface IApiDocEndpointPartWithFields extends IApiDocEndpointPart {
     fields: Record<string, Array<IApiDocField>>;
+}
+
+export interface IApiDocEndpointPartWithExamples extends IApiDocEndpointPart {
+    examples: Array<IApiDocExample>;
 }
 
 export interface IApiDocField {

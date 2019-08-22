@@ -1,5 +1,11 @@
 import * as _ from "lodash";
-import {IApiDocEndpoint, IApiDocEndpointPart, IApiDocEndpointPartWithFields, IApiDocField} from "../ApiDocInterfaces";
+import {
+    endpointHasFields,
+    IApiDocEndpoint,
+    IApiDocEndpointPart,
+    IApiDocField,
+    isEndpointPartWithFields,
+} from "../ApiDocInterfaces";
 import {JsonSchema, JsonSubSchemas} from "../JsonSchema";
 import {ApiDocField} from "./ApiDocField";
 
@@ -11,7 +17,7 @@ export interface ParserResult {
 
 export class ApiDocEndpointParser {
     parseEndpoint(endpoint: IApiDocEndpoint): ParserResult {
-        if (this.isEmptyEndpoint(endpoint)) {
+        if (!endpointHasFields(endpoint)) {
             throw new Error("Empty endpoint");
         }
 
@@ -22,18 +28,8 @@ export class ApiDocEndpointParser {
         };
     }
 
-    private isEmptyEndpoint(endpoint: IApiDocEndpoint) {
-        return !this.isValidEndpointPart(endpoint.parameter)
-               && !this.isValidEndpointPart(endpoint.success)
-               && !this.isValidEndpointPart(endpoint.error);
-    }
-
-    private isValidEndpointPart(endpointPart?: IApiDocEndpointPart): endpointPart is IApiDocEndpointPartWithFields {
-        return Boolean(endpointPart && endpointPart.fields);
-    }
-
     private parseFields(endpointPart: IApiDocEndpointPart | undefined): JsonSchema {
-        if (!this.isValidEndpointPart(endpointPart)) {
+        if (!isEndpointPartWithFields(endpointPart)) {
             return {};
         }
 

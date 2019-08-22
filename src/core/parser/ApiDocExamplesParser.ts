@@ -1,5 +1,5 @@
 import {InputData, jsonInputForTargetLanguage, quicktype, TypeScriptTargetLanguage} from "quicktype-core";
-import {IApiDocEndpointPart, IApiDocExample} from "../ApiDocInterfaces";
+import {IApiDocEndpointPart, IApiDocExample, isEndpointPartWithExamples} from "../ApiDocInterfaces";
 import {removeFieldsAligningSpaces} from "../StringUtils";
 
 export class ApiDocExamplesParser {
@@ -9,7 +9,7 @@ export class ApiDocExamplesParser {
     private targetLanguage = new TypeScriptTargetLanguage();
 
     async parse(name: string, endpointPart?: IApiDocEndpointPart): Promise<string> {
-        if (!endpointPart || !endpointPart.examples) {
+        if (!isEndpointPartWithExamples(endpointPart)) {
             return "";
         }
 
