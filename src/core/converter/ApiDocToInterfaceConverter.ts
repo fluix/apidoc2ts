@@ -1,6 +1,7 @@
 import {IApiDocEndpoint} from "../ApiDocInterfaces";
 import {InterfaceGenerator} from "../generator/InterfaceGenerator";
 import {ApiDocEndpointParser} from "../parser/ApiDocEndpointParser";
+import {ApiDocExamplesParser} from "../parser/ApiDocExamplesParser";
 
 export interface InterfaceMetadata {
     type: string;
@@ -67,6 +68,7 @@ export class ApiDocToInterfaceConverter {
         private readonly interfaceGenerator: InterfaceGenerator,
         private readonly endpointParser: ApiDocEndpointParser,
         private readonly options: ConverterOptions = converterDefaultOptions,
+        private readonly examplesParser?: ApiDocExamplesParser,
     ) {
     }
 
@@ -79,12 +81,27 @@ export class ApiDocToInterfaceConverter {
                 return this.createWarningResult(endpoint, `Skipping older version [${endpoint.version}]`);
             }
 
-            try {
-                return await this.createInterfaces(endpoint, latestEndpointsVersions);
-            } catch (error) {
-                return this.createWarningResult(endpoint, error.message);
-            }
+            return this.createInterfaces(endpoint, latestEndpointsVersions);
         }));
+    }
+
+    private createInterfaces(endpoint: IApiDocEndpoint, latestEndpointsVersions): Promise<ConverterResult> {
+        return this.createInterfacesFromParameters(endpoint, latestEndpointsVersions)
+                   .then(result => {
+                       return result;
+                   })
+                   .catch(err => {
+                       if (!this.examplesParser) {
+                           return this.createWarningResult(endpoint, err.message);
+                       }
+                       return this.createInterfacesFromExamples(endpoint, latestEndpointsVersions);
+                   })
+                   .then(result => {
+                       return result;
+                   })
+                   .catch(err => {
+                       return this.createWarningResult(endpoint, "Endpoint has no parameters nor examples");
+                   });
     }
 
     private getWhitelistedEndpoints(apiDocEndpoints: Array<IApiDocEndpoint>): Array<IApiDocEndpoint> {
@@ -106,7 +123,7 @@ export class ApiDocToInterfaceConverter {
         return latestEndpointsVersions;
     }
 
-    private async createInterfaces(
+    private async createInterfacesFromParameters(
         endpoint: IApiDocEndpoint,
         latestEndpointsVersions: Record<string, string>,
     ): Promise<ConverterResult> {
@@ -124,6 +141,37 @@ export class ApiDocToInterfaceConverter {
             requestInterface: await this.interfaceGenerator.createInterface(request, requestInterfaceName),
             responseInterface: await this.interfaceGenerator.createInterface(response, responseInterfaceName),
             errorInterface: await this.interfaceGenerator.createInterface(error, errorInterfaceName),
+        };
+    }
+
+    private async createInterfacesFromExamples(
+        endpoint: IApiDocEndpoint,
+        latestEndpointsVersions: Record<string, string>,
+    ): Promise<ConverterResult> {
+        if (!this.examplesParser) {
+            throw new Error("No examples parser");
+        }
+
+        if (
+            (!endpoint.parameter || !endpoint.parameter.examples)
+            && (!endpoint.success || !endpoint.success.examples)
+            && (!endpoint.error || !endpoint.error.examples)
+        ) {
+            throw new Error("No examples");
+        }
+
+        const isLatest = endpoint.version === latestEndpointsVersions[endpoint.name];
+        const {
+            requestInterfaceName,
+            responseInterfaceName,
+            errorInterfaceName,
+        } = this.createInterfacesNames(endpoint, isLatest);
+
+        return {
+            metadata: endpoint,
+            requestInterface: await this.examplesParser.parse(requestInterfaceName, endpoint.parameter),
+            responseInterface: await this.examplesParser.parse(responseInterfaceName, endpoint.success),
+            errorInterface: await this.examplesParser.parse(errorInterfaceName, endpoint.error),
         };
     }
 

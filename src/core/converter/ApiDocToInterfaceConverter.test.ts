@@ -1,5 +1,6 @@
 import {InterfaceGenerator} from "../generator/InterfaceGenerator";
 import {ApiDocEndpointParser} from "../parser/ApiDocEndpointParser";
+import {ApiDocExamplesParser} from "../parser/ApiDocExamplesParser";
 import {ApiDocToInterfaceConverter, ConverterVersionResolving} from "./ApiDocToInterfaceConverter";
 
 const requestVersion1 = {
@@ -78,7 +79,37 @@ const otherRequest = {
     },
 };
 
+const requestExample = ' { "name": "username", "age": 12 }';
+
+const requestWithExamples = {
+    type: "get",
+    url: "/book",
+    version: "0.1.0",
+    name: "GetBook",
+    group: "Book",
+    filename: "source/example_full/example.js",
+    parameter: {
+        examples: [
+            {
+                title: "title",
+                type: "json",
+                content: requestExample,
+            },
+        ],
+    },
+};
+
+const emptyRequest = {
+    type: "get",
+    url: "/book",
+    version: "0.1.0",
+    name: "GetBook",
+    group: "Book",
+    filename: "source/example_full/example.js",
+};
+
 jest.mock("../parser/ApiDocEndpointParser");
+jest.mock("../parser/ApiDocExamplesParser");
 jest.mock("../generator/InterfaceGenerator");
 
 const threeEndpoints = [requestVersion1, requestVersion2, requestVersion3];
@@ -94,6 +125,7 @@ const interfacesPerEndpoint = 3; // request, success response, error response
 describe("ApiDoc to Interface converter", () => {
     const interfaceGenerator = new InterfaceGenerator();
     const endpointParser = new ApiDocEndpointParser();
+    const examplesParser = new ApiDocExamplesParser();
     const parseEndpointSpy = jest.spyOn(endpointParser, "parseEndpoint");
 
     const converter = new ApiDocToInterfaceConverter(interfaceGenerator, endpointParser);
@@ -116,15 +148,19 @@ describe("ApiDoc to Interface converter", () => {
         },
     );
     const converterWithEmptyWhitelist = new ApiDocToInterfaceConverter(interfaceGenerator, endpointParser,
-        {
-            ...defaultOptions,
-        },
+        defaultOptions,
     );
     const converterWithWhitelist = new ApiDocToInterfaceConverter(interfaceGenerator, endpointParser,
         {
             ...defaultOptions,
             whitelist: ["PostBook"],
         },
+    );
+    const converterWithExamplesParser = new ApiDocToInterfaceConverter(
+        interfaceGenerator,
+        endpointParser,
+        defaultOptions,
+        examplesParser,
     );
 
     const prefixPostfixOptions = {
@@ -251,5 +287,26 @@ describe("ApiDoc to Interface converter", () => {
         await converterWithWhitelist.convert(apiDocEndpoints);
         expect(parseEndpointSpy).toBeCalledTimes(1);
         expect(interfaceGenerator.createInterface).toBeCalledTimes(1 * interfacesPerEndpoint);
+    });
+
+    it("should not call parseExamples if endpoint has parameters", async () => {
+        await converterWithExamplesParser.convert([requestVersion1]);
+        expect(examplesParser.parse).not.toBeCalled();
+    });
+
+    it("should call parseExamples if endpoint has no parameters but has examples", async () => {
+        parseEndpointSpy.mockImplementation(() => {
+            throw new Error("Mocked error while parsing");
+        });
+        await converterWithExamplesParser.convert([requestWithExamples]);
+        expect(examplesParser.parse).toBeCalledTimes(1 * interfacesPerEndpoint);
+    });
+
+    it("should create warning message if there were no parameters nor examples", async () => {
+        parseEndpointSpy.mockImplementation(() => {
+            throw new Error("Mocked error while parsing");
+        });
+        const results = await converterWithExamplesParser.convert([emptyRequest]);
+        expect(results[0].warning).toBe("Endpoint has no parameters nor examples");
     });
 });
