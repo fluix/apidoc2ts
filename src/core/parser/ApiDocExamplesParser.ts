@@ -1,4 +1,4 @@
-import {InputData, jsonInputForTargetLanguage, quicktype, TypeScriptTargetLanguage} from "quicktype-core";
+import {InputData, jsonInputForTargetLanguage, Options, quicktype, TypeScriptTargetLanguage} from "quicktype-core";
 import {IApiDocEndpointPart, IApiDocExample, isEndpointPartWithExamples} from "../ApiDocInterfaces";
 import {removeFieldsAligningSpaces} from "../StringUtils";
 
@@ -29,7 +29,7 @@ export class ApiDocExamplesParser {
         });
     }
 
-    private getQuicktypeOptions(inputData) {
+    private getQuicktypeOptions(inputData: InputData): Partial<Options> {
         return {
             inputData,
             lang: this.targetLanguage,
@@ -37,7 +37,7 @@ export class ApiDocExamplesParser {
         };
     }
 
-    private async createInputData(samples: Array<string>, name: string) {
+    private async createInputData(samples: Array<string>, name: string): Promise<InputData> {
         const inputData = new InputData();
         await inputData.addSource("json", {samples, name},
             () => jsonInputForTargetLanguage(this.targetLanguage));

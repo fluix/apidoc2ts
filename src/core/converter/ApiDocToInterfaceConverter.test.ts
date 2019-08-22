@@ -302,7 +302,7 @@ describe("ApiDoc to Interface converter", () => {
             throw new Error("Mocked error while parsing");
         });
         await converterWithExamplesParser.convert([requestWithExamples]);
-        expect(examplesParser.parse).toBeCalledTimes(1 * interfacesPerEndpoint);
+        expect(examplesParser.parse).toBeCalled();
     });
 
     it("should create warning message if there were no parameters nor examples", async () => {
