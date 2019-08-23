@@ -25,6 +25,16 @@ const endpointPartWithInvalidExamples: IApiDocEndpointPart = {
     ],
 };
 
+const endpointPartWithInvalidJsonExample: IApiDocEndpointPart = {
+    examples: [
+        {
+            title: "title",
+            type: "json",
+            content: "{resp}",
+        },
+    ],
+};
+
 describe("ApiDocExamplesParser", () => {
     const examplesParser = new ApiDocExamplesParser();
 
@@ -35,6 +45,11 @@ describe("ApiDocExamplesParser", () => {
 
     it("should return empty string if example is not valid", async () => {
         const interfaceString = await examplesParser.parse(endpointPartWithInvalidExamples);
+        expect(interfaceString).toBe("");
+    });
+
+    it("should return empty string if example JSON is not valid", async () => {
+        const interfaceString = await examplesParser.parse(endpointPartWithInvalidJsonExample);
         expect(interfaceString).toBe("");
     });
 

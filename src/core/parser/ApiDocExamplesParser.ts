@@ -12,13 +12,17 @@ export class ApiDocExamplesParser {
             return "";
         }
 
-        const samples = this.getExamplesJson(endpointPart.examples);
-        const inputData = await this.createInputData(samples, interfaceName);
-        const quicktypeOptions = this.getQuicktypeOptions(inputData);
+        try {
+            const samples = this.getExamplesJson(endpointPart.examples);
+            const inputData = await this.createInputData(samples, interfaceName);
+            const quicktypeOptions = this.getQuicktypeOptions(inputData);
 
-        const result = await quicktype(quicktypeOptions);
-        const interfaceString = result.lines.join("\n");
-        return removeFieldsAligningSpaces(interfaceString);
+            const result = await quicktype(quicktypeOptions);
+            const interfaceString = result.lines.join("\n");
+            return removeFieldsAligningSpaces(interfaceString);
+        } catch (err) {
+            return "";
+        }
     }
 
     private getExamplesJson(examples: Array<IApiDocExample>) {
