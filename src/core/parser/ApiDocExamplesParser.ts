@@ -22,20 +22,20 @@ export class ApiDocExamplesParser {
     }
 
     private getExamplesJson(examples: Array<IApiDocExample>) {
-        return examples.map(example => {
-            return this.extractExampleJson(example.content);
-        });
+        return examples
+            .map(example => {
+                return this.extractExampleJson(example.content);
+            })
+            .filter(json => json !== "");
     }
 
     private extractExampleJson(example: string): string {
         const extractor = new MatchingBracketsStringExtractor();
-        const jsonString = extractor.getString(example);
-
-        if (jsonString === "") {
-            return "{}";
+        try {
+            return extractor.getString(example);
+        } catch (e) {
+            return "";
         }
-
-        return jsonString;
     }
 
     private getQuicktypeOptions(inputData: InputData): Partial<Options> {
