@@ -160,7 +160,9 @@ describe("ApiDoc to Interface converter", () => {
     const interfaceGenerator = new InterfaceGenerator();
     const endpointParser = new ApiDocEndpointParser();
     const examplesParser = new ApiDocExamplesParser();
+
     const parseEndpointSpy = jest.spyOn(endpointParser, "parseEndpoint");
+    const createInterfaceSpy = jest.spyOn(interfaceGenerator, "createInterface");
 
     const converter = new ApiDocToInterfaceConverter(interfaceGenerator, endpointParser);
     const defaultOptions = {
@@ -222,7 +224,7 @@ describe("ApiDoc to Interface converter", () => {
     );
 
     beforeEach(() => {
-        (interfaceGenerator.createInterface as jest.Mock).mockReset();
+        createInterfaceSpy.mockReset();
         parseEndpointSpy.mockReset();
         parseEndpointSpy.mockImplementation(() => parserResultMock);
     });
@@ -238,16 +240,16 @@ describe("ApiDoc to Interface converter", () => {
 
     it("should call createInterface with parsed schemas for request, response and error", async () => {
         await converter.convert([requestVersion1]);
-        expect(interfaceGenerator.createInterface).toBeCalledWith(parserResultMock.request, expect.anything());
-        expect(interfaceGenerator.createInterface).toBeCalledWith(parserResultMock.response, expect.anything());
-        expect(interfaceGenerator.createInterface).toBeCalledWith(parserResultMock.error, expect.anything());
+        expect(createInterfaceSpy).toBeCalledWith(parserResultMock.request, expect.anything());
+        expect(createInterfaceSpy).toBeCalledWith(parserResultMock.response, expect.anything());
+        expect(createInterfaceSpy).toBeCalledWith(parserResultMock.error, expect.anything());
     });
 
     it("should call createInterface with name from apiDoc endpoint and default postfixes", async () => {
         await converter.convert([requestVersion1]);
-        expect(interfaceGenerator.createInterface).toBeCalledWith(expect.anything(), requestVersion1.name);
-        expect(interfaceGenerator.createInterface).toBeCalledWith(expect.anything(), `${requestVersion1.name}Response`);
-        expect(interfaceGenerator.createInterface).toBeCalledWith(expect.anything(), `${requestVersion1.name}Error`);
+        expect(createInterfaceSpy).toBeCalledWith(expect.anything(), requestVersion1.name);
+        expect(createInterfaceSpy).toBeCalledWith(expect.anything(), `${requestVersion1.name}Response`);
+        expect(createInterfaceSpy).toBeCalledWith(expect.anything(), `${requestVersion1.name}Error`);
     });
 
     it("should call createInterface with passed in prefixes and postfixes", async () => {
@@ -263,13 +265,13 @@ describe("ApiDoc to Interface converter", () => {
             errorPostfix,
         } = prefixPostfixOptions;
 
-        expect(interfaceGenerator.createInterface).toBeCalledWith(expect.anything(),
+        expect(createInterfaceSpy).toBeCalledWith(expect.anything(),
             `${staticPrefix}${requestPrefix}${requestVersion1.name}${requestPostfix}${staticPostfix}`,
         );
-        expect(interfaceGenerator.createInterface).toBeCalledWith(expect.anything(),
+        expect(createInterfaceSpy).toBeCalledWith(expect.anything(),
             `${staticPrefix}${responsePrefix}${requestVersion1.name}${responsePostfix}${staticPostfix}`,
         );
-        expect(interfaceGenerator.createInterface).toBeCalledWith(expect.anything(),
+        expect(createInterfaceSpy).toBeCalledWith(expect.anything(),
             `${staticPrefix}${errorPrefix}${requestVersion1.name}${errorPostfix}${staticPostfix}`,
         );
     });
@@ -277,30 +279,30 @@ describe("ApiDoc to Interface converter", () => {
     it("should call parseEndpoint and createInterface for every endpoint", async () => {
         await converter.convert(threeEndpoints);
         expect(parseEndpointSpy).toBeCalledTimes(threeEndpoints.length);
-        expect(interfaceGenerator.createInterface).toBeCalledTimes(threeEndpoints.length * interfacesPerEndpoint);
+        expect(createInterfaceSpy).toBeCalledTimes(threeEndpoints.length * interfacesPerEndpoint);
     });
 
     it("should add version postfix to interface name if it is not the latest one", async () => {
         await converter.convert([requestVersion1, requestVersion2, requestVersion3]);
-        expect(interfaceGenerator.createInterface)
+        expect(createInterfaceSpy)
             .toBeCalledWith(expect.anything(), `${requestVersion1.name}_v${requestVersion1.version}`);
-        expect(interfaceGenerator.createInterface)
+        expect(createInterfaceSpy)
             .toBeCalledWith(expect.anything(), `${requestVersion2.name}_v${requestVersion2.version}`);
-        expect(interfaceGenerator.createInterface)
+        expect(createInterfaceSpy)
             .toBeCalledWith(expect.anything(), `${requestVersion3.name}`);
     });
 
     it("should add warning message if there was some trouble while parsing or converting", async () => {
-        (interfaceGenerator.createInterface as jest.Mock)
-            .mockReturnValueOnce("")
-            .mockReturnValueOnce("")
-            .mockReturnValueOnce("");
+        createInterfaceSpy
+            .mockReturnValueOnce(Promise.resolve(""))
+            .mockReturnValueOnce(Promise.resolve(""))
+            .mockReturnValueOnce(Promise.resolve(""));
         const results = await converter.convert([requestVersion1]);
         expect(results[0].warning).toBeDefined();
     });
 
     it("should not create interfaces for older versions if version resolving option is set to 'latest'", async () => {
-        (interfaceGenerator.createInterface as jest.Mock).mockReturnValueOnce("mock fields interface");
+        createInterfaceSpy.mockReturnValueOnce(Promise.resolve("mock fields interface"));
         const results = await converterWithLatestOption.convert(threeEndpoints);
         expect(results[0].requestInterface).toBe("");
         expect(results[1].requestInterface).toBe("");
@@ -308,7 +310,7 @@ describe("ApiDoc to Interface converter", () => {
     });
 
     it("should create warnings for skipped older endpoints", async () => {
-        (interfaceGenerator.createInterface as jest.Mock).mockReturnValue("mock fields interface");
+        createInterfaceSpy.mockReturnValue(Promise.resolve("mock fields interface"));
         const results = await converterWithLatestOption.convert(threeEndpoints);
         expect(results[0].warning).toBe("Skipping older version [0.0.1]");
         expect(results[1].warning).toBe("Skipping older version [0.0.2]");
@@ -318,14 +320,14 @@ describe("ApiDoc to Interface converter", () => {
     it("should create interfaces for all endpoints if whitelist is not specified", async () => {
         await converterWithEmptyWhitelist.convert(threeEndpoints);
         expect(parseEndpointSpy).toBeCalledTimes(threeEndpoints.length);
-        expect(interfaceGenerator.createInterface).toBeCalledTimes(threeEndpoints.length * interfacesPerEndpoint);
+        expect(createInterfaceSpy).toBeCalledTimes(threeEndpoints.length * interfacesPerEndpoint);
     });
 
     it("should create interfaces only for whitelisted endpoints", async () => {
         const apiDocEndpoints = [requestVersion1, otherRequest];
         await converterWithWhitelist.convert(apiDocEndpoints);
         expect(parseEndpointSpy).toBeCalledTimes(1);
-        expect(interfaceGenerator.createInterface).toBeCalledTimes(1 * interfacesPerEndpoint);
+        expect(createInterfaceSpy).toBeCalledTimes(1 * interfacesPerEndpoint);
     });
 
     it("should not call parseExamples if endpoint has parameters", async () => {
@@ -346,7 +348,7 @@ describe("ApiDoc to Interface converter", () => {
     });
 
     it("should combine interfaces got from fields and from examples", async () => {
-        (interfaceGenerator.createInterface as jest.Mock).mockReturnValueOnce("mock fields interface");
+        createInterfaceSpy.mockReturnValueOnce(Promise.resolve("mock fields interface"));
         (examplesParser.parse as jest.Mock)
             .mockReturnValueOnce("")
             .mockReturnValueOnce("mock examples interface");
