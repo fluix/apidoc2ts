@@ -18,7 +18,11 @@ export interface ParserResult {
 export class ApiDocEndpointParser {
     parseEndpoint(endpoint: IApiDocEndpoint): ParserResult {
         if (!endpointHasFields(endpoint)) {
-            throw new Error("Empty endpoint");
+            return {
+                request: {},
+                response: {},
+                error: {},
+            };
         }
 
         return {

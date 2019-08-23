@@ -1,10 +1,9 @@
 import {InputData, jsonInputForTargetLanguage, Options, quicktype, TypeScriptTargetLanguage} from "quicktype-core";
 import {IApiDocEndpointPart, IApiDocExample, isEndpointPartWithExamples} from "../ApiDocInterfaces";
+import {MatchingBracketsStringExtractor} from "../example-extractor/MatchingBracketsStringExtractor";
 import {removeFieldsAligningSpaces} from "../StringUtils";
 
 export class ApiDocExamplesParser {
-    private matchingOuterBracketsRegex = /\[(?:\[[^[]*}|[^[]*)*]|{(?:{[^{}]*}|[^{}])*}/;
-
     private rendererOptions = {"just-types": "true"};
     private targetLanguage = new TypeScriptTargetLanguage();
 
@@ -13,20 +12,34 @@ export class ApiDocExamplesParser {
             return "";
         }
 
-        const samples = this.getExamplesJson(endpointPart.examples);
-        const inputData = await this.createInputData(samples, interfaceName);
-        const quicktypeOptions = this.getQuicktypeOptions(inputData);
+        try {
+            const samples = this.getExamplesJson(endpointPart.examples);
+            const inputData = await this.createInputData(samples, interfaceName);
+            const quicktypeOptions = this.getQuicktypeOptions(inputData);
 
-        const result = await quicktype(quicktypeOptions);
-        const interfaceString = result.lines.join("\n");
-        return removeFieldsAligningSpaces(interfaceString);
+            const result = await quicktype(quicktypeOptions);
+            const interfaceString = result.lines.join("\n");
+            return removeFieldsAligningSpaces(interfaceString);
+        } catch (err) {
+            return "";
+        }
     }
 
     private getExamplesJson(examples: Array<IApiDocExample>) {
-        return examples.map(example => {
-            const jsonMatch = example.content.match(this.matchingOuterBracketsRegex);
-            return jsonMatch ? jsonMatch[0] : "";
-        });
+        return examples
+            .map(example => {
+                return this.extractExampleJson(example.content);
+            })
+            .filter(json => json !== "");
+    }
+
+    private extractExampleJson(example: string): string {
+        const extractor = new MatchingBracketsStringExtractor();
+        try {
+            return extractor.getString(example);
+        } catch (e) {
+            return "";
+        }
     }
 
     private getQuicktypeOptions(inputData: InputData): Partial<Options> {

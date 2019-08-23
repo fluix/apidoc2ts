@@ -64,6 +64,12 @@ interface InterfaceNameOptions {
     postfix: string;
 }
 
+interface InterfacesNames {
+    requestInterfaceName: string;
+    responseInterfaceName: string;
+    errorInterfaceName: string;
+}
+
 export class ApiDocToInterfaceConverter {
 
     constructor(
@@ -88,37 +94,36 @@ export class ApiDocToInterfaceConverter {
         }));
     }
 
-    private createInterfaces(endpoint: IApiDocEndpoint, isLatest: boolean): Promise<ConverterResult> {
-        return this.createInterfacesFromParameters(endpoint, isLatest)
-                   .then(async interfacesFromFields => {
-                       if (!this.shouldParseExamples()) {
-                           return interfacesFromFields;
-                       }
-                       return await this.combineInterfaces(endpoint, isLatest, interfacesFromFields);
-                   })
-                   .catch(err => {
-                       if (!this.shouldParseExamples()) {
-                           return this.createWarningResult(endpoint, err.message);
-                       }
-                       return this.createInterfacesFromExamples(endpoint, isLatest);
-                   })
-                   .catch(err => {
-                       return this.createWarningResult(endpoint, "Endpoint has no parameters nor examples");
-                   });
+    private async createInterfaces(endpoint: IApiDocEndpoint, isLatest: boolean): Promise<ConverterResult> {
+        const interfacesNames = this.createInterfacesNames(endpoint, isLatest);
+        const fromParameters = await this.createInterfacesFromParameters(endpoint, interfacesNames);
+        const fromExamples = await this.createInterfacesFromExamples(endpoint, interfacesNames);
+
+        const combinedInterfaces = {
+            metadata: endpoint,
+            requestInterface: fromParameters.requestInterface || fromExamples.requestInterface,
+            responseInterface: fromParameters.responseInterface || fromExamples.responseInterface,
+            errorInterface: fromParameters.errorInterface || fromExamples.errorInterface,
+        };
+
+        if (this.isBlankResult(combinedInterfaces)) {
+            const errorMessage = this.getErrorMessage();
+            return this.createWarningResult(endpoint, errorMessage);
+        }
+
+        return combinedInterfaces;
     }
 
-    private async combineInterfaces(
-        endpoint: IApiDocEndpoint,
-        isLatest: boolean,
-        interfacesFromFields: ConverterResult,
-    ): Promise<ConverterResult> {
-        const interfacesFromExamples = await this.createInterfacesFromExamples(endpoint, isLatest);
-        return {
-            metadata: endpoint,
-            requestInterface: interfacesFromFields.requestInterface || interfacesFromExamples.requestInterface,
-            responseInterface: interfacesFromFields.responseInterface || interfacesFromExamples.responseInterface,
-            errorInterface: interfacesFromFields.errorInterface || interfacesFromExamples.errorInterface,
-        };
+    private getErrorMessage() {
+        return this.shouldParseExamples()
+               ? "Endpoint has no parameters nor valid examples"
+               : "Parameters are invalid or not present";
+    }
+
+    private isBlankResult(result: ConverterResult) {
+        return result.requestInterface === ""
+               && result.responseInterface === ""
+               && result.errorInterface === "";
     }
 
     private getWhitelistedEndpoints(apiDocEndpoints: Array<IApiDocEndpoint>): Array<IApiDocEndpoint> {
@@ -142,47 +147,36 @@ export class ApiDocToInterfaceConverter {
 
     private async createInterfacesFromParameters(
         endpoint: IApiDocEndpoint,
-        isLatest: boolean,
+        names: InterfacesNames,
     ): Promise<ConverterResult> {
         const {request, response, error} = this.endpointParser.parseEndpoint(endpoint);
 
-        const {
-            requestInterfaceName,
-            responseInterfaceName,
-            errorInterfaceName,
-        } = this.createInterfacesNames(endpoint, isLatest);
-
         return {
             metadata: endpoint as InterfaceMetadata,
-            requestInterface: await this.interfaceGenerator.createInterface(request, requestInterfaceName),
-            responseInterface: await this.interfaceGenerator.createInterface(response, responseInterfaceName),
-            errorInterface: await this.interfaceGenerator.createInterface(error, errorInterfaceName),
+            requestInterface: await this.interfaceGenerator.createInterface(request, names.requestInterfaceName),
+            responseInterface: await this.interfaceGenerator.createInterface(response, names.responseInterfaceName),
+            errorInterface: await this.interfaceGenerator.createInterface(error, names.errorInterfaceName),
         };
     }
 
     private async createInterfacesFromExamples(
         endpoint: IApiDocEndpoint,
-        isLatest: boolean,
+        names: InterfacesNames,
     ): Promise<ConverterResult> {
-        if (!this.examplesParser) {
-            throw new Error("No examples parser");
+        if (!this.options.parseExamples || !this.examplesParser || !endpointHasExamples(endpoint)) {
+            return {
+                metadata: endpoint,
+                requestInterface: "",
+                responseInterface: "",
+                errorInterface: "",
+            };
         }
-
-        if (!endpointHasExamples(endpoint)) {
-            throw new Error("Endpoint has no examples");
-        }
-
-        const {
-            requestInterfaceName,
-            responseInterfaceName,
-            errorInterfaceName,
-        } = this.createInterfacesNames(endpoint, isLatest);
 
         return {
             metadata: endpoint,
-            requestInterface: await this.examplesParser.parse(endpoint.parameter, requestInterfaceName),
-            responseInterface: await this.examplesParser.parse(endpoint.success, responseInterfaceName),
-            errorInterface: await this.examplesParser.parse(endpoint.error, errorInterfaceName),
+            requestInterface: await this.examplesParser.parse(endpoint.parameter, names.requestInterfaceName),
+            responseInterface: await this.examplesParser.parse(endpoint.success, names.responseInterfaceName),
+            errorInterface: await this.examplesParser.parse(endpoint.error, names.errorInterfaceName),
         };
     }
 
@@ -200,7 +194,7 @@ export class ApiDocToInterfaceConverter {
         return endpoint.version !== latestEndpointsVersions[endpoint.name];
     }
 
-    private createInterfacesNames(endpoint: IApiDocEndpoint, isLatest: boolean) {
+    private createInterfacesNames(endpoint: IApiDocEndpoint, isLatest: boolean): InterfacesNames {
         const commonOptions = {
             endpoint,
             staticPrefix: this.options.staticPrefix,
