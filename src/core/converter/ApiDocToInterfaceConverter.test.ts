@@ -148,6 +148,12 @@ const parserResultMock = {
     error: {type: "errorMock"},
 };
 
+const parserEmptyResultMock = {
+    request: {},
+    response: {},
+    error: {},
+};
+
 const interfacesPerEndpoint = 3; // request, success response, error response
 
 describe("ApiDoc to Interface converter", () => {
@@ -284,16 +290,17 @@ describe("ApiDoc to Interface converter", () => {
             .toBeCalledWith(expect.anything(), `${requestVersion3.name}`);
     });
 
-    it("should add warning message if there was an error while parsing or converting", async () => {
-        parseEndpointSpy.mockImplementationOnce(() => {
-            throw new Error("Mocked error while parsing");
-        });
-        const results = await converter.convert([requestVersion1, requestVersion2]);
-        expect(results[0].warning).toBe("Mocked error while parsing");
-        expect(results[1].warning).toBeUndefined();
+    it("should add warning message if there was some trouble while parsing or converting", async () => {
+        (interfaceGenerator.createInterface as jest.Mock)
+            .mockReturnValueOnce("")
+            .mockReturnValueOnce("")
+            .mockReturnValueOnce("");
+        const results = await converter.convert([requestVersion1]);
+        expect(results[0].warning).toBeDefined();
     });
 
     it("should not create interfaces for older versions if version resolving option is set to 'latest'", async () => {
+        (interfaceGenerator.createInterface as jest.Mock).mockReturnValueOnce("mock fields interface");
         const results = await converterWithLatestOption.convert(threeEndpoints);
         expect(results[0].requestInterface).toBe("");
         expect(results[1].requestInterface).toBe("");
@@ -301,6 +308,7 @@ describe("ApiDoc to Interface converter", () => {
     });
 
     it("should create warnings for skipped older endpoints", async () => {
+        (interfaceGenerator.createInterface as jest.Mock).mockReturnValue("mock fields interface");
         const results = await converterWithLatestOption.convert(threeEndpoints);
         expect(results[0].warning).toBe("Skipping older version [0.0.1]");
         expect(results[1].warning).toBe("Skipping older version [0.0.2]");
@@ -326,19 +334,15 @@ describe("ApiDoc to Interface converter", () => {
     });
 
     it("should call parseExamples if endpoint has no parameters but has examples", async () => {
-        parseEndpointSpy.mockImplementation(() => {
-            throw new Error("Mocked error while parsing");
-        });
+        parseEndpointSpy.mockReturnValueOnce(parserEmptyResultMock);
         await converterWithExamplesParser.convert([requestWithExamples]);
         expect(examplesParser.parse).toBeCalled();
     });
 
     it("should create warning message if there were no parameters nor examples", async () => {
-        parseEndpointSpy.mockImplementation(() => {
-            throw new Error("Mocked error while parsing");
-        });
+        parseEndpointSpy.mockReturnValueOnce(parserEmptyResultMock);
         const results = await converterWithExamplesParser.convert([emptyRequest]);
-        expect(results[0].warning).toBe("Endpoint has no parameters nor examples");
+        expect(results[0].warning).toBe("Endpoint has no parameters nor valid examples");
     });
 
     it("should combine interfaces got from fields and from examples", async () => {

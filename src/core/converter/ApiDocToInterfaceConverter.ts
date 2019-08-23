@@ -88,58 +88,35 @@ export class ApiDocToInterfaceConverter {
         }));
     }
 
-    private createInterfaces(endpoint: IApiDocEndpoint, isLatest: boolean): Promise<ConverterResult> {
-        if (this.shouldParseExamples()) {
-            return this.combineInterfaces(endpoint, isLatest)
-                       .catch(err => {
-                           return this.createWarningResult(endpoint, err.message);
-                       });
+    private async createInterfaces(endpoint: IApiDocEndpoint, isLatest: boolean): Promise<ConverterResult> {
+        const fromParameters = await this.createInterfacesFromParameters(endpoint, isLatest);
+        const fromExamples = await this.createInterfacesFromExamples(endpoint, isLatest);
+
+        const combinedInterfaces = {
+            metadata: endpoint,
+            requestInterface: fromParameters.requestInterface || fromExamples.requestInterface,
+            responseInterface: fromParameters.responseInterface || fromExamples.responseInterface,
+            errorInterface: fromParameters.errorInterface || fromExamples.errorInterface,
+        };
+
+        if (this.isBlankResult(combinedInterfaces)) {
+            const errorMessage = this.getErrorMessage();
+            return this.createWarningResult(endpoint, errorMessage);
         }
 
-        return this.createInterfacesFromParameters(endpoint, isLatest)
-                   .catch(err => {
-                       return this.createWarningResult(endpoint, err.message);
-                   });
+        return combinedInterfaces;
     }
 
-    private async combineInterfaces(
-        endpoint: IApiDocEndpoint,
-        isLatest: boolean,
-    ): Promise<ConverterResult> {
-        return this.createInterfacesFromParameters(endpoint, isLatest)
-            .then(interfacesFromParameters => {
-                return this.createInterfacesFromExamples(endpoint, isLatest)
-                           .then(interfacesFromExamples => {
-                               return {
-                                   metadata: endpoint,
-                                   requestInterface:
-                                       interfacesFromParameters.requestInterface ||
-                                       interfacesFromExamples.requestInterface,
-                                   responseInterface:
-                                       interfacesFromParameters.responseInterface ||
-                                       interfacesFromExamples.responseInterface,
-                                   errorInterface:
-                                       interfacesFromParameters.errorInterface || interfacesFromExamples.errorInterface,
-                               };
-                           })
-                           .catch(err => {
-                               return interfacesFromParameters;
-                           });
-            })
-            .catch(err => {
-                return this.createInterfacesFromExamples(endpoint, isLatest)
-                           .then(interfacesFromExamples => {
-                               return {
-                                   metadata: endpoint,
-                                   requestInterface: interfacesFromExamples.requestInterface,
-                                   responseInterface: interfacesFromExamples.responseInterface,
-                                   errorInterface: interfacesFromExamples.errorInterface,
-                               };
-                           })
-                           .catch(error => {
-                               return this.createWarningResult(endpoint, "Endpoint has no parameters nor examples");
-                           });
-            });
+    private getErrorMessage() {
+        return this.shouldParseExamples()
+               ? "Endpoint has no parameters nor valid examples"
+               : "Parameters are invalid or not present";
+    }
+
+    private isBlankResult(result: ConverterResult) {
+        return result.requestInterface === ""
+               && result.responseInterface === ""
+               && result.errorInterface === "";
     }
 
     private getWhitelistedEndpoints(apiDocEndpoints: Array<IApiDocEndpoint>): Array<IApiDocEndpoint> {
@@ -185,12 +162,13 @@ export class ApiDocToInterfaceConverter {
         endpoint: IApiDocEndpoint,
         isLatest: boolean,
     ): Promise<ConverterResult> {
-        if (!this.examplesParser) {
-            throw new Error("No examples parser");
-        }
-
-        if (!endpointHasExamples(endpoint)) {
-            throw new Error("Endpoint has no examples");
+        if (!this.options.parseExamples || !this.examplesParser || !endpointHasExamples(endpoint)) {
+            return {
+                metadata: endpoint,
+                requestInterface: "",
+                responseInterface: "",
+                errorInterface: "",
+            };
         }
 
         const {
