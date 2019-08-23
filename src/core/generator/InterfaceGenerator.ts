@@ -1,4 +1,3 @@
-import {JsonSchema, jsonSchemaDefaultTypes, traverseSchemaRecursively} from "../JsonSchema";
 import * as _ from "lodash";
 import {
     InputData,
@@ -8,6 +7,7 @@ import {
     quicktype,
     TypeScriptTargetLanguage,
 } from "quicktype-core";
+import {JsonSchema, jsonSchemaDefaultTypes, traverseSchemaRecursively} from "../JsonSchema";
 import {removeFieldsAligningSpaces} from "../StringUtils";
 
 const qtFakeCustomType = {
@@ -47,9 +47,13 @@ export class InterfaceGenerator {
     }
 
     private async execQuicktypeGenerator(quicktypeOptions) {
-        const result = await quicktype(quicktypeOptions);
-        const interfaceString = result.lines.join("\n");
-        return removeFieldsAligningSpaces(interfaceString);
+        try {
+            const result = await quicktype(quicktypeOptions);
+            const interfaceString = result.lines.join("\n");
+            return removeFieldsAligningSpaces(interfaceString);
+        } catch (err) {
+            return "";
+        }
     }
 
     private createInputData(schema: JsonSchema, name: string) {
