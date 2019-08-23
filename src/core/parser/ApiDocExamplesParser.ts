@@ -1,10 +1,9 @@
 import {InputData, jsonInputForTargetLanguage, Options, quicktype, TypeScriptTargetLanguage} from "quicktype-core";
 import {IApiDocEndpointPart, IApiDocExample, isEndpointPartWithExamples} from "../ApiDocInterfaces";
+import {MatchingBracketsStringExtractor} from "../example-extractor/MatchingBracketsStringExtractor";
 import {removeFieldsAligningSpaces} from "../StringUtils";
 
 export class ApiDocExamplesParser {
-    private matchingOuterBracketsRegex = /\[(?:\[[^[]*}|[^[]*)*]|{(?:{[^{}]*}|[^{}])*}/;
-
     private rendererOptions = {"just-types": "true"};
     private targetLanguage = new TypeScriptTargetLanguage();
 
@@ -24,9 +23,19 @@ export class ApiDocExamplesParser {
 
     private getExamplesJson(examples: Array<IApiDocExample>) {
         return examples.map(example => {
-            const jsonMatch = example.content.match(this.matchingOuterBracketsRegex);
-            return jsonMatch ? jsonMatch[0] : "";
+            return this.extractExampleJson(example.content);
         });
+    }
+
+    private extractExampleJson(example: string): string {
+        const extractor = new MatchingBracketsStringExtractor();
+        const jsonString = extractor.getString(example);
+
+        if (jsonString === "") {
+            return "{}";
+        }
+
+        return jsonString;
     }
 
     private getQuicktypeOptions(inputData: InputData): Partial<Options> {
