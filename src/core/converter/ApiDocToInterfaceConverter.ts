@@ -64,6 +64,12 @@ interface InterfaceNameOptions {
     postfix: string;
 }
 
+interface InterfacesNames {
+    requestInterfaceName: string;
+    responseInterfaceName: string;
+    errorInterfaceName: string;
+}
+
 export class ApiDocToInterfaceConverter {
 
     constructor(
@@ -89,8 +95,9 @@ export class ApiDocToInterfaceConverter {
     }
 
     private async createInterfaces(endpoint: IApiDocEndpoint, isLatest: boolean): Promise<ConverterResult> {
-        const fromParameters = await this.createInterfacesFromParameters(endpoint, isLatest);
-        const fromExamples = await this.createInterfacesFromExamples(endpoint, isLatest);
+        const interfacesNames = this.createInterfacesNames(endpoint, isLatest);
+        const fromParameters = await this.createInterfacesFromParameters(endpoint, interfacesNames);
+        const fromExamples = await this.createInterfacesFromExamples(endpoint, interfacesNames);
 
         const combinedInterfaces = {
             metadata: endpoint,
@@ -140,27 +147,21 @@ export class ApiDocToInterfaceConverter {
 
     private async createInterfacesFromParameters(
         endpoint: IApiDocEndpoint,
-        isLatest: boolean,
+        names: InterfacesNames,
     ): Promise<ConverterResult> {
         const {request, response, error} = this.endpointParser.parseEndpoint(endpoint);
 
-        const {
-            requestInterfaceName,
-            responseInterfaceName,
-            errorInterfaceName,
-        } = this.createInterfacesNames(endpoint, isLatest);
-
         return {
             metadata: endpoint as InterfaceMetadata,
-            requestInterface: await this.interfaceGenerator.createInterface(request, requestInterfaceName),
-            responseInterface: await this.interfaceGenerator.createInterface(response, responseInterfaceName),
-            errorInterface: await this.interfaceGenerator.createInterface(error, errorInterfaceName),
+            requestInterface: await this.interfaceGenerator.createInterface(request, names.requestInterfaceName),
+            responseInterface: await this.interfaceGenerator.createInterface(response, names.responseInterfaceName),
+            errorInterface: await this.interfaceGenerator.createInterface(error, names.errorInterfaceName),
         };
     }
 
     private async createInterfacesFromExamples(
         endpoint: IApiDocEndpoint,
-        isLatest: boolean,
+        names: InterfacesNames,
     ): Promise<ConverterResult> {
         if (!this.options.parseExamples || !this.examplesParser || !endpointHasExamples(endpoint)) {
             return {
@@ -171,17 +172,11 @@ export class ApiDocToInterfaceConverter {
             };
         }
 
-        const {
-            requestInterfaceName,
-            responseInterfaceName,
-            errorInterfaceName,
-        } = this.createInterfacesNames(endpoint, isLatest);
-
         return {
             metadata: endpoint,
-            requestInterface: await this.examplesParser.parse(endpoint.parameter, requestInterfaceName),
-            responseInterface: await this.examplesParser.parse(endpoint.success, responseInterfaceName),
-            errorInterface: await this.examplesParser.parse(endpoint.error, errorInterfaceName),
+            requestInterface: await this.examplesParser.parse(endpoint.parameter, names.requestInterfaceName),
+            responseInterface: await this.examplesParser.parse(endpoint.success, names.responseInterfaceName),
+            errorInterface: await this.examplesParser.parse(endpoint.error, names.errorInterfaceName),
         };
     }
 
@@ -199,7 +194,7 @@ export class ApiDocToInterfaceConverter {
         return endpoint.version !== latestEndpointsVersions[endpoint.name];
     }
 
-    private createInterfacesNames(endpoint: IApiDocEndpoint, isLatest: boolean) {
+    private createInterfacesNames(endpoint: IApiDocEndpoint, isLatest: boolean): InterfacesNames {
         const commonOptions = {
             endpoint,
             staticPrefix: this.options.staticPrefix,
