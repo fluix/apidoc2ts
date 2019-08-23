@@ -89,36 +89,57 @@ export class ApiDocToInterfaceConverter {
     }
 
     private createInterfaces(endpoint: IApiDocEndpoint, isLatest: boolean): Promise<ConverterResult> {
-        return this.createInterfacesFromParameters(endpoint, isLatest)
-                   .then(async interfacesFromFields => {
-                       if (!this.shouldParseExamples()) {
-                           return interfacesFromFields;
-                       }
-                       return await this.combineInterfaces(endpoint, isLatest, interfacesFromFields);
-                   })
-                   .catch(err => {
-                       if (!this.shouldParseExamples()) {
+        if (this.shouldParseExamples()) {
+            return this.combineInterfaces(endpoint, isLatest)
+                       .catch(err => {
                            return this.createWarningResult(endpoint, err.message);
-                       }
-                       return this.createInterfacesFromExamples(endpoint, isLatest);
-                   })
+                       });
+        }
+
+        return this.createInterfacesFromParameters(endpoint, isLatest)
                    .catch(err => {
-                       return this.createWarningResult(endpoint, "Endpoint has no parameters nor examples");
+                       return this.createWarningResult(endpoint, err.message);
                    });
     }
 
     private async combineInterfaces(
         endpoint: IApiDocEndpoint,
         isLatest: boolean,
-        interfacesFromFields: ConverterResult,
     ): Promise<ConverterResult> {
-        const interfacesFromExamples = await this.createInterfacesFromExamples(endpoint, isLatest);
-        return {
-            metadata: endpoint,
-            requestInterface: interfacesFromFields.requestInterface || interfacesFromExamples.requestInterface,
-            responseInterface: interfacesFromFields.responseInterface || interfacesFromExamples.responseInterface,
-            errorInterface: interfacesFromFields.errorInterface || interfacesFromExamples.errorInterface,
-        };
+        return this.createInterfacesFromParameters(endpoint, isLatest)
+            .then(interfacesFromParameters => {
+                return this.createInterfacesFromExamples(endpoint, isLatest)
+                           .then(interfacesFromExamples => {
+                               return {
+                                   metadata: endpoint,
+                                   requestInterface:
+                                       interfacesFromParameters.requestInterface ||
+                                       interfacesFromExamples.requestInterface,
+                                   responseInterface:
+                                       interfacesFromParameters.responseInterface ||
+                                       interfacesFromExamples.responseInterface,
+                                   errorInterface:
+                                       interfacesFromParameters.errorInterface || interfacesFromExamples.errorInterface,
+                               };
+                           })
+                           .catch(err => {
+                               return interfacesFromParameters;
+                           });
+            })
+            .catch(err => {
+                return this.createInterfacesFromExamples(endpoint, isLatest)
+                           .then(interfacesFromExamples => {
+                               return {
+                                   metadata: endpoint,
+                                   requestInterface: interfacesFromExamples.requestInterface,
+                                   responseInterface: interfacesFromExamples.responseInterface,
+                                   errorInterface: interfacesFromExamples.errorInterface,
+                               };
+                           })
+                           .catch(error => {
+                               return this.createWarningResult(endpoint, "Endpoint has no parameters nor examples");
+                           });
+            });
     }
 
     private getWhitelistedEndpoints(apiDocEndpoints: Array<IApiDocEndpoint>): Array<IApiDocEndpoint> {
