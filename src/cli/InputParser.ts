@@ -78,6 +78,7 @@ export class InputParser {
             responsePostfix: flags["response-postfix"],
             errorPrefix: flags["error-prefix"],
             errorPostfix: flags["error-postfix"],
+            parseExamples: flags["parse-examples"],
             versionResolving: flags.version,
             source: flags.source,
             name: flags.name,

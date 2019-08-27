@@ -55,6 +55,12 @@ url - save all interfaces to corresponding url paths`,
             description: "Specify list of endpoints names which should be processed",
             exclusive: ["config"],
         }),
+        ["parse-examples"]: flags.boolean({
+            char: "e",
+            default: false,
+            description: "Parse endpoint examples if it has no parameters",
+            exclusive: ["config"],
+        }),
         ["custom-types"]: flags.string({
             char: "t",
             multiple: true,

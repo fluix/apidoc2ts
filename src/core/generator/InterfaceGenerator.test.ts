@@ -1,3 +1,4 @@
+import {JsonSchema} from "../JsonSchema";
 import {InterfaceGenerator} from "./InterfaceGenerator";
 
 const simpleSchema = {
@@ -170,6 +171,11 @@ const schemaWithInvalidTypeClone = {
     },
 };
 
+const invalidSchema: JsonSchema = {
+    type: "boolean",
+    enum: ["false"],
+};
+
 describe("Interface generator", () => {
     let generator: InterfaceGenerator;
     let generatorWithCustomTypes: InterfaceGenerator;
@@ -181,6 +187,10 @@ describe("Interface generator", () => {
 
     it("should return empty string if called with empty schema", async () => {
         expect(await generator.createInterface({})).toBe("");
+    });
+
+    it("should return empty string if schema is not valid", async () => {
+        expect(await generator.createInterface(invalidSchema)).toBe("");
     });
 
     it("should create simple interface with one number property", async () => {

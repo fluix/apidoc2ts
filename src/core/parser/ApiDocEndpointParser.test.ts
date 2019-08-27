@@ -77,27 +77,25 @@ describe("apiDoc Endpoint", () => {
 
     const parser = new ApiDocEndpointParser();
 
-    it("should throw exception if endpoint has no parameters at all", () => {
-        expect(() => {
-            return new ApiDocEndpointParser().parseEndpoint(defaultEndpointMetadata);
-        }).toThrow();
+    it("should return empty schemas if endpoint has no parameters at all", () => {
+        expect(parser.parseEndpoint(defaultEndpointMetadata)).toEqual({
+            request: {},
+            response: {},
+            error: {},
+        });
     });
 
-    it("should throw an exception if endpoint has examples only", () => {
-        expect(() => {
-            return new ApiDocEndpointParser().parseEndpoint({
-                ...defaultEndpointMetadata,
-                parameter: {
-                    examples: [],
-                },
-                success: {
-                    examples: [],
-                },
-                error: {
-                    examples: [],
-                },
-            });
-        }).toThrow();
+    it("should return empty schemas if endpoint has examples only", () => {
+        expect(parser.parseEndpoint({
+            ...defaultEndpointMetadata,
+            parameter: {examples: []},
+            success: {examples: []},
+            error: {examples: []},
+        })).toEqual({
+            request: {},
+            response: {},
+            error: {},
+        });
     });
 
     it("should return separate schemas for request/response/error", () => {
@@ -314,4 +312,5 @@ describe("apiDoc Endpoint", () => {
 
         expect(parser.parseEndpoint(endpointData).request).toEqual(expectedSchema);
     });
-});
+})
+;
