@@ -31,7 +31,7 @@ $ apidoc2ts --source ./doc/api_data.json --output generated --name interfaces.ts
 Required flags:
 
 * `-s --source` - path to the `api_data.json` file from apiDoc
-* `-o --output` - path to the output folder
+* `-o --output` - path to the output folder (default `./`)
 * `-n --name` - name for the file with generated interfaces 
 
 Additional flags:
@@ -43,6 +43,8 @@ Additional flags:
     * `last` - interfaces are generated only for the latest versions
     * `all` - interfaces are generated for all version and older version interfaces has a postfix `_vx.x.x`
 * `-t --custom-types` - list of custom types that should not be replaced with strings
+* `-w --whitelist` - list of endpoints names which should be processed, the rest of endpoints will be ignored
+* `-e --parse-examples` - if example requests/responses should be parsed if no parameters are specified
 
 Prefixes/postfixes for top-level interfaces names:
  
