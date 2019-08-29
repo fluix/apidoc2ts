@@ -1,9 +1,9 @@
 ---
-name: 
-about: 
+name: Bug
+about: Template for bug issue
 title: "[Some descriptive header for a bug]"
 labels: bug
-assignees: 
+assignees: ''
 
 ---
 
