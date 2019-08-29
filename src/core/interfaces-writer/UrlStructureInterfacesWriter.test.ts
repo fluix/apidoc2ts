@@ -1,10 +1,10 @@
 import {ApiDoc2InterfaceGroupingMode} from "../ApiDoc2Interface";
 import {ConverterResult} from "../endpoint-converter/ApiDocToInterfaceConverter";
-import {writeFileToPath} from "../FsUtils";
+import {writeFileToPath} from "../utils/FsUtils";
+import {stringifyInterfaces} from "../utils/WriterUtils";
 import {UrlStructureInterfacesWriter} from "./UrlStructureInterfacesWriter";
-import {stringifyInterfaces} from "./WriterUtils";
 
-jest.mock("../FsUtils");
+jest.mock("../utils/FsUtils");
 
 describe("Single file interfaces writer", () => {
     const writer = new UrlStructureInterfacesWriter();
