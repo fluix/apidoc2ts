@@ -6,7 +6,7 @@ I'm glad that you are reading this, cause that means that you are here to help o
 
 First of all, check that the bug was not already reported by searching on GitHub under [issues](https://github.com/fluix/web-apidoc2ts/issues).
 
-If the bug was not reported, [open a new issue](https://github.com/fluix/web-apidoc2ts/issues/new) with a "bug" label and provide a title and clear description containing: 
+If the bug was not reported, [open a new issue](https://github.com/fluix/web-apidoc2ts/issues/new/choose) with a "bug" label and provide a title and clear description containing: 
 - list of steps to perform in order to reproduce the bug
 - description of the expected and actual behaviour
 - samples of expected and actual results
@@ -15,7 +15,7 @@ If the bug was not reported, [open a new issue](https://github.com/fluix/web-api
 
 ### I want to request a new feature/improvement
 
-Simply [open a new issue](https://github.com/fluix/web-apidoc2ts/issues/new) with an "enhancement" label and explain your idea in details.
+Simply [open a new issue](https://github.com/fluix/web-apidoc2ts/issues/new/choose) with an "enhancement" label and explain your idea in details.
 
 ### I want to make a new feature/improvement
 
