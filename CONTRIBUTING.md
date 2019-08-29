@@ -24,10 +24,12 @@ You dont need to do any additional steps in order to start working on a project,
 - `$ npm run lint` will run tslint and print all issues in human readable format
 - `$ npm link` will make a link the local package instead of global and thus any change you make will be immediately available
 
+Also we have a precommit hook that will run all tests and code-style linter and will prevent a commit if any of them fails.
+
 ### I fixed a bug or made an improvement
 
 Open a new GitHub pull request with the patch. Description should clearly describe the problem and solution, what have been done and what changed. If it is a fix for a specific issue reference it by adding the number of that issue.
 
 ### Code conventions?
 
-Currently we are following the extended Airbnb code style and have tslint rules for that. Also we are covering with tests every piece of functionality that we have. Besides that commit messages should consist of one-line header with a present tense imperative and a longer description of what and probably why something have been changed if needed.
+Currently we are following the extended Airbnb code style and have tslint rules for that. We use UpperCamelCase for files and kebab-case for directories. Also we are covering with tests every piece of functionality that we have. Besides that commit messages should consist of one-line header with a present tense imperative and a longer description of what and probably why something have been changed if needed.
