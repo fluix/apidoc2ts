@@ -5,9 +5,9 @@ import {
     converterDefaultOptions,
     ConverterOptions,
 } from "./converter/ApiDocToInterfaceConverter";
+import {ApiDocEndpointParser} from "./endpoint-parser/ApiDocEndpointParser";
+import {ApiDocExamplesParser} from "./endpoint-parser/ApiDocExamplesParser";
 import {InterfaceGenerator} from "./interface-generator/InterfaceGenerator";
-import {ApiDocEndpointParser} from "./parser/ApiDocEndpointParser";
-import {ApiDocExamplesParser} from "./parser/ApiDocExamplesParser";
 
 export interface BuilderOptions extends ConverterOptions {
     customTypes: Array<string>;

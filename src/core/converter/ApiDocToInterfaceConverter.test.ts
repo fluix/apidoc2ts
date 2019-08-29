@@ -1,6 +1,6 @@
+import {ApiDocEndpointParser} from "../endpoint-parser/ApiDocEndpointParser";
+import {ApiDocExamplesParser} from "../endpoint-parser/ApiDocExamplesParser";
 import {InterfaceGenerator} from "../interface-generator/InterfaceGenerator";
-import {ApiDocEndpointParser} from "../parser/ApiDocEndpointParser";
-import {ApiDocExamplesParser} from "../parser/ApiDocExamplesParser";
 import {ApiDocToInterfaceConverter, ConverterVersionResolving} from "./ApiDocToInterfaceConverter";
 
 const requestVersion1 = {
@@ -136,8 +136,8 @@ const emptyRequest = {
     filename: "source/example_full/example.js",
 };
 
-jest.mock("../parser/ApiDocEndpointParser");
-jest.mock("../parser/ApiDocExamplesParser");
+jest.mock("../endpoint-parser/ApiDocEndpointParser");
+jest.mock("../endpoint-parser/ApiDocExamplesParser");
 jest.mock("../interface-generator/InterfaceGenerator");
 
 const threeEndpoints = [requestVersion1, requestVersion2, requestVersion3];

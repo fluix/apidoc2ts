@@ -1,7 +1,7 @@
 import {endpointHasExamples, IApiDocEndpoint} from "../ApiDocInterfaces";
+import {ApiDocEndpointParser} from "../endpoint-parser/ApiDocEndpointParser";
+import {ApiDocExamplesParser} from "../endpoint-parser/ApiDocExamplesParser";
 import {InterfaceGenerator} from "../interface-generator/InterfaceGenerator";
-import {ApiDocEndpointParser} from "../parser/ApiDocEndpointParser";
-import {ApiDocExamplesParser} from "../parser/ApiDocExamplesParser";
 
 export interface InterfaceMetadata {
     type: string;
