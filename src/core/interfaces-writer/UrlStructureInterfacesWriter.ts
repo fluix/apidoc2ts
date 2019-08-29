@@ -1,10 +1,10 @@
-import {InterfacesWriter} from "./InterfacesWriter";
-import {ConverterResult} from "../converter/ApiDocToInterfaceConverter";
-import {ApiDoc2InterfaceParameters} from "../ApiDoc2Interface";
-import {getUrlWithoutParameters} from "../StringUtils";
-import {writeFileToPath} from "../FsUtils";
-import {stringifyInterfaces} from "./WriterUtils";
 import * as path from "path";
+import {ApiDoc2InterfaceParameters} from "../ApiDoc2Interface";
+import {ConverterResult} from "../endpoint-converter/ApiDocToInterfaceConverter";
+import {writeFileToPath} from "../utils/FsUtils";
+import {getUrlWithoutParameters} from "../utils/StringUtils";
+import {stringifyInterfaces} from "../utils/WriterUtils";
+import {InterfacesWriter} from "./InterfacesWriter";
 
 export class UrlStructureInterfacesWriter implements InterfacesWriter {
     async writeInterfaces(interfacesData: Array<ConverterResult>, args: ApiDoc2InterfaceParameters): Promise<void> {

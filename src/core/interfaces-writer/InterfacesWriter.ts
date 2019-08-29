@@ -1,7 +1,7 @@
-import {ConverterResult} from "../converter/ApiDocToInterfaceConverter";
 import {ApiDoc2InterfaceGroupingMode, ApiDoc2InterfaceParameters} from "../ApiDoc2Interface";
-import {UrlStructureInterfacesWriter} from "./UrlStructureInterfacesWriter";
+import {ConverterResult} from "../endpoint-converter/ApiDocToInterfaceConverter";
 import {SingleFileInterfacesWriter} from "./SingleFileInterfacesWriter";
+import {UrlStructureInterfacesWriter} from "./UrlStructureInterfacesWriter";
 
 export interface InterfacesWriter {
     writeInterfaces(

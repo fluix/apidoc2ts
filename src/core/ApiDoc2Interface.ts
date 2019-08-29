@@ -1,9 +1,9 @@
 import * as fs from "fs";
 import {promisify} from "util";
-import {ApiDocToInterfaceConverter, ConverterResult} from "./converter/ApiDocToInterfaceConverter";
-import {InterfaceGenerator} from "./generator/InterfaceGenerator";
-import {ApiDocEndpointParser} from "./parser/ApiDocEndpointParser";
-import {getInterfaceWriter} from "./writer/InterfacesWriter";
+import {ApiDocToInterfaceConverter, ConverterResult} from "./endpoint-converter/ApiDocToInterfaceConverter";
+import {ApiDocFieldsParser} from "./endpoint-parser/ApiDocFieldsParser";
+import {InterfaceGenerator} from "./interface-generator/InterfaceGenerator";
+import {getInterfaceWriter} from "./interfaces-writer/InterfacesWriter";
 
 const readFile = promisify(fs.readFile);
 
@@ -34,7 +34,7 @@ export class ApiDoc2Interface {
 
     static simple(): ApiDoc2Interface {
         const generator = new InterfaceGenerator();
-        const parser = new ApiDocEndpointParser();
+        const parser = new ApiDocFieldsParser();
         const converter = new ApiDocToInterfaceConverter(generator, parser);
         return new ApiDoc2Interface(converter);
     }

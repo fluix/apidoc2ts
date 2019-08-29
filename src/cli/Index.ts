@@ -7,7 +7,7 @@ import {
     ApiDoc2InterfaceResult,
 } from "../core/ApiDoc2Interface";
 import {ApiDoc2InterfaceBuilder} from "../core/ApiDoc2InterfaceBuilder";
-import {ConverterVersionResolving} from "../core/converter/ApiDocToInterfaceConverter";
+import {ConverterVersionResolving} from "../core/endpoint-converter/ApiDocToInterfaceConverter";
 import {InputParser} from "./InputParser";
 
 class Convert extends Command {

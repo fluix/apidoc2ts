@@ -8,7 +8,7 @@ import {
     TypeScriptTargetLanguage,
 } from "quicktype-core";
 import {JsonSchema, jsonSchemaDefaultTypes, traverseSchemaRecursively} from "../JsonSchema";
-import {removeFieldsAligningSpaces} from "../StringUtils";
+import {removeFieldsAligningSpaces} from "../utils/StringUtils";
 
 const qtFakeCustomType = {
     type: "object",

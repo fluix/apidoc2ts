@@ -4,10 +4,10 @@ import {
     ApiDocToInterfaceConverter,
     converterDefaultOptions,
     ConverterOptions,
-} from "./converter/ApiDocToInterfaceConverter";
-import {InterfaceGenerator} from "./generator/InterfaceGenerator";
-import {ApiDocEndpointParser} from "./parser/ApiDocEndpointParser";
-import {ApiDocExamplesParser} from "./parser/ApiDocExamplesParser";
+} from "./endpoint-converter/ApiDocToInterfaceConverter";
+import {ApiDocExamplesParser} from "./endpoint-parser/ApiDocExamplesParser";
+import {ApiDocFieldsParser} from "./endpoint-parser/ApiDocFieldsParser";
+import {InterfaceGenerator} from "./interface-generator/InterfaceGenerator";
 
 export interface BuilderOptions extends ConverterOptions {
     customTypes: Array<string>;
@@ -19,7 +19,7 @@ export class ApiDoc2InterfaceBuilder {
         const converterOptions: ConverterOptions = _.defaults(parameters, converterDefaultOptions);
 
         const generator = new InterfaceGenerator(generatorOptions);
-        const parser = new ApiDocEndpointParser();
+        const parser = new ApiDocFieldsParser();
         const examplesParser = new ApiDocExamplesParser();
         const converter = new ApiDocToInterfaceConverter(generator, parser, converterOptions, examplesParser);
         return new ApiDoc2Interface(converter);
