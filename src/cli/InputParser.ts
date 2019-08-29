@@ -1,4 +1,4 @@
-import Convert = require("./index");
+import Convert = require("./Index");
 import * as fs from "fs";
 import * as _ from "lodash";
 import * as path from "path";
