@@ -5,11 +5,11 @@ import {
     converterDefaultOptions,
     ConverterVersionResolving,
 } from "./converter/ApiDocToInterfaceConverter";
-import {InterfaceGenerator} from "./generator/InterfaceGenerator";
+import {InterfaceGenerator} from "./interface-generator/InterfaceGenerator";
 import {ApiDocEndpointParser} from "./parser/ApiDocEndpointParser";
 import {ApiDocExamplesParser} from "./parser/ApiDocExamplesParser";
 
-jest.mock("./generator/InterfaceGenerator");
+jest.mock("./interface-generator/InterfaceGenerator");
 jest.mock("./parser/ApiDocEndpointParser");
 jest.mock("./parser/ApiDocExamplesParser");
 jest.mock("./converter/ApiDocToInterfaceConverter");

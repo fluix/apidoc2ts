@@ -1,4 +1,4 @@
-import {InterfaceGenerator} from "../generator/InterfaceGenerator";
+import {InterfaceGenerator} from "../interface-generator/InterfaceGenerator";
 import {ApiDocEndpointParser} from "../parser/ApiDocEndpointParser";
 import {ApiDocExamplesParser} from "../parser/ApiDocExamplesParser";
 import {ApiDocToInterfaceConverter, ConverterVersionResolving} from "./ApiDocToInterfaceConverter";
@@ -138,7 +138,7 @@ const emptyRequest = {
 
 jest.mock("../parser/ApiDocEndpointParser");
 jest.mock("../parser/ApiDocExamplesParser");
-jest.mock("../generator/InterfaceGenerator");
+jest.mock("../interface-generator/InterfaceGenerator");
 
 const threeEndpoints = [requestVersion1, requestVersion2, requestVersion3];
 

@@ -5,7 +5,7 @@ import {
     converterDefaultOptions,
     ConverterOptions,
 } from "./converter/ApiDocToInterfaceConverter";
-import {InterfaceGenerator} from "./generator/InterfaceGenerator";
+import {InterfaceGenerator} from "./interface-generator/InterfaceGenerator";
 import {ApiDocEndpointParser} from "./parser/ApiDocEndpointParser";
 import {ApiDocExamplesParser} from "./parser/ApiDocExamplesParser";
 

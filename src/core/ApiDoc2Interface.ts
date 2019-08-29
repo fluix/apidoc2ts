@@ -1,7 +1,7 @@
 import * as fs from "fs";
 import {promisify} from "util";
 import {ApiDocToInterfaceConverter, ConverterResult} from "./converter/ApiDocToInterfaceConverter";
-import {InterfaceGenerator} from "./generator/InterfaceGenerator";
+import {InterfaceGenerator} from "./interface-generator/InterfaceGenerator";
 import {ApiDocEndpointParser} from "./parser/ApiDocEndpointParser";
 import {getInterfaceWriter} from "./writer/InterfacesWriter";
 
