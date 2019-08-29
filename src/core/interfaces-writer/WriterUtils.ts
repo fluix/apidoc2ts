@@ -1,4 +1,4 @@
-import {ConverterResult} from "../converter/ApiDocToInterfaceConverter";
+import {ConverterResult} from "../endpoint-converter/ApiDocToInterfaceConverter";
 import {filterEmptyStrings} from "../StringUtils";
 
 export function stringifyAllInterfaces(converterResults: Array<ConverterResult>): string {

@@ -1,9 +1,9 @@
-import {InterfacesWriter} from "./InterfacesWriter";
-import {ConverterResult} from "../converter/ApiDocToInterfaceConverter";
-import {ApiDoc2InterfaceParameters} from "../ApiDoc2Interface";
-import {writeFileToPath} from "../FsUtils";
-import {stringifyAllInterfaces} from "./WriterUtils";
 import * as path from "path";
+import {ApiDoc2InterfaceParameters} from "../ApiDoc2Interface";
+import {ConverterResult} from "../endpoint-converter/ApiDocToInterfaceConverter";
+import {writeFileToPath} from "../FsUtils";
+import {InterfacesWriter} from "./InterfacesWriter";
+import {stringifyAllInterfaces} from "./WriterUtils";
 
 export class SingleFileInterfacesWriter implements InterfacesWriter {
     writeInterfaces(interfacesData: Array<ConverterResult>, args: ApiDoc2InterfaceParameters): Promise<void> {

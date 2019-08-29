@@ -1,9 +1,9 @@
 import * as fs from "fs";
 import {promisify} from "util";
-import {ApiDocToInterfaceConverter, ConverterResult} from "./converter/ApiDocToInterfaceConverter";
+import {ApiDocToInterfaceConverter, ConverterResult} from "./endpoint-converter/ApiDocToInterfaceConverter";
 import {ApiDocEndpointParser} from "./endpoint-parser/ApiDocEndpointParser";
 import {InterfaceGenerator} from "./interface-generator/InterfaceGenerator";
-import {getInterfaceWriter} from "./writer/InterfacesWriter";
+import {getInterfaceWriter} from "./interfaces-writer/InterfacesWriter";
 
 const readFile = promisify(fs.readFile);
 

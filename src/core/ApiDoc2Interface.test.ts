@@ -1,9 +1,9 @@
 import * as fs from "fs";
 import {ApiDoc2Interface, ApiDoc2InterfaceExitCode, ApiDoc2InterfaceGroupingMode} from "./ApiDoc2Interface";
-import {ApiDocToInterfaceConverter} from "./converter/ApiDocToInterfaceConverter";
+import {ApiDocToInterfaceConverter} from "./endpoint-converter/ApiDocToInterfaceConverter";
 
 jest.mock("fs");
-jest.mock("./converter/ApiDocToInterfaceConverter");
+jest.mock("./endpoint-converter/ApiDocToInterfaceConverter");
 
 describe("ApiDoc2Interface wrapper", () => {
     const requestInterface = "interface Request";
