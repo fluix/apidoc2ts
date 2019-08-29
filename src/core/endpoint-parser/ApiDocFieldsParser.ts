@@ -15,7 +15,7 @@ export interface ParserResult {
     error: JsonSchema;
 }
 
-export class ApiDocEndpointParser {
+export class ApiDocFieldsParser {
     parseEndpoint(endpoint: IApiDocEndpoint): ParserResult {
         if (!endpointHasFields(endpoint)) {
             return {
@@ -48,7 +48,7 @@ export class ApiDocEndpointParser {
 
         const properties = {};
         fields.forEach(field => {
-            const fieldJsonSchema = ApiDocEndpointParser.toJsonSchemaProperty(field);
+            const fieldJsonSchema = ApiDocFieldsParser.toJsonSchemaProperty(field);
 
             if (field.nested) {
                 return this.fillNestedField(properties, field, fieldJsonSchema);

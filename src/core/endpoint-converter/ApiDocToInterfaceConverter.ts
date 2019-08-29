@@ -1,6 +1,6 @@
 import {endpointHasExamples, IApiDocEndpoint} from "../ApiDocInterfaces";
-import {ApiDocEndpointParser} from "../endpoint-parser/ApiDocEndpointParser";
 import {ApiDocExamplesParser} from "../endpoint-parser/ApiDocExamplesParser";
+import {ApiDocFieldsParser} from "../endpoint-parser/ApiDocFieldsParser";
 import {InterfaceGenerator} from "../interface-generator/InterfaceGenerator";
 
 export interface InterfaceMetadata {
@@ -74,7 +74,7 @@ export class ApiDocToInterfaceConverter {
 
     constructor(
         private readonly interfaceGenerator: InterfaceGenerator,
-        private readonly endpointParser: ApiDocEndpointParser,
+        private readonly endpointParser: ApiDocFieldsParser,
         private readonly options: ConverterOptions = converterDefaultOptions,
         private readonly examplesParser?: ApiDocExamplesParser,
     ) {

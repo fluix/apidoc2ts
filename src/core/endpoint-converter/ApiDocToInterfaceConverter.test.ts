@@ -1,5 +1,5 @@
-import {ApiDocEndpointParser} from "../endpoint-parser/ApiDocEndpointParser";
 import {ApiDocExamplesParser} from "../endpoint-parser/ApiDocExamplesParser";
+import {ApiDocFieldsParser} from "../endpoint-parser/ApiDocFieldsParser";
 import {InterfaceGenerator} from "../interface-generator/InterfaceGenerator";
 import {ApiDocToInterfaceConverter, ConverterVersionResolving} from "./ApiDocToInterfaceConverter";
 
@@ -136,7 +136,7 @@ const emptyRequest = {
     filename: "source/example_full/example.js",
 };
 
-jest.mock("../endpoint-parser/ApiDocEndpointParser");
+jest.mock("../endpoint-parser/ApiDocFieldsParser");
 jest.mock("../endpoint-parser/ApiDocExamplesParser");
 jest.mock("../interface-generator/InterfaceGenerator");
 
@@ -158,7 +158,7 @@ const interfacesPerEndpoint = 3; // request, success response, error response
 
 describe("ApiDoc to Interface converter", () => {
     const interfaceGenerator = new InterfaceGenerator();
-    const endpointParser = new ApiDocEndpointParser();
+    const endpointParser = new ApiDocFieldsParser();
     const examplesParser = new ApiDocExamplesParser();
 
     const parseEndpointSpy = jest.spyOn(endpointParser, "parseEndpoint");

@@ -1,7 +1,7 @@
 import * as fs from "fs";
 import {promisify} from "util";
 import {ApiDocToInterfaceConverter, ConverterResult} from "./endpoint-converter/ApiDocToInterfaceConverter";
-import {ApiDocEndpointParser} from "./endpoint-parser/ApiDocEndpointParser";
+import {ApiDocFieldsParser} from "./endpoint-parser/ApiDocFieldsParser";
 import {InterfaceGenerator} from "./interface-generator/InterfaceGenerator";
 import {getInterfaceWriter} from "./interfaces-writer/InterfacesWriter";
 
@@ -34,7 +34,7 @@ export class ApiDoc2Interface {
 
     static simple(): ApiDoc2Interface {
         const generator = new InterfaceGenerator();
-        const parser = new ApiDocEndpointParser();
+        const parser = new ApiDocFieldsParser();
         const converter = new ApiDocToInterfaceConverter(generator, parser);
         return new ApiDoc2Interface(converter);
     }

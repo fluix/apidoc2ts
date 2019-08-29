@@ -5,12 +5,12 @@ import {
     converterDefaultOptions,
     ConverterVersionResolving,
 } from "./endpoint-converter/ApiDocToInterfaceConverter";
-import {ApiDocEndpointParser} from "./endpoint-parser/ApiDocEndpointParser";
 import {ApiDocExamplesParser} from "./endpoint-parser/ApiDocExamplesParser";
+import {ApiDocFieldsParser} from "./endpoint-parser/ApiDocFieldsParser";
 import {InterfaceGenerator} from "./interface-generator/InterfaceGenerator";
 
 jest.mock("./interface-generator/InterfaceGenerator");
-jest.mock("./endpoint-parser/ApiDocEndpointParser");
+jest.mock("./endpoint-parser/ApiDocFieldsParser");
 jest.mock("./endpoint-parser/ApiDocExamplesParser");
 jest.mock("./endpoint-converter/ApiDocToInterfaceConverter");
 jest.mock("./ApiDoc2Interface");
@@ -30,7 +30,7 @@ describe("ApiDoc2InterfaceBuilder", () => {
 
     it("should create parser during execution", () => {
         builder.build(parameters);
-        expect(ApiDocEndpointParser).toBeCalled();
+        expect(ApiDocFieldsParser).toBeCalled();
     });
 
     it("should create generator with passed custom types", () => {
@@ -47,7 +47,7 @@ describe("ApiDoc2InterfaceBuilder", () => {
         builder.build(parameters);
         expect(ApiDocToInterfaceConverter).toBeCalledWith(
             (InterfaceGenerator as jest.Mock).mock.instances[0],
-            (ApiDocEndpointParser as unknown as jest.Mock).mock.instances[0],
+            (ApiDocFieldsParser as unknown as jest.Mock).mock.instances[0],
             expect.anything(),
             expect.anything(),
         );
