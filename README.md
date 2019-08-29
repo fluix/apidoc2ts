@@ -59,9 +59,7 @@ Prefixes/postfixes for top-level interfaces names:
 
 #### Config file
 
-The tool will look for a default config file called `apidoc2ts.config.js` in a current folder and combine
-flags from the file with a flags specified in command line. Note that command line flags override config
-file flags and all flags in config file should be in a camelCase.
+The tool will look for a default config file called `apidoc2ts.config.js` in a current folder and combine flags from the file with a flags specified in command line. Note that command line flags override config file flags and all flags in config file should be in a camelCase.
 
 Also you can specify a path to the config file which **must** contain all required flags:
 
@@ -77,6 +75,10 @@ module.exports = {
     customTypes: ["type1", "type2"]
 }
 ```
+
+## Contributing
+
+We appreciate any contribution to this project whether it is a bug report, feature request or some improvement and have a small [guide](CONTRIBUTING.md) for that.
 
 ## License
 
