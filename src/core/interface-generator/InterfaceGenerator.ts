@@ -1,4 +1,4 @@
-import * as _ from "lodash";
+import {cloneDeep, entries, isEmpty} from "lodash";
 import {
     InputData,
     JSONSchemaInput,
@@ -31,7 +31,7 @@ export class InterfaceGenerator {
     }
 
     async createInterface(schema: JsonSchema, name = "Generated"): Promise<string> {
-        if (_.isEmpty(schema)) {
+        if (isEmpty(schema)) {
             return "";
         }
 
@@ -39,14 +39,14 @@ export class InterfaceGenerator {
             throw new Error(`Interface ${name} exists in custom types: [${this.customTypes.join(",")}]`);
         }
 
-        const schemaCopy = _.cloneDeep(schema);
+        const schemaCopy = cloneDeep(schema);
         const inputData = this.createInputData(schemaCopy, name);
         const quicktypeOptions = this.createOptions(inputData);
         const interfaceString = await this.execQuicktypeGenerator(quicktypeOptions);
         return this.removeFakeDefinitions(interfaceString);
     }
 
-    private async execQuicktypeGenerator(quicktypeOptions) {
+    private async execQuicktypeGenerator(quicktypeOptions: Partial<Options>) {
         try {
             const result = await quicktype(quicktypeOptions);
             const interfaceString = result.lines.join("\n");
@@ -89,7 +89,7 @@ export class InterfaceGenerator {
     }
 
     private includeFakeDefinitions(schema: JsonSchema) {
-        const fakeDefinitions = {};
+        const fakeDefinitions: { [definition: string]: JsonSchema } = {};
         this.customTypes.forEach(type => {
             fakeDefinitions[type] = qtFakeCustomType;
         });
@@ -97,8 +97,8 @@ export class InterfaceGenerator {
     }
 
     private replaceCustomTypesWithReferences(schema: JsonSchema) {
-        const customProperties = {};
-        _.entries(schema.properties).forEach(([propertyKey, property]: [string, JsonSchema]) => {
+        const customProperties: { [property: string]: JsonSchema } = {};
+        entries(schema.properties).forEach(([propertyKey, property]: [string, JsonSchema]) => {
             if (!property.type) {
                 return;
             }
@@ -113,7 +113,7 @@ export class InterfaceGenerator {
 
     private includeRequiredPropertiesList(schema: JsonSchema) {
         const requiredProperties: Array<string> = [];
-        _.entries(schema.properties).forEach(([propertyKey, property]: [string, JsonSchema]) => {
+        entries(schema.properties).forEach(([propertyKey, property]: [string, JsonSchema]) => {
             if (property.required) {
                 requiredProperties.push(propertyKey);
             }
@@ -159,13 +159,13 @@ export class InterfaceGenerator {
         });
     }
 
-    private isDefaultType(subSchema) {
+    private isDefaultType(subSchema: JsonSchema) {
         return subSchema.type
                && !this.customTypes.includes(subSchema.type)
                && jsonSchemaDefaultTypes.includes(subSchema.type.toLowerCase());
     }
 
-    private isInvalidType(subSchema) {
+    private isInvalidType(subSchema: JsonSchema) {
         return subSchema.type &&
                !jsonSchemaDefaultTypes.includes(subSchema.type) &&
                !this.customTypes.includes(subSchema.type);

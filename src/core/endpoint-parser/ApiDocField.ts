@@ -1,4 +1,4 @@
-import * as _ from "lodash";
+import {last} from "lodash";
 import {IApiDocField} from "../ApiDocInterfaces";
 
 export class ApiDocField {
@@ -8,27 +8,27 @@ export class ApiDocField {
     private readonly _fieldName: string;
     private readonly _qualifiedName: Array<string>;
 
-    get required() {
+    get required(): boolean {
         return !this.optional;
     }
 
-    get enum() {
+    get enum(): Array<string> {
         return this.allowedValues;
     }
 
-    get type() {
+    get type(): string {
         return this._type.replace("[]", "");
     }
 
-    get fieldName() {
-        return _.last(this._qualifiedName);
+    get fieldName(): string {
+        return last(this._qualifiedName) || this._fieldName;
     }
 
-    get qualifiedName() {
+    get qualifiedName(): Array<string> {
         return this._qualifiedName;
     }
 
-    get nested() {
+    get nested(): boolean {
         return this._qualifiedName.length !== 1;
     }
 

@@ -4,9 +4,10 @@ import {
     ApiDoc2Interface,
     ApiDoc2InterfaceExitCode,
     ApiDoc2InterfaceGroupingMode,
+    ApiDoc2InterfaceParameters,
     ApiDoc2InterfaceResult,
 } from "../core/ApiDoc2Interface";
-import {ApiDoc2InterfaceBuilder} from "../core/ApiDoc2InterfaceBuilder";
+import {ApiDoc2InterfaceBuilder, BuilderOptions} from "../core/ApiDoc2InterfaceBuilder";
 import {ConverterVersionResolving} from "../core/endpoint-converter/ApiDocToInterfaceConverter";
 import {InputParser} from "./InputParser";
 
@@ -117,7 +118,7 @@ url - save all interfaces to corresponding url paths`,
             });
     }
 
-    private async convert(builderOptions, runParameters) {
+    private async convert(builderOptions: Partial<BuilderOptions>, runParameters: ApiDoc2InterfaceParameters) {
         const apiDoc2interface = this.getApiDoc2Interface(builderOptions);
         const result = await apiDoc2interface.run(runParameters);
 
@@ -128,7 +129,7 @@ url - save all interfaces to corresponding url paths`,
         this.onSuccess(result);
     }
 
-    private parseInput(passedFlags) {
+    private parseInput(passedFlags: any) {
         const configParser = new InputParser();
         return configParser.parse(passedFlags);
     }
@@ -147,7 +148,7 @@ url - save all interfaces to corresponding url paths`,
         this.exit(1);
     }
 
-    private getApiDoc2Interface(builderOptions): ApiDoc2Interface {
+    private getApiDoc2Interface(builderOptions: Partial<BuilderOptions>): ApiDoc2Interface {
         const apiDoc2InterfaceBuilder = new ApiDoc2InterfaceBuilder();
         return apiDoc2InterfaceBuilder.build(builderOptions);
     }

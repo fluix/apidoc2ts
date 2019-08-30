@@ -3,7 +3,7 @@ import {filterEmptyStrings} from "./StringUtils";
 
 export function stringifyAllInterfaces(converterResults: Array<ConverterResult>): string {
     return converterResults
-        .map((endpointData) => this.stringifyInterfaces(endpointData))
+        .map((endpointData) => stringifyInterfaces(endpointData))
         .filter(filterEmptyStrings)
         .join("\n");
 }

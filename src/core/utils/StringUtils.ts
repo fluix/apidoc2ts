@@ -1,8 +1,8 @@
-export const filterEmptyStrings = (str) => {
+export const filterEmptyStrings = (str: string) => {
     return str !== "";
 };
 
-export function removeFieldsAligningSpaces(interfaceString): string {
+export function removeFieldsAligningSpaces(interfaceString: string): string {
     return interfaceString.replace(/:\s+/g, ": ");
 }
 
