@@ -11,7 +11,6 @@ interface ConfigFlags extends BuilderOptions, ApiDoc2InterfaceParameters {}
 
 export class InputParser {
 
-    static requiredFlagsKeys: Array<keyof ConfigFlags> = ["source", "output", "name"];
     static defaultConfigFileName = "apidoc2ts.config.js";
 
     async parse(cliFlags: Partial<CLIFlags>): Promise<{
@@ -22,16 +21,20 @@ export class InputParser {
                       ? await this.readConfigFlags(cliFlags.config)
                       : await this.combineDefaultConfigAndCliFlags(cliFlags);
 
+        if (!flags.source) {
+            throw new Error("Missing required flag 'source'");
+        }
+
+        if (!flags.name && flags.grouping === ApiDoc2InterfaceGroupingMode.SINGLE) {
+            throw new Error("Missing required flag 'name'");
+        }
+
         const runParameters = {
             source: flags.source,
             output: flags.output || "./",
-            name: flags.name,
+            name: flags.name || "",
             grouping: flags.grouping as ApiDoc2InterfaceGroupingMode,
         };
-
-        if (!this.validateRunParameters(runParameters)) {
-            throw new Error(this.getValidationErrorMessage(flags));
-        }
 
         return {
             runParameters,
@@ -59,40 +62,6 @@ export class InputParser {
         }
 
         return Promise.resolve(require(configPath));
-    }
-
-    private validateRunParameters(
-        parameters: Partial<ApiDoc2InterfaceParameters>,
-    ): parameters is ApiDoc2InterfaceParameters {
-        if (!this.hasValidSource(parameters)) {
-            return false;
-        }
-
-        if (!this.hasValidName(parameters)) {
-            return false;
-        }
-
-        return true;
-    }
-
-    private getValidationErrorMessage(flags: Partial<ApiDoc2InterfaceParameters>): string {
-        if (!this.hasValidSource(flags)) {
-            return "Missing required flag 'source'";
-        }
-
-        if (!this.hasValidName(flags)) {
-            return "Missing required flag 'name'";
-        }
-
-        return "";
-    }
-
-    private hasValidSource(flags: Partial<ConfigFlags>): boolean {
-        return Boolean(flags.source);
-    }
-
-    private hasValidName(flags: Partial<ConfigFlags>): boolean {
-        return Boolean(flags.name || flags.grouping === ApiDoc2InterfaceGroupingMode.URL);
     }
 
     private mapInputFlags(flags: Partial<CLIFlags>): Partial<ConfigFlags> {
