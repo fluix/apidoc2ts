@@ -188,26 +188,6 @@ describe("ApiDoc to Interface converter", () => {
         },
     );
 
-    const prefixPostfixOptions = {
-        staticPrefix: "prefix",
-        staticPostfix: "postFix",
-        requestPrefix: "requestPrefix",
-        requestPostfix: "requestPostfix",
-        responsePrefix: "responsePrefix",
-        responsePostfix: "responsePostfix",
-        errorPrefix: "errorPrefix",
-        errorPostfix: "errorPostfix",
-    };
-
-    const converterWithCustomPrefixPostfix = new ApiDocToInterfaceConverter(
-        interfaceGenerator,
-        endpointParser,
-        {
-            ...converterDefaultOptions,
-            ...prefixPostfixOptions,
-        },
-    );
-
     beforeEach(() => {
         createInterfaceSpy.mockReset();
         parseEndpointSpy.mockReset();
@@ -230,51 +210,77 @@ describe("ApiDoc to Interface converter", () => {
         expect(createInterfaceSpy).toBeCalledWith(parserResultMock.error, expect.anything());
     });
 
-    it("should call createInterface with name from apiDoc endpoint and default postfixes", async () => {
-        await converter.convert([requestVersion1]);
-        expect(createInterfaceSpy).toBeCalledWith(expect.anything(), requestVersion1.name);
-        expect(createInterfaceSpy).toBeCalledWith(expect.anything(), `${requestVersion1.name}Response`);
-        expect(createInterfaceSpy).toBeCalledWith(expect.anything(), `${requestVersion1.name}Error`);
-    });
+    describe("for a custom naming function", () => {
+        const interfaceNameOptions = {
+            staticPrefix: "prefix",
+            staticPostfix: "postFix",
+            requestPrefix: "requestPrefix",
+            requestPostfix: "requestPostfix",
+            responsePrefix: "responsePrefix",
+            responsePostfix: "responsePostfix",
+            errorPrefix: "errorPrefix",
+            errorPostfix: "errorPostfix",
+        };
 
-    it("should call createInterface with passed in prefixes and postfixes", async () => {
-        await converterWithCustomPrefixPostfix.convert([requestVersion1]);
-        const {
-            staticPrefix,
-            staticPostfix,
-            requestPrefix,
-            requestPostfix,
-            responsePrefix,
-            responsePostfix,
-            errorPrefix,
-            errorPostfix,
-        } = prefixPostfixOptions;
+        const namingFunctionMock = jest.fn();
 
-        expect(createInterfaceSpy).toBeCalledWith(expect.anything(),
-            `${staticPrefix}${requestPrefix}${requestVersion1.name}${requestPostfix}${staticPostfix}`,
+        const converterWithCustomNamingFunction = new ApiDocToInterfaceConverter(
+            interfaceGenerator,
+            endpointParser,
+            {
+                ...converterDefaultOptions,
+                ...interfaceNameOptions,
+                makeName: namingFunctionMock,
+            },
         );
-        expect(createInterfaceSpy).toBeCalledWith(expect.anything(),
-            `${staticPrefix}${responsePrefix}${requestVersion1.name}${responsePostfix}${staticPostfix}`,
-        );
-        expect(createInterfaceSpy).toBeCalledWith(expect.anything(),
-            `${staticPrefix}${errorPrefix}${requestVersion1.name}${errorPostfix}${staticPostfix}`,
-        );
+
+        it("should call naming function for creating names for interfaces", async () => {
+            await converterWithCustomNamingFunction.convert([requestVersion1]);
+            expect(namingFunctionMock).toBeCalledTimes(1 * interfacesPerEndpoint);
+        });
+
+        it("should call naming function with passed in prefixes and postfixes", async () => {
+            await converterWithCustomNamingFunction.convert([requestVersion1]);
+
+            const commonOptions = {
+                staticPrefix: interfaceNameOptions.staticPrefix,
+                staticPostfix: interfaceNameOptions.staticPostfix,
+            };
+
+            expect(namingFunctionMock).toBeCalledWith(requestVersion1, true,
+                {
+                    ...commonOptions,
+                    prefix: interfaceNameOptions.requestPrefix,
+                    postfix: interfaceNameOptions.requestPostfix,
+                },
+            );
+            expect(namingFunctionMock).toBeCalledWith(requestVersion1, true,
+                {
+                    ...commonOptions,
+                    prefix: interfaceNameOptions.responsePrefix,
+                    postfix: interfaceNameOptions.responsePostfix,
+                },
+            );
+            expect(namingFunctionMock).toBeCalledWith(requestVersion1, true,
+                {
+                    ...commonOptions,
+                    prefix: interfaceNameOptions.errorPrefix,
+                    postfix: interfaceNameOptions.errorPostfix,
+                },
+            );
+        });
+
+        it("should call createInterface with naming function result", async () => {
+            namingFunctionMock.mockReturnValueOnce("mock interface name");
+            await converterWithCustomNamingFunction.convert([requestVersion1]);
+            expect(createInterfaceSpy).toBeCalledWith(expect.anything(), "mock interface name");
+        });
     });
 
     it("should call parseEndpoint and createInterface for every endpoint", async () => {
         await converter.convert(threeEndpoints);
         expect(parseEndpointSpy).toBeCalledTimes(threeEndpoints.length);
         expect(createInterfaceSpy).toBeCalledTimes(threeEndpoints.length * interfacesPerEndpoint);
-    });
-
-    it("should add version postfix to interface name if it is not the latest one", async () => {
-        await converter.convert([requestVersion1, requestVersion2, requestVersion3]);
-        expect(createInterfaceSpy)
-            .toBeCalledWith(expect.anything(), `${requestVersion1.name}_v${requestVersion1.version}`);
-        expect(createInterfaceSpy)
-            .toBeCalledWith(expect.anything(), `${requestVersion2.name}_v${requestVersion2.version}`);
-        expect(createInterfaceSpy)
-            .toBeCalledWith(expect.anything(), `${requestVersion3.name}`);
     });
 
     it("should add warning message if there was some trouble while parsing or converting", async () => {

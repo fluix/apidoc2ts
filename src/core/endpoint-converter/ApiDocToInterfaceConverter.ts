@@ -39,6 +39,13 @@ export interface ConverterOptions {
     errorPostfix: string;
     whitelist: Array<string>;
     parseExamples: boolean;
+    makeName: (endpoint: IApiDocEndpoint, isLatest: boolean, options: InterfaceNameOptions) => string;
+}
+
+function defaultMakeName(endpoint: IApiDocEndpoint, isLatest: boolean, options: InterfaceNameOptions): string {
+    const {staticPrefix, staticPostfix, prefix, postfix} = options;
+    const versionPostfix = isLatest ? "" : `_v${endpoint.version}`;
+    return `${staticPrefix}${prefix}${endpoint.name}${postfix}${versionPostfix}${staticPostfix}`;
 }
 
 export const converterDefaultOptions: ConverterOptions = {
@@ -53,11 +60,10 @@ export const converterDefaultOptions: ConverterOptions = {
     errorPostfix: "Error",
     whitelist: [],
     parseExamples: false,
+    makeName: defaultMakeName,
 };
 
 interface InterfaceNameOptions {
-    endpoint: IApiDocEndpoint;
-    versionPostfix: string;
     staticPrefix: string;
     staticPostfix: string;
     prefix: string;
@@ -195,35 +201,28 @@ export class ApiDocToInterfaceConverter {
     }
 
     private createInterfacesNames(endpoint: IApiDocEndpoint, isLatest: boolean): InterfacesNames {
-        const commonOptions = {
-            endpoint,
+        const staticOptions = {
             staticPrefix: this.options.staticPrefix,
             staticPostfix: this.options.staticPostfix,
-            versionPostfix: isLatest ? "" : `_v${endpoint.version}`,
         };
 
         return {
-            requestInterfaceName: this.createInterfaceName({
-                ...commonOptions,
+            requestInterfaceName: this.options.makeName(endpoint, isLatest, {
+                ...staticOptions,
                 prefix: this.options.requestPrefix,
                 postfix: this.options.requestPostfix,
             }),
-            responseInterfaceName: this.createInterfaceName({
-                ...commonOptions,
+            responseInterfaceName: this.options.makeName(endpoint, isLatest, {
+                ...staticOptions,
                 prefix: this.options.responsePrefix,
                 postfix: this.options.responsePostfix,
             }),
-            errorInterfaceName: this.createInterfaceName({
-                ...commonOptions,
+            errorInterfaceName: this.options.makeName(endpoint, isLatest, {
+                ...staticOptions,
                 prefix: this.options.errorPrefix,
                 postfix: this.options.errorPostfix,
             }),
         };
-    }
-
-    private createInterfaceName(options: InterfaceNameOptions): string {
-        const {staticPrefix, staticPostfix, prefix, endpoint, postfix, versionPostfix} = options;
-        return `${staticPrefix}${prefix}${endpoint.name}${postfix}${versionPostfix}${staticPostfix}`;
     }
 
     private createWarningResult(endpoint: IApiDocEndpoint, message: string) {
