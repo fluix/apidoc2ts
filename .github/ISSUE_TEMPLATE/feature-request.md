@@ -1,7 +1,7 @@
 ---
 name: Feature request
-about: Template for feature request
-title: "[Some descriptive header for a enhancement]"
+about: Suggest an idea for enhancement or a new feature
+title: ''
 labels: enhancement
 assignees: ''
 
@@ -12,4 +12,8 @@ assignees: ''
 - [ ] Existing feature enhancement
 - [ ] New feature request
 
-#### Feature/enhancement details:
+#### Issue description
+Short and clear description of the issue
+
+#### Solution
+Description of what you want to happen, maybe some possible solutions that you have been thinking of
