@@ -226,7 +226,7 @@ export class ApiDocToInterfaceConverter {
         return `${staticPrefix}${prefix}${endpoint.name}${postfix}${versionPostfix}${staticPostfix}`;
     }
 
-    private createWarningResult(endpoint, message) {
+    private createWarningResult(endpoint: IApiDocEndpoint, message: string) {
         return {
             metadata: endpoint as InterfaceMetadata,
             requestInterface: "",

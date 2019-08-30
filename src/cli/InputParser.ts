@@ -1,6 +1,6 @@
 import Convert = require("./Index");
 import * as fs from "fs";
-import * as _ from "lodash";
+import {defaults} from "lodash";
 import * as path from "path";
 import {ApiDoc2InterfaceGroupingMode, ApiDoc2InterfaceParameters} from "../core/ApiDoc2Interface";
 import {BuilderOptions} from "../core/ApiDoc2InterfaceBuilder";
@@ -11,7 +11,7 @@ interface ConfigFlags extends BuilderOptions, ApiDoc2InterfaceParameters {}
 
 export class InputParser {
 
-    static requiredFlagsKeys: Array<keyof CLIFlags> = ["source", "output", "name"];
+    static requiredFlagsKeys: Array<keyof ConfigFlags> = ["source", "output", "name"];
     static defaultConfigFileName = "apidoc2ts.config.js";
 
     async parse(cliFlags: Partial<CLIFlags>): Promise<{
@@ -36,7 +36,7 @@ export class InputParser {
 
         return this.readConfigFlags(InputParser.defaultConfigFileName)
                    .then(defaultConfigFlags => {
-                       return _.defaults(mappedCliFlags, defaultConfigFlags);
+                       return defaults(mappedCliFlags, defaultConfigFlags);
                    })
                    .catch(err => {
                        return mappedCliFlags;
@@ -53,7 +53,7 @@ export class InputParser {
         return Promise.resolve(require(configPath));
     }
 
-    private validateInput(flags) {
+    private validateInput(flags: ConfigFlags) {
         InputParser.requiredFlagsKeys.forEach(key => {
             if (flags[key]) {
                 return;

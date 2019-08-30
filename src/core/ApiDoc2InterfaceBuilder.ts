@@ -1,4 +1,4 @@
-import * as _ from "lodash";
+import {defaults} from "lodash";
 import {ApiDoc2Interface} from "./ApiDoc2Interface";
 import {
     ApiDocToInterfaceConverter,
@@ -16,7 +16,7 @@ export interface BuilderOptions extends ConverterOptions {
 export class ApiDoc2InterfaceBuilder {
     build(parameters: Partial<BuilderOptions>): ApiDoc2Interface {
         const generatorOptions = parameters.customTypes || [];
-        const converterOptions: ConverterOptions = _.defaults(parameters, converterDefaultOptions);
+        const converterOptions: ConverterOptions = defaults(parameters, converterDefaultOptions);
 
         const generator = new InterfaceGenerator(generatorOptions);
         const parser = new ApiDocFieldsParser();

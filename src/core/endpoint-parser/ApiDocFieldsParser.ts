@@ -1,4 +1,4 @@
-import * as _ from "lodash";
+import {flatMap} from "lodash";
 import {
     endpointHasFields,
     IApiDocEndpoint,
@@ -46,7 +46,7 @@ export class ApiDocFieldsParser {
     private convertFieldsToProperties(fieldGroups: Record<string, Array<IApiDocField>>): JsonSubSchemas {
         const fields = this.getSortedFlatFields(fieldGroups);
 
-        const properties = {};
+        const properties: JsonSchema = {};
         fields.forEach(field => {
             const fieldJsonSchema = ApiDocFieldsParser.toJsonSchemaProperty(field);
 
@@ -104,8 +104,11 @@ export class ApiDocFieldsParser {
     }
 
     private getSortedFlatFields(fieldGroups: Record<string, Array<IApiDocField>>): Array<ApiDocField> {
-        return _.flatMap(fieldGroups).map(field => new ApiDocField(field))
-                .sort((a, b) => a.qualifiedName.length - b.qualifiedName.length);
+        return flatMap(fieldGroups)
+            .map((field: IApiDocField) => new ApiDocField(field))
+            .sort((a: ApiDocField, b: ApiDocField) =>
+                a.qualifiedName.length - b.qualifiedName.length,
+            );
     }
 
     static toJsonSchemaProperty(field: ApiDocField): JsonSchema {

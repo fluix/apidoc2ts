@@ -23,7 +23,11 @@ export class UrlStructureInterfacesWriter implements InterfacesWriter {
             });
     }
 
-    private writeInterfaceIntoUrlPath(converterResult, args: ApiDoc2InterfaceParameters, interfacesString) {
+    private writeInterfaceIntoUrlPath(
+        converterResult: ConverterResult,
+        args: ApiDoc2InterfaceParameters,
+        interfacesString: string,
+    ) {
         const urlPath = getUrlWithoutParameters(converterResult.metadata.url);
         const filePath = path.join(args.output, urlPath, `${converterResult.metadata.name}.ts`);
 

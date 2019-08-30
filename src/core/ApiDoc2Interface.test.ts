@@ -42,7 +42,7 @@ describe("ApiDoc2Interface wrapper", () => {
 
     beforeEach(() => {
         readFileSpy.mockReset();
-        readFileSpy.mockImplementation(((a, b, callback) => {
+        readFileSpy.mockImplementation(((a: any, b: any, callback: (err: any, data: any) => void) => {
             callback(null, "{\"mock\": \"data\"}");
         }) as any);
 

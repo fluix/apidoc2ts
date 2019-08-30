@@ -41,6 +41,7 @@
     "@oclif/command": "^1.5.18",
     "@oclif/config": "^1.13.2",
     "@oclif/plugin-help": "^2.2.0",
+    "@types/lodash": "^4.14.138",
     "chalk": "^2.4.2",
     "lodash": "^4.17.14",
     "make-dir": "^3.0.0",
