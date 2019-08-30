@@ -193,15 +193,6 @@ describe("ApiDoc to Interface converter", () => {
             whitelist: ["PostBook"],
         },
     );
-    const converterWithExamplesParser = new ApiDocToInterfaceConverter(
-        interfaceGenerator,
-        endpointParser,
-        {
-            ...defaultOptions,
-            parseExamples: true,
-        },
-        examplesParser,
-    );
 
     const prefixPostfixOptions = {
         staticPrefix: "prefix",
@@ -330,35 +321,48 @@ describe("ApiDoc to Interface converter", () => {
         expect(createInterfaceSpy).toBeCalledTimes(1 * interfacesPerEndpoint);
     });
 
-    it("should not call parseExamples if endpoint has parameters", async () => {
-        await converterWithExamplesParser.convert([requestVersion1]);
-        expect(examplesParser.parse).not.toBeCalled();
-    });
+    describe("when parsing examples", () => {
 
-    it("should call parseExamples if endpoint has no parameters but has examples", async () => {
-        parseEndpointSpy.mockReturnValueOnce(parserEmptyResultMock);
-        await converterWithExamplesParser.convert([requestWithExamples]);
-        expect(examplesParser.parse).toBeCalled();
-    });
-
-    it("should create warning message if there were no parameters nor examples", async () => {
-        parseEndpointSpy.mockReturnValueOnce(parserEmptyResultMock);
-        const results = await converterWithExamplesParser.convert([emptyRequest]);
-        expect(results[0].warning).toBe("Endpoint has no parameters nor valid examples");
-    });
-
-    it("should combine interfaces got from fields and from examples", async () => {
-        createInterfaceSpy.mockReturnValueOnce(Promise.resolve("mock fields interface"));
-        (examplesParser.parse as jest.Mock)
-            .mockReturnValueOnce("")
-            .mockReturnValueOnce("mock examples interface");
-
-        const results = await converterWithExamplesParser.convert(
-            [requestWithFieldsAndExamplesInDifferentParts],
+        const converterWithExamplesParser = new ApiDocToInterfaceConverter(
+            interfaceGenerator,
+            endpointParser,
+            {
+                ...defaultOptions,
+                parseExamples: true,
+            },
+            examplesParser,
         );
 
-        expect(results[0].requestInterface).toBeDefined();
-        expect(results[0].responseInterface).toBeDefined();
-        expect(results[0].errorInterface).toBeUndefined();
+        it("should not call parseExamples if endpoint has parameters", async () => {
+            await converterWithExamplesParser.convert([requestVersion1]);
+            expect(examplesParser.parse).not.toBeCalled();
+        });
+
+        it("should call parseExamples if endpoint has no parameters but has examples", async () => {
+            parseEndpointSpy.mockReturnValueOnce(parserEmptyResultMock);
+            await converterWithExamplesParser.convert([requestWithExamples]);
+            expect(examplesParser.parse).toBeCalled();
+        });
+
+        it("should create warning message if there were no parameters nor examples", async () => {
+            parseEndpointSpy.mockReturnValueOnce(parserEmptyResultMock);
+            const results = await converterWithExamplesParser.convert([emptyRequest]);
+            expect(results[0].warning).toBe("Endpoint has no parameters nor valid examples");
+        });
+
+        it("should combine interfaces got from fields and from examples", async () => {
+            createInterfaceSpy.mockReturnValueOnce(Promise.resolve("mock fields interface"));
+            (examplesParser.parse as jest.Mock)
+                .mockReturnValueOnce("")
+                .mockReturnValueOnce("mock examples interface");
+
+            const results = await converterWithExamplesParser.convert(
+                [requestWithFieldsAndExamplesInDifferentParts],
+            );
+
+            expect(results[0].requestInterface).toBeDefined();
+            expect(results[0].responseInterface).toBeDefined();
+            expect(results[0].errorInterface).toBeUndefined();
+        });
     });
 });
