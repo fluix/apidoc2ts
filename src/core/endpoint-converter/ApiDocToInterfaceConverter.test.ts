@@ -1,7 +1,11 @@
 import {ApiDocExamplesParser} from "../endpoint-parser/ApiDocExamplesParser";
 import {ApiDocFieldsParser} from "../endpoint-parser/ApiDocFieldsParser";
 import {InterfaceGenerator} from "../interface-generator/InterfaceGenerator";
-import {ApiDocToInterfaceConverter, ConverterVersionResolving} from "./ApiDocToInterfaceConverter";
+import {
+    ApiDocToInterfaceConverter,
+    converterDefaultOptions,
+    ConverterVersionResolving,
+} from "./ApiDocToInterfaceConverter";
 
 const requestVersion1 = {
     type: "post",
@@ -165,31 +169,21 @@ describe("ApiDoc to Interface converter", () => {
     const createInterfaceSpy = jest.spyOn(interfaceGenerator, "createInterface");
 
     const converter = new ApiDocToInterfaceConverter(interfaceGenerator, endpointParser);
-    const defaultOptions = {
-        versionResolving: ConverterVersionResolving.ALL,
-        staticPrefix: "",
-        staticPostfix: "",
-        requestPrefix: "",
-        requestPostfix: "",
-        responsePrefix: "",
-        responsePostfix: "",
-        errorPrefix: "",
-        errorPostfix: "",
-        whitelist: [],
-        parseExamples: false,
-    };
     const converterWithLatestOption = new ApiDocToInterfaceConverter(interfaceGenerator, endpointParser,
         {
-            ...defaultOptions,
+            ...converterDefaultOptions,
             versionResolving: ConverterVersionResolving.LAST,
         },
     );
     const converterWithEmptyWhitelist = new ApiDocToInterfaceConverter(interfaceGenerator, endpointParser,
-        defaultOptions,
+        {
+            ...converterDefaultOptions,
+            whitelist: [],
+        },
     );
     const converterWithWhitelist = new ApiDocToInterfaceConverter(interfaceGenerator, endpointParser,
         {
-            ...defaultOptions,
+            ...converterDefaultOptions,
             whitelist: ["PostBook"],
         },
     );
@@ -209,7 +203,7 @@ describe("ApiDoc to Interface converter", () => {
         interfaceGenerator,
         endpointParser,
         {
-            ...defaultOptions,
+            ...converterDefaultOptions,
             ...prefixPostfixOptions,
         },
     );
@@ -327,7 +321,7 @@ describe("ApiDoc to Interface converter", () => {
             interfaceGenerator,
             endpointParser,
             {
-                ...defaultOptions,
+                ...converterDefaultOptions,
                 parseExamples: true,
             },
             examplesParser,
