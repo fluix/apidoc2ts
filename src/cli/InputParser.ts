@@ -33,7 +33,7 @@ export class InputParser {
             source: flags.source,
             output: flags.output || "./",
             name: flags.name || "",
-            grouping: flags.grouping as ApiDoc2InterfaceGroupingMode,
+            grouping: flags.grouping || ApiDoc2InterfaceGroupingMode.URL,
         };
 
         return {
