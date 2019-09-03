@@ -27,6 +27,12 @@ export enum ConverterVersionResolving {
     LAST = "last",
 }
 
+export enum ConverterMessages {
+    SKIP_OLD_ENDPOINT = "Skipping older version",
+    INVALID_PARAMETERS = "Parameters are invalid or not present",
+    INVALID_PARAMETERS_AND_EXAMPLES = "Endpoint has no parameters nor valid examples",
+}
+
 export interface ConverterOptions {
     versionResolving: ConverterVersionResolving;
     staticPrefix: string;
@@ -92,7 +98,10 @@ export class ApiDocToInterfaceConverter {
 
         return await Promise.all(whitelistedEndpoints.map(async (endpoint) => {
             if (this.shouldSkipEndpointVersion(endpoint, latestEndpointsVersions)) {
-                return this.createWarningResult(endpoint, `Skipping older version [${endpoint.version}]`);
+                return this.createWarningResult(
+                    endpoint,
+                    `${ConverterMessages.SKIP_OLD_ENDPOINT} [${endpoint.version}]`,
+                );
             }
 
             const isLatest = endpoint.version === latestEndpointsVersions[endpoint.name];
@@ -122,8 +131,8 @@ export class ApiDocToInterfaceConverter {
 
     private getErrorMessage() {
         return this.shouldParseExamples()
-               ? "Endpoint has no parameters nor valid examples"
-               : "Parameters are invalid or not present";
+               ? ConverterMessages.INVALID_PARAMETERS_AND_EXAMPLES
+               : ConverterMessages.INVALID_PARAMETERS;
     }
 
     private isBlankResult(result: ConverterResult) {

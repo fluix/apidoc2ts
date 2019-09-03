@@ -4,6 +4,7 @@ import {InterfaceGenerator} from "../interface-generator/InterfaceGenerator";
 import {
     ApiDocToInterfaceConverter,
     converterDefaultOptions,
+    ConverterMessages,
     ConverterVersionResolving,
 } from "./ApiDocToInterfaceConverter";
 
@@ -303,8 +304,8 @@ describe("ApiDoc to Interface converter", () => {
     it("should create warnings for skipped older endpoints", async () => {
         createInterfaceSpy.mockReturnValue(Promise.resolve("mock fields interface"));
         const results = await converterWithLatestOption.convert(threeEndpoints);
-        expect(results[0].warning).toBe("Skipping older version [0.0.1]");
-        expect(results[1].warning).toBe("Skipping older version [0.0.2]");
+        expect(results[0].warning).toContain(ConverterMessages.SKIP_OLD_ENDPOINT);
+        expect(results[1].warning).toContain(ConverterMessages.SKIP_OLD_ENDPOINT);
         expect(results[2].warning).toBeUndefined();
     });
 
@@ -347,7 +348,7 @@ describe("ApiDoc to Interface converter", () => {
         it("should create warning message if there were no parameters nor examples", async () => {
             parseEndpointSpy.mockReturnValueOnce(parserEmptyResultMock);
             const results = await converterWithExamplesParser.convert([emptyRequest]);
-            expect(results[0].warning).toBe("Endpoint has no parameters nor valid examples");
+            expect(results[0].warning).toContain(ConverterMessages.INVALID_PARAMETERS_AND_EXAMPLES);
         });
 
         it("should combine interfaces got from fields and from examples", async () => {
