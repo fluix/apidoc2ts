@@ -1,7 +1,12 @@
 import {ApiDocExamplesParser} from "../endpoint-parser/ApiDocExamplesParser";
 import {ApiDocFieldsParser} from "../endpoint-parser/ApiDocFieldsParser";
 import {InterfaceGenerator} from "../interface-generator/InterfaceGenerator";
-import {ApiDocToInterfaceConverter, ConverterVersionResolving} from "./ApiDocToInterfaceConverter";
+import {
+    ApiDocToInterfaceConverter,
+    converterDefaultOptions,
+    ConverterMessages,
+    ConverterVersionResolving,
+} from "./ApiDocToInterfaceConverter";
 
 const requestVersion1 = {
     type: "post",
@@ -165,61 +170,22 @@ describe("ApiDoc to Interface converter", () => {
     const createInterfaceSpy = jest.spyOn(interfaceGenerator, "createInterface");
 
     const converter = new ApiDocToInterfaceConverter(interfaceGenerator, endpointParser);
-    const defaultOptions = {
-        versionResolving: ConverterVersionResolving.ALL,
-        staticPrefix: "",
-        staticPostfix: "",
-        requestPrefix: "",
-        requestPostfix: "",
-        responsePrefix: "",
-        responsePostfix: "",
-        errorPrefix: "",
-        errorPostfix: "",
-        whitelist: [],
-        parseExamples: false,
-    };
     const converterWithLatestOption = new ApiDocToInterfaceConverter(interfaceGenerator, endpointParser,
         {
-            ...defaultOptions,
+            ...converterDefaultOptions,
             versionResolving: ConverterVersionResolving.LAST,
         },
     );
     const converterWithEmptyWhitelist = new ApiDocToInterfaceConverter(interfaceGenerator, endpointParser,
-        defaultOptions,
+        {
+            ...converterDefaultOptions,
+            whitelist: [],
+        },
     );
     const converterWithWhitelist = new ApiDocToInterfaceConverter(interfaceGenerator, endpointParser,
         {
-            ...defaultOptions,
+            ...converterDefaultOptions,
             whitelist: ["PostBook"],
-        },
-    );
-    const converterWithExamplesParser = new ApiDocToInterfaceConverter(
-        interfaceGenerator,
-        endpointParser,
-        {
-            ...defaultOptions,
-            parseExamples: true,
-        },
-        examplesParser,
-    );
-
-    const prefixPostfixOptions = {
-        staticPrefix: "prefix",
-        staticPostfix: "postFix",
-        requestPrefix: "requestPrefix",
-        requestPostfix: "requestPostfix",
-        responsePrefix: "responsePrefix",
-        responsePostfix: "responsePostfix",
-        errorPrefix: "errorPrefix",
-        errorPostfix: "errorPostfix",
-    };
-
-    const converterWithCustomPrefixPostfix = new ApiDocToInterfaceConverter(
-        interfaceGenerator,
-        endpointParser,
-        {
-            ...defaultOptions,
-            ...prefixPostfixOptions,
         },
     );
 
@@ -245,51 +211,77 @@ describe("ApiDoc to Interface converter", () => {
         expect(createInterfaceSpy).toBeCalledWith(parserResultMock.error, expect.anything());
     });
 
-    it("should call createInterface with name from apiDoc endpoint and default postfixes", async () => {
-        await converter.convert([requestVersion1]);
-        expect(createInterfaceSpy).toBeCalledWith(expect.anything(), requestVersion1.name);
-        expect(createInterfaceSpy).toBeCalledWith(expect.anything(), `${requestVersion1.name}Response`);
-        expect(createInterfaceSpy).toBeCalledWith(expect.anything(), `${requestVersion1.name}Error`);
-    });
+    describe("for a custom naming function", () => {
+        const interfaceNameOptions = {
+            staticPrefix: "prefix",
+            staticPostfix: "postFix",
+            requestPrefix: "requestPrefix",
+            requestPostfix: "requestPostfix",
+            responsePrefix: "responsePrefix",
+            responsePostfix: "responsePostfix",
+            errorPrefix: "errorPrefix",
+            errorPostfix: "errorPostfix",
+        };
 
-    it("should call createInterface with passed in prefixes and postfixes", async () => {
-        await converterWithCustomPrefixPostfix.convert([requestVersion1]);
-        const {
-            staticPrefix,
-            staticPostfix,
-            requestPrefix,
-            requestPostfix,
-            responsePrefix,
-            responsePostfix,
-            errorPrefix,
-            errorPostfix,
-        } = prefixPostfixOptions;
+        const namingFunctionMock = jest.fn();
 
-        expect(createInterfaceSpy).toBeCalledWith(expect.anything(),
-            `${staticPrefix}${requestPrefix}${requestVersion1.name}${requestPostfix}${staticPostfix}`,
+        const converterWithCustomNamingFunction = new ApiDocToInterfaceConverter(
+            interfaceGenerator,
+            endpointParser,
+            {
+                ...converterDefaultOptions,
+                ...interfaceNameOptions,
+                makeName: namingFunctionMock,
+            },
         );
-        expect(createInterfaceSpy).toBeCalledWith(expect.anything(),
-            `${staticPrefix}${responsePrefix}${requestVersion1.name}${responsePostfix}${staticPostfix}`,
-        );
-        expect(createInterfaceSpy).toBeCalledWith(expect.anything(),
-            `${staticPrefix}${errorPrefix}${requestVersion1.name}${errorPostfix}${staticPostfix}`,
-        );
+
+        it("should call naming function for creating names for interfaces", async () => {
+            await converterWithCustomNamingFunction.convert([requestVersion1]);
+            expect(namingFunctionMock).toBeCalledTimes(1 * interfacesPerEndpoint);
+        });
+
+        it("should call naming function with passed in prefixes and postfixes", async () => {
+            await converterWithCustomNamingFunction.convert([requestVersion1]);
+
+            const commonOptions = {
+                staticPrefix: interfaceNameOptions.staticPrefix,
+                staticPostfix: interfaceNameOptions.staticPostfix,
+            };
+
+            expect(namingFunctionMock).toBeCalledWith(requestVersion1, true,
+                {
+                    ...commonOptions,
+                    prefix: interfaceNameOptions.requestPrefix,
+                    postfix: interfaceNameOptions.requestPostfix,
+                },
+            );
+            expect(namingFunctionMock).toBeCalledWith(requestVersion1, true,
+                {
+                    ...commonOptions,
+                    prefix: interfaceNameOptions.responsePrefix,
+                    postfix: interfaceNameOptions.responsePostfix,
+                },
+            );
+            expect(namingFunctionMock).toBeCalledWith(requestVersion1, true,
+                {
+                    ...commonOptions,
+                    prefix: interfaceNameOptions.errorPrefix,
+                    postfix: interfaceNameOptions.errorPostfix,
+                },
+            );
+        });
+
+        it("should call createInterface with naming function result", async () => {
+            namingFunctionMock.mockReturnValueOnce("mock interface name");
+            await converterWithCustomNamingFunction.convert([requestVersion1]);
+            expect(createInterfaceSpy).toBeCalledWith(expect.anything(), "mock interface name");
+        });
     });
 
     it("should call parseEndpoint and createInterface for every endpoint", async () => {
         await converter.convert(threeEndpoints);
         expect(parseEndpointSpy).toBeCalledTimes(threeEndpoints.length);
         expect(createInterfaceSpy).toBeCalledTimes(threeEndpoints.length * interfacesPerEndpoint);
-    });
-
-    it("should add version postfix to interface name if it is not the latest one", async () => {
-        await converter.convert([requestVersion1, requestVersion2, requestVersion3]);
-        expect(createInterfaceSpy)
-            .toBeCalledWith(expect.anything(), `${requestVersion1.name}_v${requestVersion1.version}`);
-        expect(createInterfaceSpy)
-            .toBeCalledWith(expect.anything(), `${requestVersion2.name}_v${requestVersion2.version}`);
-        expect(createInterfaceSpy)
-            .toBeCalledWith(expect.anything(), `${requestVersion3.name}`);
     });
 
     it("should add warning message if there was some trouble while parsing or converting", async () => {
@@ -312,8 +304,8 @@ describe("ApiDoc to Interface converter", () => {
     it("should create warnings for skipped older endpoints", async () => {
         createInterfaceSpy.mockReturnValue(Promise.resolve("mock fields interface"));
         const results = await converterWithLatestOption.convert(threeEndpoints);
-        expect(results[0].warning).toBe("Skipping older version [0.0.1]");
-        expect(results[1].warning).toBe("Skipping older version [0.0.2]");
+        expect(results[0].warning).toContain(ConverterMessages.SKIP_OLD_ENDPOINT);
+        expect(results[1].warning).toContain(ConverterMessages.SKIP_OLD_ENDPOINT);
         expect(results[2].warning).toBeUndefined();
     });
 
@@ -330,35 +322,48 @@ describe("ApiDoc to Interface converter", () => {
         expect(createInterfaceSpy).toBeCalledTimes(1 * interfacesPerEndpoint);
     });
 
-    it("should not call parseExamples if endpoint has parameters", async () => {
-        await converterWithExamplesParser.convert([requestVersion1]);
-        expect(examplesParser.parse).not.toBeCalled();
-    });
+    describe("when parsing examples", () => {
 
-    it("should call parseExamples if endpoint has no parameters but has examples", async () => {
-        parseEndpointSpy.mockReturnValueOnce(parserEmptyResultMock);
-        await converterWithExamplesParser.convert([requestWithExamples]);
-        expect(examplesParser.parse).toBeCalled();
-    });
-
-    it("should create warning message if there were no parameters nor examples", async () => {
-        parseEndpointSpy.mockReturnValueOnce(parserEmptyResultMock);
-        const results = await converterWithExamplesParser.convert([emptyRequest]);
-        expect(results[0].warning).toBe("Endpoint has no parameters nor valid examples");
-    });
-
-    it("should combine interfaces got from fields and from examples", async () => {
-        createInterfaceSpy.mockReturnValueOnce(Promise.resolve("mock fields interface"));
-        (examplesParser.parse as jest.Mock)
-            .mockReturnValueOnce("")
-            .mockReturnValueOnce("mock examples interface");
-
-        const results = await converterWithExamplesParser.convert(
-            [requestWithFieldsAndExamplesInDifferentParts],
+        const converterWithExamplesParser = new ApiDocToInterfaceConverter(
+            interfaceGenerator,
+            endpointParser,
+            {
+                ...converterDefaultOptions,
+                parseExamples: true,
+            },
+            examplesParser,
         );
 
-        expect(results[0].requestInterface).toBeDefined();
-        expect(results[0].responseInterface).toBeDefined();
-        expect(results[0].errorInterface).toBeUndefined();
+        it("should not call parseExamples if endpoint has parameters", async () => {
+            await converterWithExamplesParser.convert([requestVersion1]);
+            expect(examplesParser.parse).not.toBeCalled();
+        });
+
+        it("should call parseExamples if endpoint has no parameters but has examples", async () => {
+            parseEndpointSpy.mockReturnValueOnce(parserEmptyResultMock);
+            await converterWithExamplesParser.convert([requestWithExamples]);
+            expect(examplesParser.parse).toBeCalled();
+        });
+
+        it("should create warning message if there were no parameters nor examples", async () => {
+            parseEndpointSpy.mockReturnValueOnce(parserEmptyResultMock);
+            const results = await converterWithExamplesParser.convert([emptyRequest]);
+            expect(results[0].warning).toContain(ConverterMessages.INVALID_PARAMETERS_AND_EXAMPLES);
+        });
+
+        it("should combine interfaces got from fields and from examples", async () => {
+            createInterfaceSpy.mockReturnValueOnce(Promise.resolve("mock fields interface"));
+            (examplesParser.parse as jest.Mock)
+                .mockReturnValueOnce("")
+                .mockReturnValueOnce("mock examples interface");
+
+            const results = await converterWithExamplesParser.convert(
+                [requestWithFieldsAndExamplesInDifferentParts],
+            );
+
+            expect(results[0].requestInterface).toBeDefined();
+            expect(results[0].responseInterface).toBeDefined();
+            expect(results[0].errorInterface).toBeUndefined();
+        });
     });
 });

@@ -11,7 +11,6 @@ interface ConfigFlags extends BuilderOptions, ApiDoc2InterfaceParameters {}
 
 export class InputParser {
 
-    static requiredFlagsKeys: Array<keyof ConfigFlags> = ["source", "output", "name"];
     static defaultConfigFileName = "apidoc2ts.config.js";
 
     async parse(cliFlags: Partial<CLIFlags>): Promise<{
@@ -22,16 +21,28 @@ export class InputParser {
                       ? await this.readConfigFlags(cliFlags.config)
                       : await this.combineDefaultConfigAndCliFlags(cliFlags);
 
-        flags.output = flags.output || "./";
-        this.validateInput(flags);
+        if (!flags.source) {
+            throw new Error("Missing required flag 'source'");
+        }
+
+        if (!flags.name && flags.grouping === ApiDoc2InterfaceGroupingMode.SINGLE) {
+            throw new Error("Missing required flag 'name'");
+        }
+
+        const runParameters = {
+            source: flags.source,
+            output: flags.output || "./",
+            name: flags.name || "",
+            grouping: flags.grouping || ApiDoc2InterfaceGroupingMode.URL,
+        };
 
         return {
+            runParameters,
             builderOptions: flags,
-            runParameters: flags,
         };
     }
 
-    private async combineDefaultConfigAndCliFlags(flags: Partial<CLIFlags>): Promise<ConfigFlags> {
+    private async combineDefaultConfigAndCliFlags(flags: Partial<CLIFlags>): Promise<Partial<ConfigFlags>> {
         const mappedCliFlags = this.mapInputFlags(flags);
 
         return this.readConfigFlags(InputParser.defaultConfigFileName)
@@ -53,21 +64,7 @@ export class InputParser {
         return Promise.resolve(require(configPath));
     }
 
-    private validateInput(flags: ConfigFlags) {
-        InputParser.requiredFlagsKeys.forEach(key => {
-            if (flags[key]) {
-                return;
-            }
-
-            if (key === "name" && flags.grouping === ApiDoc2InterfaceGroupingMode.URL) {
-                return;
-            }
-
-            throw new Error(`Missing required flag '${key}'`);
-        });
-    }
-
-    private mapInputFlags(flags: Partial<CLIFlags>): ConfigFlags {
+    private mapInputFlags(flags: Partial<CLIFlags>): Partial<ConfigFlags> {
         return {
             customTypes: flags["custom-types"],
             staticPrefix: flags["static-prefix"],
