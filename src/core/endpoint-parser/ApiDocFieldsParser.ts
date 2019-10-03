@@ -1,4 +1,4 @@
-import {flatMap} from "lodash";
+import { flatMap } from "lodash";
 import {
     endpointHasFields,
     IApiDocEndpoint,
@@ -6,8 +6,8 @@ import {
     IApiDocField,
     isEndpointPartWithFields,
 } from "../ApiDocInterfaces";
-import {JsonSchema, JsonSubSchemas} from "../JsonSchema";
-import {ApiDocField} from "./ApiDocField";
+import { JsonSchema, JsonSubSchemas } from "../JsonSchema";
+import { ApiDocField } from "./ApiDocField";
 
 export interface ParserResult {
     request: JsonSchema;
@@ -92,13 +92,11 @@ export class ApiDocFieldsParser {
     }
 
     private createArrayProperties(parentProperties: JsonSchema, currentNamePart: string) {
-        parentProperties[currentNamePart].items =
-            parentProperties[currentNamePart].items || {
-                type: "object",
-            };
+        parentProperties[currentNamePart].items = parentProperties[currentNamePart].items || {
+            type: "object",
+        };
 
-        parentProperties[currentNamePart].items.properties =
-            parentProperties[currentNamePart].items.properties || {};
+        parentProperties[currentNamePart].items.properties = parentProperties[currentNamePart].items.properties || {};
 
         return parentProperties[currentNamePart].items.properties;
     }
@@ -106,9 +104,7 @@ export class ApiDocFieldsParser {
     private getSortedFlatFields(fieldGroups: Record<string, Array<IApiDocField>>): Array<ApiDocField> {
         return flatMap(fieldGroups)
             .map((field: IApiDocField) => new ApiDocField(field))
-            .sort((a: ApiDocField, b: ApiDocField) =>
-                a.qualifiedName.length - b.qualifiedName.length,
-            );
+            .sort((a: ApiDocField, b: ApiDocField) => a.qualifiedName.length - b.qualifiedName.length);
     }
 
     static toJsonSchemaProperty(field: ApiDocField): JsonSchema {

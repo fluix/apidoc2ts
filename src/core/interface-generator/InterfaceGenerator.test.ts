@@ -1,5 +1,5 @@
-import {JsonSchema} from "../JsonSchema";
-import {InterfaceGenerator} from "./InterfaceGenerator";
+import { JsonSchema } from "../JsonSchema";
+import { InterfaceGenerator } from "./InterfaceGenerator";
 
 const simpleSchema = {
     type: "object",
@@ -281,8 +281,8 @@ describe("Interface generator", () => {
         const originalType = schemaWithInvalidType.properties.invalidParam.type;
         const result = await generator.createInterface(schemaWithInvalidType);
         expect(result.match(new RegExp(
-            `\\/\\*\\*\\s*\\* Replaced type: ${originalType}\\s*\\*\\/`),
-        )).toBeTruthy();
+            `\\/\\*\\*\\s*\\* Replaced type: ${originalType}\\s*\\*\\/`,
+        ))).toBeTruthy();
     });
 
     it("should create numeric enumeration", async () => {

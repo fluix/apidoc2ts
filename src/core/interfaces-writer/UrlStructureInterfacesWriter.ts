@@ -1,10 +1,10 @@
 import * as path from "path";
-import {ApiDoc2InterfaceParameters} from "../ApiDoc2Interface";
-import {ConverterResult} from "../endpoint-converter/ApiDocToInterfaceConverter";
-import {writeFileToPath} from "../utils/FsUtils";
-import {getUrlWithoutParameters} from "../utils/StringUtils";
-import {stringifyInterfaces} from "../utils/WriterUtils";
-import {InterfacesWriter} from "./InterfacesWriter";
+import { ApiDoc2InterfaceParameters } from "../ApiDoc2Interface";
+import { ConverterResult } from "../endpoint-converter/ApiDocToInterfaceConverter";
+import { writeFileToPath } from "../utils/FsUtils";
+import { getUrlWithoutParameters } from "../utils/StringUtils";
+import { stringifyInterfaces } from "../utils/WriterUtils";
+import { InterfacesWriter } from "./InterfacesWriter";
 
 export class UrlStructureInterfacesWriter implements InterfacesWriter {
     async writeInterfaces(interfacesData: Array<ConverterResult>, args: ApiDoc2InterfaceParameters): Promise<void> {
@@ -18,9 +18,7 @@ export class UrlStructureInterfacesWriter implements InterfacesWriter {
 
                 return this.writeInterfaceIntoUrlPath(converterResult, args, interfacesString);
             }))
-            .then(() => {
-                return Promise.resolve();
-            });
+            .then(() => Promise.resolve());
     }
 
     private writeInterfaceIntoUrlPath(

@@ -1,6 +1,6 @@
-import {JsonSchema} from "../JsonSchema";
-import {ApiDocField} from "./ApiDocField";
-import {ApiDocFieldsParser} from "./ApiDocFieldsParser";
+import { JsonSchema } from "../JsonSchema";
+import { ApiDocField } from "./ApiDocField";
+import { ApiDocFieldsParser } from "./ApiDocFieldsParser";
 
 const requiredField = {
     type: "string",
@@ -74,7 +74,6 @@ const defaultEndpointMetadata = {
 };
 
 describe("apiDoc Endpoint", () => {
-
     const parser = new ApiDocFieldsParser();
 
     it("should return empty schemas if endpoint has no parameters at all", () => {
@@ -88,9 +87,9 @@ describe("apiDoc Endpoint", () => {
     it("should return empty schemas if endpoint has examples only", () => {
         expect(parser.parseEndpoint({
             ...defaultEndpointMetadata,
-            parameter: {examples: []},
-            success: {examples: []},
-            error: {examples: []},
+            parameter: { examples: [] },
+            success: { examples: [] },
+            error: { examples: [] },
         })).toEqual({
             request: {},
             response: {},
@@ -101,7 +100,7 @@ describe("apiDoc Endpoint", () => {
     it("should return separate schemas for request/response/error", () => {
         const endpointData = {
             parameter: {
-                fields: {Parameter: [requiredField]},
+                fields: { Parameter: [requiredField] },
             },
             ...defaultEndpointMetadata,
         };
@@ -115,13 +114,13 @@ describe("apiDoc Endpoint", () => {
     it("should parse request, response and error", () => {
         const endpointData = {
             parameter: {
-                fields: {Parameter: [parentField]},
+                fields: { Parameter: [parentField] },
             },
             success: {
-                fields: {["Success 2xx"]: [requiredField]},
+                fields: { "Success 2xx": [requiredField] },
             },
             error: {
-                fields: {["Error 4xx"]: [customTypeField]},
+                fields: { "Error 4xx": [customTypeField] },
             },
             ...defaultEndpointMetadata,
         };
@@ -135,7 +134,7 @@ describe("apiDoc Endpoint", () => {
     it("should create property with custom type", () => {
         const endpointData = {
             parameter: {
-                fields: {Parameter: [customTypeField]},
+                fields: { Parameter: [customTypeField] },
             },
             ...defaultEndpointMetadata,
         };
@@ -227,7 +226,7 @@ describe("apiDoc Endpoint", () => {
 
     it("should create array property with the same items type as field", () => {
         const apiDocField = new ApiDocField(arrayField);
-        const items = ApiDocFieldsParser.toJsonSchemaProperty(apiDocField).items;
+        const { items } = ApiDocFieldsParser.toJsonSchemaProperty(apiDocField);
         expect(Array.isArray(items)).toBeFalsy();
         expect((items as JsonSchema).type).toBe("string");
     });
@@ -286,7 +285,7 @@ describe("apiDoc Endpoint", () => {
     it("should generate interface JSON Schema", () => {
         const endpointData = {
             parameter: {
-                fields: {Parameter: [requiredField, customTypeField, enumField]},
+                fields: { Parameter: [requiredField, customTypeField, enumField] },
             },
             ...defaultEndpointMetadata,
         };
@@ -312,5 +311,4 @@ describe("apiDoc Endpoint", () => {
 
         expect(parser.parseEndpoint(endpointData).request).toEqual(expectedSchema);
     });
-})
-;
+});

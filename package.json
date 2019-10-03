@@ -12,7 +12,8 @@
     "build": "tsc",
     "test": "jest --verbose --passWithNoTests",
     "lint": "eslint -c .eslintrc.js --cache 'src/**/*.ts'",
-    "lint-strict": "eslint -c .eslintrc.js 'src/**/*.ts'"
+    "lint:fix": "eslint -c .eslintrc.js --fix 'src/**/*.ts'",
+    "lint:strict": "eslint -c .eslintrc.js 'src/**/*.ts'"
   },
   "jest": {
     "preset": "ts-jest//presets/default",

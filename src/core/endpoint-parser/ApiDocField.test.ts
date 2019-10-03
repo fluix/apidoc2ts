@@ -1,4 +1,4 @@
-import {ApiDocField} from "./ApiDocField";
+import { ApiDocField } from "./ApiDocField";
 
 describe("apiDoc Field", () => {
     it("should return required status", () => {

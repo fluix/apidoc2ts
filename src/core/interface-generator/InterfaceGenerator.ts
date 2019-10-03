@@ -1,4 +1,4 @@
-import {cloneDeep, entries, isEmpty} from "lodash";
+import { cloneDeep, entries, isEmpty } from "lodash";
 import {
     InputData,
     JSONSchemaInput,
@@ -7,8 +7,8 @@ import {
     quicktype,
     TypeScriptTargetLanguage,
 } from "quicktype-core";
-import {JsonSchema, jsonSchemaDefaultTypes, traverseSchemaRecursively} from "../JsonSchema";
-import {removeFieldsAligningSpaces} from "../utils/StringUtils";
+import { JsonSchema, jsonSchemaDefaultTypes, traverseSchemaRecursively } from "../JsonSchema";
+import { removeFieldsAligningSpaces } from "../utils/StringUtils";
 
 const qtFakeCustomType = {
     type: "object",
@@ -18,10 +18,9 @@ const qtFakeCustomType = {
 };
 
 export class InterfaceGenerator {
-
     private readonly customTypes: Array<string> = [];
 
-    private rendererOptions = {"just-types": "true"};
+    private rendererOptions = { "just-types": "true" };
     private targetLang = new TypeScriptTargetLanguage();
 
     private qtMakeInput = () => new JSONSchemaInput(undefined);
@@ -63,7 +62,7 @@ export class InterfaceGenerator {
         this.replaceNumericEnumsWithStringEnums(schema);
 
         const schemaString = JSON.stringify(schema);
-        const source: JSONSchemaSourceData = {name, schema: schemaString};
+        const source: JSONSchemaSourceData = { name, schema: schemaString };
         const inputData = new InputData();
 
         inputData.addSourceSync("schema", source, this.qtMakeInput);
@@ -93,7 +92,7 @@ export class InterfaceGenerator {
         this.customTypes.forEach(type => {
             fakeDefinitions[type] = qtFakeCustomType;
         });
-        schema.definitions = Object.assign({}, schema.definitions, fakeDefinitions);
+        schema.definitions = { ...schema.definitions, ...fakeDefinitions };
     }
 
     private replaceCustomTypesWithReferences(schema: JsonSchema) {
@@ -104,11 +103,11 @@ export class InterfaceGenerator {
             }
 
             if (this.customTypes.includes(property.type)) {
-                customProperties[propertyKey] = {$ref: `#/definitions/${property.type}`};
+                customProperties[propertyKey] = { $ref: `#/definitions/${property.type}` };
             }
         });
 
-        schema.properties = Object.assign({}, schema.properties, customProperties);
+        schema.properties = { ...schema.properties, ...customProperties };
     }
 
     private includeRequiredPropertiesList(schema: JsonSchema) {
@@ -166,8 +165,8 @@ export class InterfaceGenerator {
     }
 
     private isInvalidType(subSchema: JsonSchema) {
-        return subSchema.type &&
-               !jsonSchemaDefaultTypes.includes(subSchema.type) &&
-               !this.customTypes.includes(subSchema.type);
+        return subSchema.type
+               && !jsonSchemaDefaultTypes.includes(subSchema.type)
+               && !this.customTypes.includes(subSchema.type);
     }
 }

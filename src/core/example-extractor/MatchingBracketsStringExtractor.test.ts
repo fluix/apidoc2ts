@@ -1,4 +1,4 @@
-import {MatchingBracketsStringExtractor} from "./MatchingBracketsStringExtractor";
+import { MatchingBracketsStringExtractor } from "./MatchingBracketsStringExtractor";
 
 const complexExample = `{
     [{[{}]}]

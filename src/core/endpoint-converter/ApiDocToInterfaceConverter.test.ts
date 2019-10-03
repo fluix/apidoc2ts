@@ -1,6 +1,6 @@
-import {ApiDocExamplesParser} from "../endpoint-parser/ApiDocExamplesParser";
-import {ApiDocFieldsParser} from "../endpoint-parser/ApiDocFieldsParser";
-import {InterfaceGenerator} from "../interface-generator/InterfaceGenerator";
+import { ApiDocExamplesParser } from "../endpoint-parser/ApiDocExamplesParser";
+import { ApiDocFieldsParser } from "../endpoint-parser/ApiDocFieldsParser";
+import { InterfaceGenerator } from "../interface-generator/InterfaceGenerator";
 import {
     ApiDocToInterfaceConverter,
     converterDefaultOptions,
@@ -148,9 +148,9 @@ jest.mock("../interface-generator/InterfaceGenerator");
 const threeEndpoints = [requestVersion1, requestVersion2, requestVersion3];
 
 const parserResultMock = {
-    request: {type: "requestMock"},
-    response: {type: "responseMock"},
-    error: {type: "errorMock"},
+    request: { type: "requestMock" },
+    response: { type: "responseMock" },
+    error: { type: "errorMock" },
 };
 
 const parserEmptyResultMock = {
@@ -174,20 +174,17 @@ describe("ApiDoc to Interface converter", () => {
         {
             ...converterDefaultOptions,
             versionResolving: ConverterVersionResolving.LAST,
-        },
-    );
+        });
     const converterWithEmptyWhitelist = new ApiDocToInterfaceConverter(interfaceGenerator, endpointParser,
         {
             ...converterDefaultOptions,
             whitelist: [],
-        },
-    );
+        });
     const converterWithWhitelist = new ApiDocToInterfaceConverter(interfaceGenerator, endpointParser,
         {
             ...converterDefaultOptions,
             whitelist: ["PostBook"],
-        },
-    );
+        });
 
     beforeEach(() => {
         createInterfaceSpy.mockReset();
@@ -253,22 +250,19 @@ describe("ApiDoc to Interface converter", () => {
                     ...commonOptions,
                     prefix: interfaceNameOptions.requestPrefix,
                     postfix: interfaceNameOptions.requestPostfix,
-                },
-            );
+                });
             expect(namingFunctionMock).toBeCalledWith(requestVersion1, true,
                 {
                     ...commonOptions,
                     prefix: interfaceNameOptions.responsePrefix,
                     postfix: interfaceNameOptions.responsePostfix,
-                },
-            );
+                });
             expect(namingFunctionMock).toBeCalledWith(requestVersion1, true,
                 {
                     ...commonOptions,
                     prefix: interfaceNameOptions.errorPrefix,
                     postfix: interfaceNameOptions.errorPostfix,
-                },
-            );
+                });
         });
 
         it("should call createInterface with naming function result", async () => {
@@ -323,7 +317,6 @@ describe("ApiDoc to Interface converter", () => {
     });
 
     describe("when parsing examples", () => {
-
         const converterWithExamplesParser = new ApiDocToInterfaceConverter(
             interfaceGenerator,
             endpointParser,

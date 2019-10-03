@@ -1,7 +1,6 @@
-import {values} from "lodash";
+import { values } from "lodash";
 
-export const jsonSchemaDefaultTypes: Array<string> =
-    ["null", "boolean", "object", "array", "number", "string", "integer"];
+export const jsonSchemaDefaultTypes: Array<string> = ["null", "boolean", "object", "array", "number", "string", "integer"];
 
 export type JsonSubSchemas = Record<string, JsonSchema>;
 

@@ -1,13 +1,13 @@
-import {defaults} from "lodash";
-import {ApiDoc2Interface} from "./ApiDoc2Interface";
+import { defaults } from "lodash";
+import { ApiDoc2Interface } from "./ApiDoc2Interface";
 import {
     ApiDocToInterfaceConverter,
     converterDefaultOptions,
     ConverterOptions,
 } from "./endpoint-converter/ApiDocToInterfaceConverter";
-import {ApiDocExamplesParser} from "./endpoint-parser/ApiDocExamplesParser";
-import {ApiDocFieldsParser} from "./endpoint-parser/ApiDocFieldsParser";
-import {InterfaceGenerator} from "./interface-generator/InterfaceGenerator";
+import { ApiDocExamplesParser } from "./endpoint-parser/ApiDocExamplesParser";
+import { ApiDocFieldsParser } from "./endpoint-parser/ApiDocFieldsParser";
+import { InterfaceGenerator } from "./interface-generator/InterfaceGenerator";
 
 export interface BuilderOptions extends ConverterOptions {
     customTypes: Array<string>;

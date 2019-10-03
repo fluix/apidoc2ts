@@ -1,7 +1,7 @@
-import {endpointHasExamples, IApiDocEndpoint} from "../ApiDocInterfaces";
-import {ApiDocExamplesParser} from "../endpoint-parser/ApiDocExamplesParser";
-import {ApiDocFieldsParser} from "../endpoint-parser/ApiDocFieldsParser";
-import {InterfaceGenerator} from "../interface-generator/InterfaceGenerator";
+import { endpointHasExamples, IApiDocEndpoint } from "../ApiDocInterfaces";
+import { ApiDocExamplesParser } from "../endpoint-parser/ApiDocExamplesParser";
+import { ApiDocFieldsParser } from "../endpoint-parser/ApiDocFieldsParser";
+import { InterfaceGenerator } from "../interface-generator/InterfaceGenerator";
 
 export interface InterfaceMetadata {
     type: string;
@@ -49,7 +49,9 @@ export interface ConverterOptions {
 }
 
 function defaultMakeName(endpoint: IApiDocEndpoint, isLatest: boolean, options: InterfaceNameOptions): string {
-    const {staticPrefix, staticPostfix, prefix, postfix} = options;
+    const {
+        staticPrefix, staticPostfix, prefix, postfix,
+    } = options;
     const versionPostfix = isLatest ? "" : `_v${endpoint.version}`;
     return `${staticPrefix}${prefix}${endpoint.name}${postfix}${versionPostfix}${staticPostfix}`;
 }
@@ -83,7 +85,6 @@ interface InterfacesNames {
 }
 
 export class ApiDocToInterfaceConverter {
-
     constructor(
         private readonly interfaceGenerator: InterfaceGenerator,
         private readonly endpointParser: ApiDocFieldsParser,
@@ -131,8 +132,8 @@ export class ApiDocToInterfaceConverter {
 
     private getErrorMessage() {
         return this.shouldParseExamples()
-               ? ConverterMessages.INVALID_PARAMETERS_AND_EXAMPLES
-               : ConverterMessages.INVALID_PARAMETERS;
+            ? ConverterMessages.INVALID_PARAMETERS_AND_EXAMPLES
+            : ConverterMessages.INVALID_PARAMETERS;
     }
 
     private isBlankResult(result: ConverterResult) {
@@ -154,8 +155,8 @@ export class ApiDocToInterfaceConverter {
         apiDocEndpoints.forEach((endpoint) => {
             const currentVersion = latestEndpointsVersions[endpoint.name] || endpoint.version;
             latestEndpointsVersions[endpoint.name] = endpoint.version > currentVersion
-                                                     ? endpoint.version
-                                                     : currentVersion;
+                ? endpoint.version
+                : currentVersion;
         });
         return latestEndpointsVersions;
     }
@@ -164,7 +165,7 @@ export class ApiDocToInterfaceConverter {
         endpoint: IApiDocEndpoint,
         names: InterfacesNames,
     ): Promise<ConverterResult> {
-        const {request, response, error} = this.endpointParser.parseEndpoint(endpoint);
+        const { request, response, error } = this.endpointParser.parseEndpoint(endpoint);
 
         return {
             metadata: endpoint as InterfaceMetadata,
