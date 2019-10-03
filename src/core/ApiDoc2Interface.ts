@@ -1,4 +1,5 @@
 import * as fs from "fs";
+import * as path from "path";
 import {promisify} from "util";
 import {ApiDocToInterfaceConverter, ConverterResult} from "./endpoint-converter/ApiDocToInterfaceConverter";
 import {ApiDocFieldsParser} from "./endpoint-parser/ApiDocFieldsParser";
@@ -48,7 +49,7 @@ export class ApiDoc2Interface {
 
     async run(args: ApiDoc2InterfaceParameters): Promise<ApiDoc2InterfaceResult> {
         const warnings: Array<string> = [];
-        return readFile(args.source, "utf-8")
+        return readFile(path.join(args.source, "api_data.json"), "utf-8")
             .then((fileData) => {
                 const apiDocEndpoints = JSON.parse(fileData);
                 return this.converter.convert(apiDocEndpoints);
