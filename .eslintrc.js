@@ -110,12 +110,8 @@ module.exports = {
             "error",
             {
                 "allow": [
-                    "log",
-                    "debug",
-                    "info",
-                    "time",
-                    "timeEnd",
-                    "trace"
+                    "warn",
+                    "error"
                 ]
             }
         ],
@@ -184,10 +180,6 @@ module.exports = {
                             "protected-method-regex": "^[a-z$][\\w\\d]+$",
                             "static-method-regex": "^[a-z$][\\w\\d]+$"
                         }
-                    ],
-                    "max-line-length": [
-                        true,
-                        120
                     ],
                     "no-boolean-literal-compare": true,
                     "no-duplicate-variable": true,
