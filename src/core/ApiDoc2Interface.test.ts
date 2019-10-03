@@ -1,4 +1,5 @@
 import * as fs from "fs";
+import * as path from "path";
 import {ApiDoc2Interface, ApiDoc2InterfaceExitCode, ApiDoc2InterfaceGroupingMode} from "./ApiDoc2Interface";
 import {ApiDocToInterfaceConverter} from "./endpoint-converter/ApiDocToInterfaceConverter";
 
@@ -32,7 +33,7 @@ describe("ApiDoc2Interface wrapper", () => {
         interfaceWriterFactoryMock,
     );
     const args = {
-        source: "path/to/the/file",
+        source: "path/to/apidoc",
         output: "path/to/the/output",
         name: "interfaces.ts",
         grouping: ApiDoc2InterfaceGroupingMode.SINGLE,
@@ -49,9 +50,9 @@ describe("ApiDoc2Interface wrapper", () => {
         writeInterfacesMock.mockReset();
     });
 
-    it("should call readFile with given path", async () => {
+    it("should call readFile for api_data.json file in provided apidoc source", async () => {
         await apiDoc2Interface.run(args);
-        expect(readFileSpy).toBeCalledWith(args.source, "utf-8", expect.anything());
+        expect(readFileSpy).toBeCalledWith(path.join(args.source, "api_data.json"), "utf-8", expect.anything());
     });
 
     it("should throw an error when readFile failed", async () => {

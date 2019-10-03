@@ -23,7 +23,7 @@ class Convert extends Command {
         }),
         source: flags.string({
             char: "s",
-            description: "Path to the api_data.json",
+            description: "Path to the apidoc folder",
             exclusive: ["config"],
         }),
         output: flags.string({
