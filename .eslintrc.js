@@ -9,13 +9,77 @@ module.exports = {
         "@typescript-eslint",
         "@typescript-eslint/tslint"
     ],
+    "globals": {
+        "jest": "readonly",
+        "it": "readonly",
+        "expect": "readonly",
+    },
     "rules": {
+        // eslint typescript support fixes/problems
+        "import/no-unresolved": "off",
+        "no-unused-vars": "off",
+        "@typescript-eslint/no-unused-vars": "error",
+        // "@typescript-eslint/prefer-interface": "error",
+        // "@typescript-eslint/no-param-reassign": "error",
+
         "@typescript-eslint/class-name-casing": "error",
         "@typescript-eslint/indent": "error",
         "@typescript-eslint/no-inferrable-types": "error",
-        "@typescript-eslint/no-param-reassign": "error",
         "@typescript-eslint/no-this-alias": "off",
-        "@typescript-eslint/prefer-interface": "error",
+        "max-len": ["error", 120, 4],
+        "quotes": ["error", "double",
+            {
+                avoidEscape: true
+            }
+        ],
+        "indent": ["error", 4, {
+            "SwitchCase": 1,
+            "VariableDeclarator": 1,
+            "outerIIFEBody": 1,
+            "FunctionDeclaration": {
+                "parameters": 1,
+                "body": 1
+            },
+            "FunctionExpression": {
+                "parameters": 1,
+                "body": 1
+            },
+            "CallExpression": {
+                "arguments": 1
+            },
+            "ArrayExpression": 1,
+            "ObjectExpression": 1,
+            "ImportDeclaration": 1,
+            "flatTernaryExpressions": false,
+            "ignoredNodes": [
+                "JSXElement",
+                "JSXElement > *",
+                "JSXAttribute",
+                "JSXIdentifier",
+                "JSXNamespacedName",
+                "JSXMemberExpression",
+                "JSXSpreadAttribute",
+                "JSXExpressionContainer",
+                "JSXOpeningElement",
+                "JSXClosingElement",
+                "JSXText",
+                "JSXEmptyExpression",
+                "JSXSpreadChild"
+            ],
+            "ignoreComments": false
+        }],
+        "lines-between-class-members": ["error", "always",
+            {
+                exceptAfterSingleLine: true
+            }
+        ],
+        "no-continue": "off",
+        'no-underscore-dangle': ['error', {
+            allow: [],
+            allowAfterThis: true,
+            allowAfterSuper: false,
+            enforceInMethodNames: true,
+        }],
         "arrow-parens": [
             "off",
             "as-needed"
@@ -132,13 +196,6 @@ module.exports = {
                         "check-catch",
                         "check-else",
                         "check-whitespace"
-                    ],
-                    "quotemark": [
-                        true,
-                        "double",
-                        "avoid-escape",
-                        "avoid-template",
-                        "jsx-double"
                     ],
                     "semicolon": [
                         true,
