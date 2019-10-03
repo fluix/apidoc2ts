@@ -33,3 +33,17 @@ Open a new GitHub pull request with the patch. Description should clearly descri
 ### Code conventions?
 
 Currently we are following the extended Airbnb code style and have tslint rules for that. We use UpperCamelCase for files and kebab-case for directories. Also we are covering with tests every piece of functionality that we have. Besides that commit messages should consist of one-line header with a present tense imperative and a longer description of what and probably why something have been changed if needed.
+
+Branch names should start with specific prefix and follow up with some description in kebab-case after slash.
+Prefixes:
+- `feat` - for any new features
+- `fix` - for any fixes
+- `impr` - for small improvements
+- `ref` - for refactoring
+
+If a branch contains several types of this changes then the prefix should reflect the main purpose of the branch/PR.
+
+Examples:
+- `feat/add-new-feature`
+- `fix/fixed-some-bug`
+
