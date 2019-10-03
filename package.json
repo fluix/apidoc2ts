@@ -32,7 +32,7 @@
   "bugs": {
     "url": "https://github.com/fluix/web-apidoc2ts/issues"
   },
-  "homepage": "https://github.com/fluix/web-apidoc2ts#readme",
+  "homepage": "https://fluix.github.io/web-apidoc2ts/",
   "files": [
     "/bin",
     "/dist"
