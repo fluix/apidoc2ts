@@ -27,12 +27,15 @@
     "type": "git",
     "url": "git+https://github.com/fluix/web-apidoc2ts.git"
   },
-  "author": "Artem Velkov",
+  "author": {
+    "name": "Artem Velkov",
+    "email": "velkov.artem@gmail.com"
+  },
   "license": "MIT",
   "bugs": {
     "url": "https://github.com/fluix/web-apidoc2ts/issues"
   },
-  "homepage": "https://github.com/fluix/web-apidoc2ts#readme",
+  "homepage": "https://fluix.github.io/web-apidoc2ts/",
   "files": [
     "/bin",
     "/dist"
@@ -61,6 +64,10 @@
     "typescript": "^3.5.3"
   },
   "keywords": [
-    "apidoc2ts"
+    "apidoc2ts",
+    "apidoc",
+    "interface",
+    "interface generator",
+    "code generator"
   ]
 }
