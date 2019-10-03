@@ -10,7 +10,7 @@ type CLIFlags = Record<keyof typeof Convert.flags, any>;
 
 interface ConfigFlags extends BuilderOptions, ApiDoc2InterfaceParameters {}
 
-export class InputParser {
+export default class InputParser {
     static defaultConfigFileName = "apidoc2ts.config.js";
 
     async parse(cliFlags: Partial<CLIFlags>): Promise<{
@@ -47,7 +47,7 @@ export class InputParser {
 
         return this.readConfigFlags(InputParser.defaultConfigFileName)
             .then(defaultConfigFlags => defaults(mappedCliFlags, defaultConfigFlags))
-            .catch(err => mappedCliFlags);
+            .catch(() => mappedCliFlags);
     }
 
     private readConfigFlags(config: string): Promise<ConfigFlags> {
@@ -57,6 +57,7 @@ export class InputParser {
             return Promise.reject(new Error(`Could not find config file: ${configPath}`));
         }
 
+        // eslint-disable-next-line global-require, import/no-dynamic-require
         return Promise.resolve(require(configPath));
     }
 

@@ -1,5 +1,5 @@
 import { JsonSchema } from "../JsonSchema";
-import { InterfaceGenerator } from "./InterfaceGenerator";
+import InterfaceGenerator from "./InterfaceGenerator";
 
 const simpleSchema = {
     type: "object",

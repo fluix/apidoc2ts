@@ -1,7 +1,7 @@
 import { last } from "lodash";
 import { IApiDocField } from "../ApiDocInterfaces";
 
-export class ApiDocField {
+export default class ApiDocField {
     private readonly optional: boolean;
     private readonly _type: string;
     private readonly allowedValues: Array<string>;

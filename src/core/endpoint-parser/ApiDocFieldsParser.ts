@@ -7,7 +7,7 @@ import {
     isEndpointPartWithFields,
 } from "../ApiDocInterfaces";
 import { JsonSchema, JsonSubSchemas } from "../JsonSchema";
-import { ApiDocField } from "./ApiDocField";
+import ApiDocField from "./ApiDocField";
 
 export interface ParserResult {
     request: JsonSchema;
@@ -15,7 +15,9 @@ export interface ParserResult {
     error: JsonSchema;
 }
 
-export class ApiDocFieldsParser {
+// TODO: refactor methods to not have side effects
+
+export default class ApiDocFieldsParser {
     parseEndpoint(endpoint: IApiDocEndpoint): ParserResult {
         if (!endpointHasFields(endpoint)) {
             return {
@@ -47,6 +49,7 @@ export class ApiDocFieldsParser {
         const fields = this.getSortedFlatFields(fieldGroups);
 
         const properties: JsonSchema = {};
+        // eslint-disable-next-line consistent-return
         fields.forEach(field => {
             const fieldJsonSchema = ApiDocFieldsParser.toJsonSchemaProperty(field);
 
@@ -67,6 +70,7 @@ export class ApiDocFieldsParser {
                 return this.createParentProperties(parentProperties, currentNamePart);
             }
 
+            // eslint-disable-next-line no-param-reassign
             parentProperties[currentNamePart] = fieldJsonSchema;
             return parentProperties[currentNamePart];
         }, properties);
@@ -84,18 +88,22 @@ export class ApiDocFieldsParser {
     }
 
     private createObjectProperties(parentProperties: JsonSchema, currentNamePart: string) {
+        // eslint-disable-next-line no-param-reassign
         parentProperties[currentNamePart] = parentProperties[currentNamePart] || {
             type: "object",
         };
+        // eslint-disable-next-line no-param-reassign
         parentProperties[currentNamePart].properties = parentProperties[currentNamePart].properties || {};
         return parentProperties[currentNamePart].properties;
     }
 
     private createArrayProperties(parentProperties: JsonSchema, currentNamePart: string) {
+        // eslint-disable-next-line no-param-reassign
         parentProperties[currentNamePart].items = parentProperties[currentNamePart].items || {
             type: "object",
         };
 
+        // eslint-disable-next-line no-param-reassign
         parentProperties[currentNamePart].items.properties = parentProperties[currentNamePart].items.properties || {};
 
         return parentProperties[currentNamePart].items.properties;

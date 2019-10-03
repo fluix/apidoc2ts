@@ -7,9 +7,9 @@ import {
     ApiDoc2InterfaceParameters,
     ApiDoc2InterfaceResult,
 } from "../core/ApiDoc2Interface";
-import { ApiDoc2InterfaceBuilder, BuilderOptions } from "../core/ApiDoc2InterfaceBuilder";
+import ApiDoc2InterfaceBuilder, { BuilderOptions } from "../core/ApiDoc2InterfaceBuilder";
 import { ConverterVersionResolving } from "../core/endpoint-converter/ApiDocToInterfaceConverter";
-import { InputParser } from "./InputParser";
+import InputParser from "./InputParser";
 
 class Convert extends Command {
     static description = "Tool for converting apiDoc documentation to Typescript interfaces";
@@ -106,7 +106,7 @@ url - save all interfaces to corresponding url paths`,
     };
 
     async run() {
-        const { args, flags: passedFlags } = this.parse(Convert);
+        const { flags: passedFlags } = this.parse(Convert);
 
         return this.parseInput(passedFlags)
             .then(async ({ builderOptions, runParameters }) => {

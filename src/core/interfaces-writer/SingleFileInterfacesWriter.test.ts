@@ -1,8 +1,8 @@
 import { ApiDoc2InterfaceGroupingMode } from "../ApiDoc2Interface";
 import { ConverterResult } from "../endpoint-converter/ApiDocToInterfaceConverter";
-import { writeFileToPath } from "../utils/FsUtils";
+import writeFileToPath from "../utils/FsUtils";
 import { stringifyAllInterfaces } from "../utils/WriterUtils";
-import { SingleFileInterfacesWriter } from "./SingleFileInterfacesWriter";
+import SingleFileInterfacesWriter from "./SingleFileInterfacesWriter";
 
 jest.mock("../utils/FsUtils");
 

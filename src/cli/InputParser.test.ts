@@ -1,5 +1,5 @@
 import * as fs from "fs";
-import { InputParser } from "./InputParser";
+import InputParser from "./InputParser";
 
 const emptyFlags = {};
 

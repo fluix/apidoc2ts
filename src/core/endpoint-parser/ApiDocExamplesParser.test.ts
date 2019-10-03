@@ -1,5 +1,5 @@
 import { IApiDocEndpointPart } from "../ApiDocInterfaces";
-import { ApiDocExamplesParser } from "./ApiDocExamplesParser";
+import ApiDocExamplesParser from "./ApiDocExamplesParser";
 
 const emptyEndpointPart: IApiDocEndpointPart = {};
 

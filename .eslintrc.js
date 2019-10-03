@@ -13,12 +13,25 @@ module.exports = {
         "jest": "readonly",
         "it": "readonly",
         "expect": "readonly",
+        "describe": "readonly",
+        "beforeEach": "readonly",
+        "afterEach": "readonly",
+        "beforeAll": "readonly",
+        "afterAll": "readonly",
     },
     "rules": {
         // eslint typescript support fixes/problems
         "import/no-unresolved": "off",
+
         "no-unused-vars": "off",
         "@typescript-eslint/no-unused-vars": "error",
+
+        "no-useless-constructor": "off",
+        "@typescript-eslint/no-useless-constructor": "error",
+
+        "no-empty-function": "off",
+        "@typescript-eslint/no-empty-function": "error",
+
         // "@typescript-eslint/prefer-interface": "error",
         // "@typescript-eslint/no-param-reassign": "error",
 
@@ -26,7 +39,9 @@ module.exports = {
         "@typescript-eslint/indent": "error",
         "@typescript-eslint/no-inferrable-types": "error",
         "@typescript-eslint/no-this-alias": "off",
+
         "max-len": ["error", 120, 4],
+        "class-methods-use-this": "off",
         "quotes": ["error", "double",
             {
                 avoidEscape: true
@@ -106,7 +121,6 @@ module.exports = {
         ],
         "no-debugger": "error",
         "no-empty": "off",
-        "no-empty-functions": "off",
         "no-eval": "error",
         "no-fallthrough": "error",
         "no-multiple-empty-lines": "error",

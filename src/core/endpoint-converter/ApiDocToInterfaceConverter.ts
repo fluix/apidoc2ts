@@ -1,7 +1,7 @@
 import { endpointHasExamples, IApiDocEndpoint } from "../ApiDocInterfaces";
-import { ApiDocExamplesParser } from "../endpoint-parser/ApiDocExamplesParser";
-import { ApiDocFieldsParser } from "../endpoint-parser/ApiDocFieldsParser";
-import { InterfaceGenerator } from "../interface-generator/InterfaceGenerator";
+import ApiDocExamplesParser from "../endpoint-parser/ApiDocExamplesParser";
+import ApiDocFieldsParser from "../endpoint-parser/ApiDocFieldsParser";
+import InterfaceGenerator from "../interface-generator/InterfaceGenerator";
 
 export interface InterfaceMetadata {
     type: string;
@@ -97,7 +97,7 @@ export class ApiDocToInterfaceConverter {
         const whitelistedEndpoints = this.getWhitelistedEndpoints(apiDocEndpoints);
         const latestEndpointsVersions = this.getLatestEndpointsVersions(whitelistedEndpoints);
 
-        return await Promise.all(whitelistedEndpoints.map(async (endpoint) => {
+        return Promise.all(whitelistedEndpoints.map(async (endpoint) => {
             if (this.shouldSkipEndpointVersion(endpoint, latestEndpointsVersions)) {
                 return this.createWarningResult(
                     endpoint,

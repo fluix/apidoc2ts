@@ -21,7 +21,7 @@
   },
   "husky": {
     "hooks": {
-      "pre-commit": "node .git-scripts/check-branch-name.js && npm run lint-strict && npm test"
+      "pre-commit": "node .git-scripts/check-branch-name.js && npm run lint:strict && npm test"
     }
   },
   "repository": {

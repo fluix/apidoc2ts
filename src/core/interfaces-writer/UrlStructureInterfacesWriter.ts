@@ -1,19 +1,19 @@
 import * as path from "path";
 import { ApiDoc2InterfaceParameters } from "../ApiDoc2Interface";
 import { ConverterResult } from "../endpoint-converter/ApiDocToInterfaceConverter";
-import { writeFileToPath } from "../utils/FsUtils";
+import writeFileToPath from "../utils/FsUtils";
 import { getUrlWithoutParameters } from "../utils/StringUtils";
 import { stringifyInterfaces } from "../utils/WriterUtils";
 import { InterfacesWriter } from "./InterfacesWriter";
 
-export class UrlStructureInterfacesWriter implements InterfacesWriter {
+export default class UrlStructureInterfacesWriter implements InterfacesWriter {
     async writeInterfaces(interfacesData: Array<ConverterResult>, args: ApiDoc2InterfaceParameters): Promise<void> {
         await Promise
             .all(interfacesData.map(converterResult => {
                 const interfacesString = stringifyInterfaces(converterResult);
 
                 if (interfacesString.length === 0) {
-                    return;
+                    return Promise.resolve();
                 }
 
                 return this.writeInterfaceIntoUrlPath(converterResult, args, interfacesString);

@@ -1,13 +1,13 @@
 import { ApiDoc2Interface } from "./ApiDoc2Interface";
-import { ApiDoc2InterfaceBuilder, BuilderOptions } from "./ApiDoc2InterfaceBuilder";
+import ApiDoc2InterfaceBuilder, { BuilderOptions } from "./ApiDoc2InterfaceBuilder";
 import {
     ApiDocToInterfaceConverter,
     converterDefaultOptions,
     ConverterVersionResolving,
 } from "./endpoint-converter/ApiDocToInterfaceConverter";
-import { ApiDocExamplesParser } from "./endpoint-parser/ApiDocExamplesParser";
-import { ApiDocFieldsParser } from "./endpoint-parser/ApiDocFieldsParser";
-import { InterfaceGenerator } from "./interface-generator/InterfaceGenerator";
+import ApiDocExamplesParser from "./endpoint-parser/ApiDocExamplesParser";
+import ApiDocFieldsParser from "./endpoint-parser/ApiDocFieldsParser";
+import InterfaceGenerator from "./interface-generator/InterfaceGenerator";
 
 jest.mock("./interface-generator/InterfaceGenerator");
 jest.mock("./endpoint-parser/ApiDocFieldsParser");

@@ -23,8 +23,8 @@ describe("ApiDoc2Interface wrapper", () => {
         convert: jest.fn(() => (converterResults)),
     };
 
-    const writeInterfacesMock = jest.fn((a, b) => Promise.resolve());
-    const interfaceWriterFactoryMock = jest.fn((grouping) => ({
+    const writeInterfacesMock = jest.fn(() => Promise.resolve());
+    const interfaceWriterFactoryMock = jest.fn(() => ({
         writeInterfaces: writeInterfacesMock,
     }));
 
