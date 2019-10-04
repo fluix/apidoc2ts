@@ -2,10 +2,10 @@ import {
     InputData, jsonInputForTargetLanguage, Options, quicktype, TypeScriptTargetLanguage,
 } from "quicktype-core";
 import {IApiDocEndpointPart, IApiDocExample, isEndpointPartWithExamples} from "../ApiDocInterfaces";
-import MatchingBracketsStringExtractor from "../example-extractor/MatchingBracketsStringExtractor";
+import {MatchingBracketsStringExtractor} from "../example-extractor/MatchingBracketsStringExtractor";
 import {removeFieldsAligningSpaces} from "../utils/StringUtils";
 
-export default class ApiDocExamplesParser {
+export class ApiDocExamplesParser {
     private rendererOptions = {"just-types": "true"};
     private targetLanguage = new TypeScriptTargetLanguage();
 

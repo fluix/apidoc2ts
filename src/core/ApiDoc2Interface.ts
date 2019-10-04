@@ -2,9 +2,9 @@ import * as fs from "fs";
 import * as path from "path";
 import {promisify} from "util";
 import {ApiDocToInterfaceConverter, ConverterResult} from "./endpoint-converter/ApiDocToInterfaceConverter";
-import ApiDocFieldsParser from "./endpoint-parser/ApiDocFieldsParser";
-import InterfaceGenerator from "./interface-generator/InterfaceGenerator";
-import getInterfaceWriter from "./interfaces-writer/InterfacesWriter";
+import {ApiDocFieldsParser} from "./endpoint-parser/ApiDocFieldsParser";
+import {InterfaceGenerator} from "./interface-generator/InterfaceGenerator";
+import {getInterfaceWriter} from "./interfaces-writer/InterfacesWriter";
 
 const readFile = promisify(fs.readFile);
 

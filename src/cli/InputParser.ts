@@ -10,7 +10,7 @@ type CLIFlags = Record<keyof typeof Convert.flags, any>;
 
 interface ConfigFlags extends BuilderOptions, ApiDoc2InterfaceParameters {}
 
-export default class InputParser {
+export class InputParser {
     static defaultConfigFileName = "apidoc2ts.config.js";
 
     async parse(cliFlags: Partial<CLIFlags>): Promise<{

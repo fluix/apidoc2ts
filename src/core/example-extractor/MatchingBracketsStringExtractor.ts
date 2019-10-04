@@ -1,4 +1,4 @@
-export default class MatchingBracketsStringExtractor {
+export class MatchingBracketsStringExtractor {
     private openBrackets = ["{", "["];
     private closeBrackets = ["}", "]"];
     private matchingBrackets: { [bracket: string]: string } = {

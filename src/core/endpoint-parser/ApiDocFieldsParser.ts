@@ -7,7 +7,7 @@ import {
     isEndpointPartWithFields,
 } from "../ApiDocInterfaces";
 import {JsonSchema, JsonSubSchemas} from "../JsonSchema";
-import ApiDocField from "./ApiDocField";
+import {ApiDocField} from "./ApiDocField";
 
 export interface ParserResult {
     request: JsonSchema;
@@ -17,7 +17,7 @@ export interface ParserResult {
 
 // TODO: refactor methods to not have side effects
 
-export default class ApiDocFieldsParser {
+export class ApiDocFieldsParser {
     parseEndpoint(endpoint: IApiDocEndpoint): ParserResult {
         if (!endpointHasFields(endpoint)) {
             return {

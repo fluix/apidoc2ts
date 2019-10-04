@@ -20,7 +20,7 @@ const qtFakeCustomType = {
 // TODO: refactor methods to not have side effects
 /* eslint-disable no-param-reassign */
 
-export default class InterfaceGenerator {
+export class InterfaceGenerator {
     private readonly customTypes: Array<string> = [];
 
     private rendererOptions = {"just-types": "true"};

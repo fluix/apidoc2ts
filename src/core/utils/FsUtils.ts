@@ -7,7 +7,7 @@ import {promisify} from "util";
 
 const writeFile = promisify(fs.writeFile);
 
-export default function writeFileToPath(filePath: string, data: any, options?: WriteFileOptions): Promise<void> {
+export function writeFileToPath(filePath: string, data: any, options?: WriteFileOptions): Promise<void> {
     return makeDir(path.dirname(filePath), {})
         .then(() => writeFile(filePath, data, options));
 }

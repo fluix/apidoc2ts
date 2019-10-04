@@ -41,6 +41,7 @@ module.exports = {
         "@typescript-eslint/no-this-alias": "off",
 
         "max-len": ["error", 120, 4],
+        "import/prefer-default-export": "off",
         "object-curly-spacing": ["error", "never"],
         "class-methods-use-this": "off",
         "quotes": ["error", "double",

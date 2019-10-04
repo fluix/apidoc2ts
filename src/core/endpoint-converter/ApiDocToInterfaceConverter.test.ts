@@ -1,6 +1,6 @@
-import ApiDocExamplesParser from "../endpoint-parser/ApiDocExamplesParser";
-import ApiDocFieldsParser from "../endpoint-parser/ApiDocFieldsParser";
-import InterfaceGenerator from "../interface-generator/InterfaceGenerator";
+import {ApiDocExamplesParser} from "../endpoint-parser/ApiDocExamplesParser";
+import {ApiDocFieldsParser} from "../endpoint-parser/ApiDocFieldsParser";
+import {InterfaceGenerator} from "../interface-generator/InterfaceGenerator";
 import {
     ApiDocToInterfaceConverter,
     converterDefaultOptions,
