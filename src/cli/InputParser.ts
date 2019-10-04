@@ -1,8 +1,8 @@
 import * as fs from "fs";
-import { defaults } from "lodash";
+import {defaults} from "lodash";
 import * as path from "path";
-import { ApiDoc2InterfaceGroupingMode, ApiDoc2InterfaceParameters } from "../core/ApiDoc2Interface";
-import { BuilderOptions } from "../core/ApiDoc2InterfaceBuilder";
+import {ApiDoc2InterfaceGroupingMode, ApiDoc2InterfaceParameters} from "../core/ApiDoc2Interface";
+import {BuilderOptions} from "../core/ApiDoc2InterfaceBuilder";
 
 import Convert = require("./Index");
 

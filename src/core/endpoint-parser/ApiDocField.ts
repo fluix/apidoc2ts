@@ -1,5 +1,5 @@
-import { last } from "lodash";
-import { IApiDocField } from "../ApiDocInterfaces";
+import {last} from "lodash";
+import {IApiDocField} from "../ApiDocInterfaces";
 
 export default class ApiDocField {
     private readonly optional: boolean;

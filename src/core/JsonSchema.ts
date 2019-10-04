@@ -1,4 +1,4 @@
-import { values } from "lodash";
+import {values} from "lodash";
 
 export const jsonSchemaDefaultTypes: Array<string> = [
     "null",

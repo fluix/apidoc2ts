@@ -1,4 +1,4 @@
-import { endpointHasExamples, IApiDocEndpoint } from "../ApiDocInterfaces";
+import {endpointHasExamples, IApiDocEndpoint} from "../ApiDocInterfaces";
 import ApiDocExamplesParser from "../endpoint-parser/ApiDocExamplesParser";
 import ApiDocFieldsParser from "../endpoint-parser/ApiDocFieldsParser";
 import InterfaceGenerator from "../interface-generator/InterfaceGenerator";
@@ -165,7 +165,7 @@ export class ApiDocToInterfaceConverter {
         endpoint: IApiDocEndpoint,
         names: InterfacesNames,
     ): Promise<ConverterResult> {
-        const { request, response, error } = this.endpointParser.parseEndpoint(endpoint);
+        const {request, response, error} = this.endpointParser.parseEndpoint(endpoint);
 
         return {
             metadata: endpoint as InterfaceMetadata,

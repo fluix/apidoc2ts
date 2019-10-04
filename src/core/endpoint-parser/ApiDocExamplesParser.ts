@@ -1,12 +1,12 @@
 import {
     InputData, jsonInputForTargetLanguage, Options, quicktype, TypeScriptTargetLanguage,
 } from "quicktype-core";
-import { IApiDocEndpointPart, IApiDocExample, isEndpointPartWithExamples } from "../ApiDocInterfaces";
+import {IApiDocEndpointPart, IApiDocExample, isEndpointPartWithExamples} from "../ApiDocInterfaces";
 import MatchingBracketsStringExtractor from "../example-extractor/MatchingBracketsStringExtractor";
-import { removeFieldsAligningSpaces } from "../utils/StringUtils";
+import {removeFieldsAligningSpaces} from "../utils/StringUtils";
 
 export default class ApiDocExamplesParser {
-    private rendererOptions = { "just-types": "true" };
+    private rendererOptions = {"just-types": "true"};
     private targetLanguage = new TypeScriptTargetLanguage();
 
     async parse(endpointPart?: IApiDocEndpointPart, interfaceName = "Generated"): Promise<string> {
@@ -52,7 +52,7 @@ export default class ApiDocExamplesParser {
 
     private async createInputData(samples: Array<string>, name: string): Promise<InputData> {
         const inputData = new InputData();
-        await inputData.addSource("json", { samples, name },
+        await inputData.addSource("json", {samples, name},
             () => jsonInputForTargetLanguage(this.targetLanguage));
         return inputData;
     }

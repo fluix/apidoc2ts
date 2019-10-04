@@ -51,7 +51,7 @@ describe("CLI InputParser", () => {
     });
 
     it("should throw an error if specified config file does not exist", async () => {
-        await expect(inputParser.parse({ config: "/non-existing-config" })).rejects.toThrow();
+        await expect(inputParser.parse({config: "/non-existing-config"})).rejects.toThrow();
     });
 
     it("should not throw an error if default config file does not exists", async () => {
@@ -64,7 +64,7 @@ describe("CLI InputParser", () => {
     });
 
     it("should throw an error if any of required flags are missing", async () => {
-        await expect(inputParser.parse({ config: "/invalid-config.js" })).rejects.toThrow();
+        await expect(inputParser.parse({config: "/invalid-config.js"})).rejects.toThrow();
     });
 
     it("should replace missing 'output' flag with default value", async () => {
@@ -97,7 +97,7 @@ describe("CLI InputParser", () => {
     });
 
     it("should import config file from specified path", async () => {
-        const result = await inputParser.parse({ config: "/config.js" });
+        const result = await inputParser.parse({config: "/config.js"});
         expect(result.runParameters.name).toEqual(configFlags.name);
     });
 

@@ -1,4 +1,4 @@
-import { Command, flags } from "@oclif/command";
+import {Command, flags} from "@oclif/command";
 import chalk from "chalk";
 import {
     ApiDoc2Interface,
@@ -7,8 +7,8 @@ import {
     ApiDoc2InterfaceParameters,
     ApiDoc2InterfaceResult,
 } from "../core/ApiDoc2Interface";
-import ApiDoc2InterfaceBuilder, { BuilderOptions } from "../core/ApiDoc2InterfaceBuilder";
-import { ConverterVersionResolving } from "../core/endpoint-converter/ApiDocToInterfaceConverter";
+import ApiDoc2InterfaceBuilder, {BuilderOptions} from "../core/ApiDoc2InterfaceBuilder";
+import {ConverterVersionResolving} from "../core/endpoint-converter/ApiDocToInterfaceConverter";
 import InputParser from "./InputParser";
 
 class Convert extends Command {
@@ -16,7 +16,7 @@ class Convert extends Command {
 
     static flags = {
         v: flags.version(),
-        help: flags.help({ char: "h" }),
+        help: flags.help({char: "h"}),
 
         config: flags.string({
             char: "c",
@@ -106,10 +106,10 @@ url - save all interfaces to corresponding url paths`,
     };
 
     async run() {
-        const { flags: passedFlags } = this.parse(Convert);
+        const {flags: passedFlags} = this.parse(Convert);
 
         return this.parseInput(passedFlags)
-            .then(async ({ builderOptions, runParameters }) => {
+            .then(async ({builderOptions, runParameters}) => {
                 await this.convert(builderOptions, runParameters);
             })
             .catch(err => {

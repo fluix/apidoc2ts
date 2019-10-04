@@ -148,9 +148,9 @@ jest.mock("../interface-generator/InterfaceGenerator");
 const threeEndpoints = [requestVersion1, requestVersion2, requestVersion3];
 
 const parserResultMock = {
-    request: { type: "requestMock" },
-    response: { type: "responseMock" },
-    error: { type: "errorMock" },
+    request: {type: "requestMock"},
+    response: {type: "responseMock"},
+    error: {type: "errorMock"},
 };
 
 const parserEmptyResultMock = {

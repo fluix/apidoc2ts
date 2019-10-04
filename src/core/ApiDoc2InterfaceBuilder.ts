@@ -1,5 +1,5 @@
-import { defaults } from "lodash";
-import { ApiDoc2Interface } from "./ApiDoc2Interface";
+import {defaults} from "lodash";
+import {ApiDoc2Interface} from "./ApiDoc2Interface";
 import {
     ApiDocToInterfaceConverter,
     converterDefaultOptions,

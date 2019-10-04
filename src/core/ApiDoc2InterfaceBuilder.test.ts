@@ -1,5 +1,5 @@
-import { ApiDoc2Interface } from "./ApiDoc2Interface";
-import ApiDoc2InterfaceBuilder, { BuilderOptions } from "./ApiDoc2InterfaceBuilder";
+import {ApiDoc2Interface} from "./ApiDoc2Interface";
+import ApiDoc2InterfaceBuilder, {BuilderOptions} from "./ApiDoc2InterfaceBuilder";
 import {
     ApiDocToInterfaceConverter,
     converterDefaultOptions,

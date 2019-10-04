@@ -1,4 +1,4 @@
-import { flatMap } from "lodash";
+import {flatMap} from "lodash";
 import {
     endpointHasFields,
     IApiDocEndpoint,
@@ -6,7 +6,7 @@ import {
     IApiDocField,
     isEndpointPartWithFields,
 } from "../ApiDocInterfaces";
-import { JsonSchema, JsonSubSchemas } from "../JsonSchema";
+import {JsonSchema, JsonSubSchemas} from "../JsonSchema";
 import ApiDocField from "./ApiDocField";
 
 export interface ParserResult {

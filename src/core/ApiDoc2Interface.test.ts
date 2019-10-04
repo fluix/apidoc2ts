@@ -1,7 +1,7 @@
 import * as fs from "fs";
 import * as path from "path";
-import { ApiDoc2Interface, ApiDoc2InterfaceExitCode, ApiDoc2InterfaceGroupingMode } from "./ApiDoc2Interface";
-import { ApiDocToInterfaceConverter } from "./endpoint-converter/ApiDocToInterfaceConverter";
+import {ApiDoc2Interface, ApiDoc2InterfaceExitCode, ApiDoc2InterfaceGroupingMode} from "./ApiDoc2Interface";
+import {ApiDocToInterfaceConverter} from "./endpoint-converter/ApiDocToInterfaceConverter";
 
 jest.mock("fs");
 jest.mock("./endpoint-converter/ApiDocToInterfaceConverter");
@@ -65,7 +65,7 @@ describe("ApiDoc2Interface wrapper", () => {
 
     it("should call converter with parsed data", async () => {
         await apiDoc2Interface.run(args);
-        expect(converter.convert).toBeCalledWith({ mock: "data" });
+        expect(converter.convert).toBeCalledWith({mock: "data"});
     });
 
     it("should call writer factory with grouping mode", async () => {
