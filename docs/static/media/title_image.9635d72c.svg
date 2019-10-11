@@ -1,0 +1,65 @@
+<svg id="Layer_1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1500 870">
+    <defs>
+        <style>
+            .cls-1 {
+                fill-opacity: 0;
+            }
+
+            .cls-2 {
+                fill: #f2f2f2;
+            }
+
+            .cls-3 {
+                font-size: 36px;
+                font-family: PTMono-Regular, PT Mono;
+            }
+
+            .cls-4 {
+                fill: #ccc;
+            }
+
+            .cls-5 {
+                fill: #ffbb34;
+            }
+
+            .cls-6 {
+                fill: #333;
+            }
+
+            .cls-7 {
+                fill: #85cd34;
+            }
+        </style>
+    </defs>
+    <title>Title image</title>
+    <rect class="cls-1" width="1500" height="870" rx="20" ry="20"/>
+    <rect class="cls-2" x="36" y="37.27" width="688.68" height="776.06" rx="36.97" ry="36.97"/>
+    <rect class="cls-2" x="883.38" y="37.27" width="558.68" height="776.06" rx="36.97" ry="36.97"/>
+    <text class="cls-3" transform="translate(935.23 135.06)">
+        <tspan xml:space="preserve">interface           {</tspan>
+    </text>
+    <text class="cls-3" transform="translate(935.23 338.34)">}</text>
+    <rect class="cls-4" x="984.85" y="158.13" width="354.13" height="36.24" rx="6.53" ry="6.53"/>
+    <rect class="cls-4" x="984.85" y="204.85" width="354.13" height="36.24" rx="6.53" ry="6.53"/>
+    <rect class="cls-4" x="984.85" y="251.57" width="354.13" height="36.24" rx="6.53" ry="6.53"/>
+    <rect class="cls-5" x="1162.72" y="105.86" width="176.26" height="36.24" rx="8.94" ry="8.94"/>
+    <rect class="cls-6" x="85.23" y="74.74" width="587.55" height="63.44" rx="7.2" ry="7.2"/>
+    <rect class="cls-5" x="85.23" y="168.74" width="324.97" height="35.47" rx="5.87" ry="5.87"/>
+    <rect class="cls-4" x="85.23" y="219.71" width="487.79" height="35.47" rx="7.2" ry="7.2"/>
+    <rect class="cls-4" x="85.23" y="321.67" width="487.79" height="35.47" rx="7.2" ry="7.2"/>
+    <rect class="cls-4" x="85.23" y="270.69" width="487.79" height="35.47" rx="7.2" ry="7.2"/>
+    <polygon class="cls-2" points="790.91 466.25 845.04 435 790.91 403.75 790.91 466.25"/>
+    <text class="cls-3" transform="translate(935.23 536.47)">
+        <tspan xml:space="preserve">interface           {</tspan>
+    </text>
+    <text class="cls-3" transform="translate(935.23 739.75)">}</text>
+    <rect class="cls-4" x="984.85" y="559.54" width="354.13" height="36.24" rx="6.53" ry="6.53"/>
+    <rect class="cls-4" x="984.85" y="606.26" width="354.13" height="36.24" rx="6.53" ry="6.53"/>
+    <rect class="cls-4" x="984.85" y="652.97" width="354.13" height="36.24" rx="6.53" ry="6.53"/>
+    <rect class="cls-7" x="1162.72" y="507.27" width="176.26" height="36.24" rx="8.94" ry="8.94"/>
+    <rect class="cls-6" x="85.23" y="476.15" width="587.55" height="63.44" rx="7.2" ry="7.2"/>
+    <rect class="cls-7" x="85.23" y="570.15" width="324.97" height="35.47" rx="5.87" ry="5.87"/>
+    <rect class="cls-4" x="85.23" y="621.12" width="487.79" height="35.47" rx="7.2" ry="7.2"/>
+    <rect class="cls-4" x="85.23" y="723.07" width="487.79" height="35.47" rx="7.2" ry="7.2"/>
+    <rect class="cls-4" x="85.23" y="672.1" width="487.79" height="35.47" rx="7.2" ry="7.2"/>
+</svg>
