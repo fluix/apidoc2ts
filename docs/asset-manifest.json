@@ -1,22 +1,22 @@
 {
   "files": {
-    "main.css": "/web-apidoc2ts/static/css/main.0a509ed7.chunk.css",
-    "main.js": "/web-apidoc2ts/static/js/main.4fd366fc.chunk.js",
-    "main.js.map": "/web-apidoc2ts/static/js/main.4fd366fc.chunk.js.map",
+    "main.css": "/web-apidoc2ts/static/css/main.38ba581d.chunk.css",
+    "main.js": "/web-apidoc2ts/static/js/main.23c09004.chunk.js",
+    "main.js.map": "/web-apidoc2ts/static/js/main.23c09004.chunk.js.map",
     "runtime~main.js": "/web-apidoc2ts/static/js/runtime~main.f15b53b3.js",
     "runtime~main.js.map": "/web-apidoc2ts/static/js/runtime~main.f15b53b3.js.map",
     "static/js/2.5bf7c3d2.chunk.js": "/web-apidoc2ts/static/js/2.5bf7c3d2.chunk.js",
     "static/js/2.5bf7c3d2.chunk.js.map": "/web-apidoc2ts/static/js/2.5bf7c3d2.chunk.js.map",
     "index.html": "/web-apidoc2ts/index.html",
-    "precache-manifest.c77df5a032687506b92b368ab9ea78c9.js": "/web-apidoc2ts/precache-manifest.c77df5a032687506b92b368ab9ea78c9.js",
+    "precache-manifest.bec2caa5dc754dc6dce3727ec535fe2b.js": "/web-apidoc2ts/precache-manifest.bec2caa5dc754dc6dce3727ec535fe2b.js",
     "service-worker.js": "/web-apidoc2ts/service-worker.js",
-    "static/css/main.0a509ed7.chunk.css.map": "/web-apidoc2ts/static/css/main.0a509ed7.chunk.css.map",
-    "static/media/feature_customizing.png": "/web-apidoc2ts/static/media/feature_customizing.a6a4676c.png",
-    "static/media/feature_enums.png": "/web-apidoc2ts/static/media/feature_enums.253e1965.png",
-    "static/media/feature_nested.png": "/web-apidoc2ts/static/media/feature_nested.502bac62.png",
-    "static/media/feature_url.png": "/web-apidoc2ts/static/media/feature_url.449e2a29.png",
-    "static/media/feature_versions.png": "/web-apidoc2ts/static/media/feature_versions.42ff2bcd.png",
-    "static/media/title_image.png": "/web-apidoc2ts/static/media/title_image.ed227ec6.png",
+    "static/css/main.38ba581d.chunk.css.map": "/web-apidoc2ts/static/css/main.38ba581d.chunk.css.map",
+    "static/media/feature_customizing.svg": "/web-apidoc2ts/static/media/feature_customizing.bab20fea.svg",
+    "static/media/feature_enums.svg": "/web-apidoc2ts/static/media/feature_enums.b58b1617.svg",
+    "static/media/feature_nested.svg": "/web-apidoc2ts/static/media/feature_nested.8f05e168.svg",
+    "static/media/feature_url.svg": "/web-apidoc2ts/static/media/feature_url.4b0fe763.svg",
+    "static/media/feature_versions.svg": "/web-apidoc2ts/static/media/feature_versions.58223c2d.svg",
+    "static/media/title_image.svg": "/web-apidoc2ts/static/media/title_image.9635d72c.svg",
     "static/media/traffic-lights.svg": "/web-apidoc2ts/static/media/traffic-lights.740165a3.svg"
   }
 }
