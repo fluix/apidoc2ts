@@ -1,4 +1,6 @@
-import {InputData, jsonInputForTargetLanguage, Options, quicktype, TypeScriptTargetLanguage} from "quicktype-core";
+import {
+    InputData, jsonInputForTargetLanguage, Options, quicktype, TypeScriptTargetLanguage,
+} from "quicktype-core";
 import {IApiDocEndpointPart, IApiDocExample, isEndpointPartWithExamples} from "../ApiDocInterfaces";
 import {MatchingBracketsStringExtractor} from "../example-extractor/MatchingBracketsStringExtractor";
 import {removeFieldsAligningSpaces} from "../utils/StringUtils";
@@ -27,9 +29,7 @@ export class ApiDocExamplesParser {
 
     private getExamplesJson(examples: Array<IApiDocExample>) {
         return examples
-            .map(example => {
-                return this.extractExampleJson(example.content);
-            })
+            .map(example => this.extractExampleJson(example.content))
             .filter(json => json !== "");
     }
 

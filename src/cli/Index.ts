@@ -56,57 +56,57 @@ url - save all interfaces to corresponding url paths`,
             description: "Specify list of endpoints names which should be processed",
             exclusive: ["config"],
         }),
-        ["parse-examples"]: flags.boolean({
+        "parse-examples": flags.boolean({
             char: "e",
             default: false,
             description: "Parse endpoint examples if it has no parameters",
             exclusive: ["config"],
         }),
-        ["custom-types"]: flags.string({
+        "custom-types": flags.string({
             char: "t",
             multiple: true,
             description: "List of custom types",
             helpValue: "type1 type2 type3",
             exclusive: ["config"],
         }),
-        ["static-prefix"]: flags.string({
+        "static-prefix": flags.string({
             required: false,
             description: "Prefix for all interfaces names",
             exclusive: ["config"],
         }),
-        ["static-postfix"]: flags.string({
+        "static-postfix": flags.string({
             required: false,
             description: "Postfix for all interfaces names",
             exclusive: ["config"],
         }),
-        ["request-prefix"]: flags.string({
+        "request-prefix": flags.string({
             description: "Prefix for a request interface name",
             exclusive: ["config"],
         }),
-        ["request-postfix"]: flags.string({
+        "request-postfix": flags.string({
             description: "Postfix for a request interface name",
             exclusive: ["config"],
         }),
-        ["response-prefix"]: flags.string({
+        "response-prefix": flags.string({
             description: "Prefix for a response interface name",
             exclusive: ["config"],
         }),
-        ["response-postfix"]: flags.string({
+        "response-postfix": flags.string({
             description: "Postfix for a response interface name",
             exclusive: ["config"],
         }),
-        ["error-prefix"]: flags.string({
+        "error-prefix": flags.string({
             description: "Prefix for a error interface name",
             exclusive: ["config"],
         }),
-        ["error-postfix"]: flags.string({
+        "error-postfix": flags.string({
             description: "Postfix for a error interface name",
             exclusive: ["config"],
         }),
     };
 
     async run() {
-        const {args, flags: passedFlags} = this.parse(Convert);
+        const {flags: passedFlags} = this.parse(Convert);
 
         return this.parseInput(passedFlags)
             .then(async ({builderOptions, runParameters}) => {

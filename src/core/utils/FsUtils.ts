@@ -1,3 +1,4 @@
+/* eslint-disable import/no-duplicates */
 import * as fs from "fs";
 import {WriteFileOptions} from "fs";
 import * as makeDir from "make-dir";
@@ -8,7 +9,5 @@ const writeFile = promisify(fs.writeFile);
 
 export function writeFileToPath(filePath: string, data: any, options?: WriteFileOptions): Promise<void> {
     return makeDir(path.dirname(filePath), {})
-        .then(() => {
-            return writeFile(filePath, data, options);
-        });
+        .then(() => writeFile(filePath, data, options));
 }

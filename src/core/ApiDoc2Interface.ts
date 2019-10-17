@@ -32,7 +32,6 @@ export interface ApiDoc2InterfaceParameters {
 }
 
 export class ApiDoc2Interface {
-
     static simple(): ApiDoc2Interface {
         const generator = new InterfaceGenerator();
         const parser = new ApiDocFieldsParser();
@@ -59,20 +58,16 @@ export class ApiDoc2Interface {
                 const writer = this.writerFactory(args.grouping);
                 return writer.writeInterfaces(converterResults, args);
             })
-            .then(() => {
-                return {
-                    warnings,
-                    message: "Successfully generated interfaces",
-                    code: ApiDoc2InterfaceExitCode.SUCCESS,
-                };
-            })
-            .catch((err) => {
-                return {
-                    message: `${err}`,
-                    code: ApiDoc2InterfaceExitCode.FAIL,
-                    warnings: [],
-                };
-            });
+            .then(() => ({
+                warnings,
+                message: "Successfully generated interfaces",
+                code: ApiDoc2InterfaceExitCode.SUCCESS,
+            }))
+            .catch((err) => ({
+                message: `${err}`,
+                code: ApiDoc2InterfaceExitCode.FAIL,
+                warnings: [],
+            }));
     }
 
     private fillInWarnings(converterResults: Array<ConverterResult>, warnings: Array<string>) {

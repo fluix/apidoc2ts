@@ -15,6 +15,8 @@ export interface ParserResult {
     error: JsonSchema;
 }
 
+// TODO: refactor methods to not have side effects
+
 export class ApiDocFieldsParser {
     parseEndpoint(endpoint: IApiDocEndpoint): ParserResult {
         if (!endpointHasFields(endpoint)) {
@@ -47,6 +49,7 @@ export class ApiDocFieldsParser {
         const fields = this.getSortedFlatFields(fieldGroups);
 
         const properties: JsonSchema = {};
+        // eslint-disable-next-line consistent-return
         fields.forEach(field => {
             const fieldJsonSchema = ApiDocFieldsParser.toJsonSchemaProperty(field);
 
@@ -67,6 +70,7 @@ export class ApiDocFieldsParser {
                 return this.createParentProperties(parentProperties, currentNamePart);
             }
 
+            // eslint-disable-next-line no-param-reassign
             parentProperties[currentNamePart] = fieldJsonSchema;
             return parentProperties[currentNamePart];
         }, properties);
@@ -84,21 +88,23 @@ export class ApiDocFieldsParser {
     }
 
     private createObjectProperties(parentProperties: JsonSchema, currentNamePart: string) {
+        // eslint-disable-next-line no-param-reassign
         parentProperties[currentNamePart] = parentProperties[currentNamePart] || {
             type: "object",
         };
+        // eslint-disable-next-line no-param-reassign
         parentProperties[currentNamePart].properties = parentProperties[currentNamePart].properties || {};
         return parentProperties[currentNamePart].properties;
     }
 
     private createArrayProperties(parentProperties: JsonSchema, currentNamePart: string) {
-        parentProperties[currentNamePart].items =
-            parentProperties[currentNamePart].items || {
-                type: "object",
-            };
+        // eslint-disable-next-line no-param-reassign
+        parentProperties[currentNamePart].items = parentProperties[currentNamePart].items || {
+            type: "object",
+        };
 
-        parentProperties[currentNamePart].items.properties =
-            parentProperties[currentNamePart].items.properties || {};
+        // eslint-disable-next-line no-param-reassign
+        parentProperties[currentNamePart].items.properties = parentProperties[currentNamePart].items.properties || {};
 
         return parentProperties[currentNamePart].items.properties;
     }
@@ -106,9 +112,7 @@ export class ApiDocFieldsParser {
     private getSortedFlatFields(fieldGroups: Record<string, Array<IApiDocField>>): Array<ApiDocField> {
         return flatMap(fieldGroups)
             .map((field: IApiDocField) => new ApiDocField(field))
-            .sort((a: ApiDocField, b: ApiDocField) =>
-                a.qualifiedName.length - b.qualifiedName.length,
-            );
+            .sort((a: ApiDocField, b: ApiDocField) => a.qualifiedName.length - b.qualifiedName.length);
     }
 
     static toJsonSchemaProperty(field: ApiDocField): JsonSchema {

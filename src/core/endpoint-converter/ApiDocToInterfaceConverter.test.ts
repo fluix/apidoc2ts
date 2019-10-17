@@ -174,20 +174,17 @@ describe("ApiDoc to Interface converter", () => {
         {
             ...converterDefaultOptions,
             versionResolving: ConverterVersionResolving.LAST,
-        },
-    );
+        });
     const converterWithEmptyWhitelist = new ApiDocToInterfaceConverter(interfaceGenerator, endpointParser,
         {
             ...converterDefaultOptions,
             whitelist: [],
-        },
-    );
+        });
     const converterWithWhitelist = new ApiDocToInterfaceConverter(interfaceGenerator, endpointParser,
         {
             ...converterDefaultOptions,
             whitelist: ["PostBook"],
-        },
-    );
+        });
 
     beforeEach(() => {
         createInterfaceSpy.mockReset();
@@ -253,22 +250,19 @@ describe("ApiDoc to Interface converter", () => {
                     ...commonOptions,
                     prefix: interfaceNameOptions.requestPrefix,
                     postfix: interfaceNameOptions.requestPostfix,
-                },
-            );
+                });
             expect(namingFunctionMock).toBeCalledWith(requestVersion1, true,
                 {
                     ...commonOptions,
                     prefix: interfaceNameOptions.responsePrefix,
                     postfix: interfaceNameOptions.responsePostfix,
-                },
-            );
+                });
             expect(namingFunctionMock).toBeCalledWith(requestVersion1, true,
                 {
                     ...commonOptions,
                     prefix: interfaceNameOptions.errorPrefix,
                     postfix: interfaceNameOptions.errorPostfix,
-                },
-            );
+                });
         });
 
         it("should call createInterface with naming function result", async () => {
@@ -323,7 +317,6 @@ describe("ApiDoc to Interface converter", () => {
     });
 
     describe("when parsing examples", () => {
-
         const converterWithExamplesParser = new ApiDocToInterfaceConverter(
             interfaceGenerator,
             endpointParser,

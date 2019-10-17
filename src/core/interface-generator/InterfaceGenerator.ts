@@ -17,8 +17,10 @@ const qtFakeCustomType = {
     },
 };
 
-export class InterfaceGenerator {
+// TODO: refactor methods to not have side effects
+/* eslint-disable no-param-reassign */
 
+export class InterfaceGenerator {
     private readonly customTypes: Array<string> = [];
 
     private rendererOptions = {"just-types": "true"};
@@ -93,7 +95,7 @@ export class InterfaceGenerator {
         this.customTypes.forEach(type => {
             fakeDefinitions[type] = qtFakeCustomType;
         });
-        schema.definitions = Object.assign({}, schema.definitions, fakeDefinitions);
+        schema.definitions = {...schema.definitions, ...fakeDefinitions};
     }
 
     private replaceCustomTypesWithReferences(schema: JsonSchema) {
@@ -108,7 +110,7 @@ export class InterfaceGenerator {
             }
         });
 
-        schema.properties = Object.assign({}, schema.properties, customProperties);
+        schema.properties = {...schema.properties, ...customProperties};
     }
 
     private includeRequiredPropertiesList(schema: JsonSchema) {
@@ -166,8 +168,8 @@ export class InterfaceGenerator {
     }
 
     private isInvalidType(subSchema: JsonSchema) {
-        return subSchema.type &&
-               !jsonSchemaDefaultTypes.includes(subSchema.type) &&
-               !this.customTypes.includes(subSchema.type);
+        return subSchema.type
+               && !jsonSchemaDefaultTypes.includes(subSchema.type)
+               && !this.customTypes.includes(subSchema.type);
     }
 }

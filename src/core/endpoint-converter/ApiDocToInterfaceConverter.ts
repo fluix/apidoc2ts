@@ -49,7 +49,9 @@ export interface ConverterOptions {
 }
 
 function defaultMakeName(endpoint: IApiDocEndpoint, isLatest: boolean, options: InterfaceNameOptions): string {
-    const {staticPrefix, staticPostfix, prefix, postfix} = options;
+    const {
+        staticPrefix, staticPostfix, prefix, postfix,
+    } = options;
     const versionPostfix = isLatest ? "" : `_v${endpoint.version}`;
     return `${staticPrefix}${prefix}${endpoint.name}${postfix}${versionPostfix}${staticPostfix}`;
 }
@@ -83,7 +85,6 @@ interface InterfacesNames {
 }
 
 export class ApiDocToInterfaceConverter {
-
     constructor(
         private readonly interfaceGenerator: InterfaceGenerator,
         private readonly endpointParser: ApiDocFieldsParser,
@@ -96,7 +97,7 @@ export class ApiDocToInterfaceConverter {
         const whitelistedEndpoints = this.getWhitelistedEndpoints(apiDocEndpoints);
         const latestEndpointsVersions = this.getLatestEndpointsVersions(whitelistedEndpoints);
 
-        return await Promise.all(whitelistedEndpoints.map(async (endpoint) => {
+        return Promise.all(whitelistedEndpoints.map(async (endpoint) => {
             if (this.shouldSkipEndpointVersion(endpoint, latestEndpointsVersions)) {
                 return this.createWarningResult(
                     endpoint,
@@ -131,8 +132,8 @@ export class ApiDocToInterfaceConverter {
 
     private getErrorMessage() {
         return this.shouldParseExamples()
-               ? ConverterMessages.INVALID_PARAMETERS_AND_EXAMPLES
-               : ConverterMessages.INVALID_PARAMETERS;
+            ? ConverterMessages.INVALID_PARAMETERS_AND_EXAMPLES
+            : ConverterMessages.INVALID_PARAMETERS;
     }
 
     private isBlankResult(result: ConverterResult) {
@@ -154,8 +155,8 @@ export class ApiDocToInterfaceConverter {
         apiDocEndpoints.forEach((endpoint) => {
             const currentVersion = latestEndpointsVersions[endpoint.name] || endpoint.version;
             latestEndpointsVersions[endpoint.name] = endpoint.version > currentVersion
-                                                     ? endpoint.version
-                                                     : currentVersion;
+                ? endpoint.version
+                : currentVersion;
         });
         return latestEndpointsVersions;
     }

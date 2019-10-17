@@ -13,14 +13,12 @@ export class UrlStructureInterfacesWriter implements InterfacesWriter {
                 const interfacesString = stringifyInterfaces(converterResult);
 
                 if (interfacesString.length === 0) {
-                    return;
+                    return Promise.resolve();
                 }
 
                 return this.writeInterfaceIntoUrlPath(converterResult, args, interfacesString);
             }))
-            .then(() => {
-                return Promise.resolve();
-            });
+            .then(() => Promise.resolve());
     }
 
     private writeInterfaceIntoUrlPath(

@@ -1,16 +1,16 @@
-import Convert = require("./Index");
 import * as fs from "fs";
 import {defaults} from "lodash";
 import * as path from "path";
 import {ApiDoc2InterfaceGroupingMode, ApiDoc2InterfaceParameters} from "../core/ApiDoc2Interface";
 import {BuilderOptions} from "../core/ApiDoc2InterfaceBuilder";
 
+import Convert = require("./Index");
+
 type CLIFlags = Record<keyof typeof Convert.flags, any>;
 
 interface ConfigFlags extends BuilderOptions, ApiDoc2InterfaceParameters {}
 
 export class InputParser {
-
     static defaultConfigFileName = "apidoc2ts.config.js";
 
     async parse(cliFlags: Partial<CLIFlags>): Promise<{
@@ -18,8 +18,8 @@ export class InputParser {
         runParameters: ApiDoc2InterfaceParameters,
     }> {
         const flags = cliFlags.config
-                      ? await this.readConfigFlags(cliFlags.config)
-                      : await this.combineDefaultConfigAndCliFlags(cliFlags);
+            ? await this.readConfigFlags(cliFlags.config)
+            : await this.combineDefaultConfigAndCliFlags(cliFlags);
 
         if (!flags.source) {
             throw new Error("Missing required flag 'source'");
@@ -46,12 +46,8 @@ export class InputParser {
         const mappedCliFlags = this.mapInputFlags(flags);
 
         return this.readConfigFlags(InputParser.defaultConfigFileName)
-                   .then(defaultConfigFlags => {
-                       return defaults(mappedCliFlags, defaultConfigFlags);
-                   })
-                   .catch(err => {
-                       return mappedCliFlags;
-                   });
+            .then(defaultConfigFlags => defaults(mappedCliFlags, defaultConfigFlags))
+            .catch(() => mappedCliFlags);
     }
 
     private readConfigFlags(config: string): Promise<ConfigFlags> {
@@ -61,6 +57,7 @@ export class InputParser {
             return Promise.reject(new Error(`Could not find config file: ${configPath}`));
         }
 
+        // eslint-disable-next-line global-require, import/no-dynamic-require
         return Promise.resolve(require(configPath));
     }
 

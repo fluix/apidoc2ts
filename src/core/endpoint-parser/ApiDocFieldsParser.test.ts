@@ -74,7 +74,6 @@ const defaultEndpointMetadata = {
 };
 
 describe("apiDoc Endpoint", () => {
-
     const parser = new ApiDocFieldsParser();
 
     it("should return empty schemas if endpoint has no parameters at all", () => {
@@ -118,10 +117,10 @@ describe("apiDoc Endpoint", () => {
                 fields: {Parameter: [parentField]},
             },
             success: {
-                fields: {["Success 2xx"]: [requiredField]},
+                fields: {"Success 2xx": [requiredField]},
             },
             error: {
-                fields: {["Error 4xx"]: [customTypeField]},
+                fields: {"Error 4xx": [customTypeField]},
             },
             ...defaultEndpointMetadata,
         };
@@ -227,7 +226,7 @@ describe("apiDoc Endpoint", () => {
 
     it("should create array property with the same items type as field", () => {
         const apiDocField = new ApiDocField(arrayField);
-        const items = ApiDocFieldsParser.toJsonSchemaProperty(apiDocField).items;
+        const {items} = ApiDocFieldsParser.toJsonSchemaProperty(apiDocField);
         expect(Array.isArray(items)).toBeFalsy();
         expect((items as JsonSchema).type).toBe("string");
     });
@@ -312,5 +311,4 @@ describe("apiDoc Endpoint", () => {
 
         expect(parser.parseEndpoint(endpointData).request).toEqual(expectedSchema);
     });
-})
-;
+});
