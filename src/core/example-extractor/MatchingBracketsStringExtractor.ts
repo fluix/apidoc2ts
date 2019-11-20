@@ -1,7 +1,7 @@
 export class MatchingBracketsStringExtractor {
     private openBrackets = ["{", "["];
     private closeBrackets = ["}", "]"];
-    private matchingBrackets = {
+    private matchingBrackets: { [bracket: string]: string } = {
         "{": "}",
         "[": "]",
     };
@@ -28,7 +28,7 @@ export class MatchingBracketsStringExtractor {
                     substringEnd = i + 1;
                     break;
                 }
-                if (!this.isMatchingBracket(bracket, char)) {
+                if (bracket && !this.isMatchingBracket(bracket, char)) {
                     throw new Error("Close bracket does not match the open bracket");
                 }
             }
@@ -41,15 +41,15 @@ export class MatchingBracketsStringExtractor {
         return bracketsString.substring(substringStart, substringEnd);
     }
 
-    private isMatchingBracket(bracket, char) {
+    private isMatchingBracket(bracket: string, char: string): boolean {
         return char === this.matchingBrackets[bracket];
     }
 
-    private isCloseBracket(char) {
+    private isCloseBracket(char: string): boolean {
         return this.closeBrackets.includes(char);
     }
 
-    private isOpenBracket(char) {
+    private isOpenBracket(char: string): boolean {
         return this.openBrackets.includes(char);
     }
 }

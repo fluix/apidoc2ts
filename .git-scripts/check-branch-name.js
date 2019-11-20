@@ -2,7 +2,7 @@
 
 const childProcessExec = require('child_process').exec;
 const util = require('util');
-const branchRegex = new RegExp("EWN-\\d+\\/[\\w-]+");
+const branchRegex = new RegExp("(?:impr|fix|feat|ref)\\/[\\w-]+");
 
 const exec = util.promisify(childProcessExec);
 
@@ -28,7 +28,9 @@ async function checkBranchName() {
     }
 
     console.log("Invalid branch name");
-    console.log("Use EWN-######/my-description-message");
+    console.log("Branch name should start with: 'impr', 'fix', 'feat' or 'ref'");
+    console.log("Please check contributing guide for more information");
+    console.log("https://github.com/fluix/apidoc2ts/blob/develop/CONTRIBUTING.md");
     process.exit(1);
 }
 

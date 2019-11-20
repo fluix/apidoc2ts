@@ -1,9 +1,10 @@
 import * as fs from "fs";
+import * as path from "path";
 import {promisify} from "util";
-import {ApiDocToInterfaceConverter, ConverterResult} from "./converter/ApiDocToInterfaceConverter";
-import {InterfaceGenerator} from "./generator/InterfaceGenerator";
-import {ApiDocEndpointParser} from "./parser/ApiDocEndpointParser";
-import {getInterfaceWriter} from "./writer/InterfacesWriter";
+import {ApiDocToInterfaceConverter, ConverterResult} from "./endpoint-converter/ApiDocToInterfaceConverter";
+import {ApiDocFieldsParser} from "./endpoint-parser/ApiDocFieldsParser";
+import {InterfaceGenerator} from "./interface-generator/InterfaceGenerator";
+import {getInterfaceWriter} from "./interfaces-writer/InterfacesWriter";
 
 const readFile = promisify(fs.readFile);
 
@@ -31,10 +32,9 @@ export interface ApiDoc2InterfaceParameters {
 }
 
 export class ApiDoc2Interface {
-
     static simple(): ApiDoc2Interface {
         const generator = new InterfaceGenerator();
-        const parser = new ApiDocEndpointParser();
+        const parser = new ApiDocFieldsParser();
         const converter = new ApiDocToInterfaceConverter(generator, parser);
         return new ApiDoc2Interface(converter);
     }
@@ -48,7 +48,7 @@ export class ApiDoc2Interface {
 
     async run(args: ApiDoc2InterfaceParameters): Promise<ApiDoc2InterfaceResult> {
         const warnings: Array<string> = [];
-        return readFile(args.source, "utf-8")
+        return readFile(path.join(args.source, "api_data.json"), "utf-8")
             .then((fileData) => {
                 const apiDocEndpoints = JSON.parse(fileData);
                 return this.converter.convert(apiDocEndpoints);
@@ -58,20 +58,16 @@ export class ApiDoc2Interface {
                 const writer = this.writerFactory(args.grouping);
                 return writer.writeInterfaces(converterResults, args);
             })
-            .then(() => {
-                return {
-                    warnings,
-                    message: "Successfully generated interfaces",
-                    code: ApiDoc2InterfaceExitCode.SUCCESS,
-                };
-            })
-            .catch((err) => {
-                return {
-                    message: `${err}`,
-                    code: ApiDoc2InterfaceExitCode.FAIL,
-                    warnings: [],
-                };
-            });
+            .then(() => ({
+                warnings,
+                message: "Successfully generated interfaces",
+                code: ApiDoc2InterfaceExitCode.SUCCESS,
+            }))
+            .catch((err) => ({
+                message: `${err}`,
+                code: ApiDoc2InterfaceExitCode.FAIL,
+                warnings: [],
+            }));
     }
 
     private fillInWarnings(converterResults: Array<ConverterResult>, warnings: Array<string>) {

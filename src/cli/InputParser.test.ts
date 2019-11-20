@@ -71,15 +71,23 @@ describe("CLI InputParser", () => {
         existsSpy.mockReturnValue(false);
         const result = await inputParser.parse({
             source: "source",
-            name: "name",
         });
         expect(result.runParameters.output).toBe("./");
+    });
+
+    it("should replace missing 'grouping' flag with default value 'url'", async () => {
+        existsSpy.mockReturnValue(false);
+        const result = await inputParser.parse({
+            source: "source",
+        });
+        expect(result.runParameters.grouping).toBe("url");
     });
 
     it("should not throw an error if 'name' is not specified and grouping is set to 'url'", async () => {
         existsSpy.mockReturnValue(false);
         await expect(inputParser.parse({
-            source: "source", output: "output", grouping: "url",
+            source: "source",
+            grouping: "url",
         })).resolves.not.toThrow();
     });
 

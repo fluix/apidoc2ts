@@ -1,17 +1,16 @@
-import Convert = require("./index");
 import * as fs from "fs";
-import * as _ from "lodash";
+import {defaults} from "lodash";
 import * as path from "path";
 import {ApiDoc2InterfaceGroupingMode, ApiDoc2InterfaceParameters} from "../core/ApiDoc2Interface";
 import {BuilderOptions} from "../core/ApiDoc2InterfaceBuilder";
+
+import Convert = require("./Index");
 
 type CLIFlags = Record<keyof typeof Convert.flags, any>;
 
 interface ConfigFlags extends BuilderOptions, ApiDoc2InterfaceParameters {}
 
 export class InputParser {
-
-    static requiredFlagsKeys: Array<keyof CLIFlags> = ["source", "output", "name"];
     static defaultConfigFileName = "apidoc2ts.config.js";
 
     async parse(cliFlags: Partial<CLIFlags>): Promise<{
@@ -19,28 +18,36 @@ export class InputParser {
         runParameters: ApiDoc2InterfaceParameters,
     }> {
         const flags = cliFlags.config
-                      ? await this.readConfigFlags(cliFlags.config)
-                      : await this.combineDefaultConfigAndCliFlags(cliFlags);
+            ? await this.readConfigFlags(cliFlags.config)
+            : await this.combineDefaultConfigAndCliFlags(cliFlags);
 
-        flags.output = flags.output || "./";
-        this.validateInput(flags);
+        if (!flags.source) {
+            throw new Error("Missing required flag 'source'");
+        }
+
+        if (!flags.name && flags.grouping === ApiDoc2InterfaceGroupingMode.SINGLE) {
+            throw new Error("Missing required flag 'name'");
+        }
+
+        const runParameters = {
+            source: flags.source,
+            output: flags.output || "./",
+            name: flags.name || "",
+            grouping: flags.grouping || ApiDoc2InterfaceGroupingMode.URL,
+        };
 
         return {
+            runParameters,
             builderOptions: flags,
-            runParameters: flags,
         };
     }
 
-    private async combineDefaultConfigAndCliFlags(flags: Partial<CLIFlags>): Promise<ConfigFlags> {
+    private async combineDefaultConfigAndCliFlags(flags: Partial<CLIFlags>): Promise<Partial<ConfigFlags>> {
         const mappedCliFlags = this.mapInputFlags(flags);
 
         return this.readConfigFlags(InputParser.defaultConfigFileName)
-                   .then(defaultConfigFlags => {
-                       return _.defaults(mappedCliFlags, defaultConfigFlags);
-                   })
-                   .catch(err => {
-                       return mappedCliFlags;
-                   });
+            .then(defaultConfigFlags => defaults(mappedCliFlags, defaultConfigFlags))
+            .catch(() => mappedCliFlags);
     }
 
     private readConfigFlags(config: string): Promise<ConfigFlags> {
@@ -50,24 +57,11 @@ export class InputParser {
             return Promise.reject(new Error(`Could not find config file: ${configPath}`));
         }
 
+        // eslint-disable-next-line global-require, import/no-dynamic-require
         return Promise.resolve(require(configPath));
     }
 
-    private validateInput(flags) {
-        InputParser.requiredFlagsKeys.forEach(key => {
-            if (flags[key]) {
-                return;
-            }
-
-            if (key === "name" && flags.grouping === ApiDoc2InterfaceGroupingMode.URL) {
-                return;
-            }
-
-            throw new Error(`Missing required flag '${key}'`);
-        });
-    }
-
-    private mapInputFlags(flags: Partial<CLIFlags>): ConfigFlags {
+    private mapInputFlags(flags: Partial<CLIFlags>): Partial<ConfigFlags> {
         return {
             customTypes: flags["custom-types"],
             staticPrefix: flags["static-prefix"],

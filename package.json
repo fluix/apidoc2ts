@@ -1,18 +1,19 @@
 {
   "name": "apidoc2ts",
-  "version": "0.2.1",
+  "version": "0.3.0",
   "description": "Typescript interface generator based on ApiDoc",
   "bin": {
     "apidoc2ts": "./bin/run"
   },
-  "main": "src/cli/index.ts",
+  "main": "src/cli/Index.ts",
   "scripts": {
     "start": "npm run lint && npm test && npm run build && npm run main",
     "monitor": "jest --watchAll --verbose",
     "build": "tsc",
     "test": "jest --verbose --passWithNoTests",
-    "lint": "tslint --force -t stylish -c tslint.json 'src/**/*.ts'",
-    "lint-strict": "tslint -t stylish -c tslint.json 'src/**/*.ts'"
+    "lint": "eslint -c .eslintrc.js --cache 'src/**/*.ts'",
+    "lint:fix": "eslint -c .eslintrc.js --fix 'src/**/*.ts'",
+    "lint:strict": "eslint -c .eslintrc.js 'src/**/*.ts'"
   },
   "jest": {
     "preset": "ts-jest//presets/default",
@@ -20,19 +21,22 @@
   },
   "husky": {
     "hooks": {
-      "pre-commit": "node .git-scripts/check-branch-name.js && npm run lint-strict && npm test"
+      "pre-commit": "node .git-scripts/check-branch-name.js && npm run lint:strict && npm test"
     }
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/fluix/web-apidoc2ts.git"
+    "url": "git+https://github.com/fluix/apidoc2ts.git"
   },
-  "author": "Artem Velkov",
+  "author": {
+    "name": "Artem Velkov",
+    "email": "velkov.artem@gmail.com"
+  },
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/fluix/web-apidoc2ts/issues"
+    "url": "https://github.com/fluix/apidoc2ts/issues"
   },
-  "homepage": "https://github.com/fluix/web-apidoc2ts#readme",
+  "homepage": "https://fluix.github.io/apidoc2ts/",
   "files": [
     "/bin",
     "/dist"
@@ -41,6 +45,7 @@
     "@oclif/command": "^1.5.18",
     "@oclif/config": "^1.13.2",
     "@oclif/plugin-help": "^2.2.0",
+    "@types/lodash": "^4.14.138",
     "chalk": "^2.4.2",
     "lodash": "^4.17.14",
     "make-dir": "^3.0.0",
@@ -49,17 +54,29 @@
   },
   "devDependencies": {
     "@oclif/tslint": "^3.1.1",
-    "@types/node": "^10.14.13",
     "@types/jest": "^24.0.15",
-    "ts-node": "^8.3.0",
+    "@types/node": "^10.14.13",
+    "@typescript-eslint/eslint-plugin": "^2.3.2",
+    "@typescript-eslint/eslint-plugin-tslint": "^2.3.2",
+    "@typescript-eslint/parser": "^2.3.2",
+    "eslint": "^6.5.1",
+    "eslint-config-airbnb": "^18.0.1",
+    "eslint-plugin-import": "^2.18.2",
+    "eslint-plugin-jsx-a11y": "^6.2.3",
+    "eslint-plugin-react": "^7.15.1",
+    "eslint-plugin-react-hooks": "^1.7.0",
     "husky": "^3.0.0",
     "jest": "^24.8.0",
     "ts-jest": "^24.0.2",
-    "tslint": "^5.18.0",
-    "tslint-config-airbnb": "5.11.1",
+    "ts-node": "^8.3.0",
+    "tslint": "^5.20.0",
     "typescript": "^3.5.3"
   },
   "keywords": [
-    "apidoc2ts"
+    "apidoc2ts",
+    "apidoc",
+    "interface",
+    "interface generator",
+    "code generator"
   ]
 }

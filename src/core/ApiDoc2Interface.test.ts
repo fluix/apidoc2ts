@@ -1,9 +1,10 @@
 import * as fs from "fs";
+import * as path from "path";
 import {ApiDoc2Interface, ApiDoc2InterfaceExitCode, ApiDoc2InterfaceGroupingMode} from "./ApiDoc2Interface";
-import {ApiDocToInterfaceConverter} from "./converter/ApiDocToInterfaceConverter";
+import {ApiDocToInterfaceConverter} from "./endpoint-converter/ApiDocToInterfaceConverter";
 
 jest.mock("fs");
-jest.mock("./converter/ApiDocToInterfaceConverter");
+jest.mock("./endpoint-converter/ApiDocToInterfaceConverter");
 
 describe("ApiDoc2Interface wrapper", () => {
     const requestInterface = "interface Request";
@@ -22,8 +23,8 @@ describe("ApiDoc2Interface wrapper", () => {
         convert: jest.fn(() => (converterResults)),
     };
 
-    const writeInterfacesMock = jest.fn((a, b) => Promise.resolve());
-    const interfaceWriterFactoryMock = jest.fn((grouping) => ({
+    const writeInterfacesMock = jest.fn(() => Promise.resolve());
+    const interfaceWriterFactoryMock = jest.fn(() => ({
         writeInterfaces: writeInterfacesMock,
     }));
 
@@ -32,7 +33,7 @@ describe("ApiDoc2Interface wrapper", () => {
         interfaceWriterFactoryMock,
     );
     const args = {
-        source: "path/to/the/file",
+        source: "path/to/apidoc",
         output: "path/to/the/output",
         name: "interfaces.ts",
         grouping: ApiDoc2InterfaceGroupingMode.SINGLE,
@@ -42,16 +43,16 @@ describe("ApiDoc2Interface wrapper", () => {
 
     beforeEach(() => {
         readFileSpy.mockReset();
-        readFileSpy.mockImplementation(((a, b, callback) => {
+        readFileSpy.mockImplementation(((a: any, b: any, callback: (err: any, data: any) => void) => {
             callback(null, "{\"mock\": \"data\"}");
         }) as any);
 
         writeInterfacesMock.mockReset();
     });
 
-    it("should call readFile with given path", async () => {
+    it("should call readFile for api_data.json file in provided apidoc source", async () => {
         await apiDoc2Interface.run(args);
-        expect(readFileSpy).toBeCalledWith(args.source, "utf-8", expect.anything());
+        expect(readFileSpy).toBeCalledWith(path.join(args.source, "api_data.json"), "utf-8", expect.anything());
     });
 
     it("should throw an error when readFile failed", async () => {
