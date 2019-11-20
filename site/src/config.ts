@@ -42,7 +42,7 @@ export const features = [
 ];
 
 export const links = {
-    github: "https://github.com/fluix/web-apidoc2ts",
+    github: "https://github.com/fluix/apidoc2ts",
     npm: "https://www.npmjs.com/package/apidoc2ts",
 };
 

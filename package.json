@@ -26,7 +26,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/fluix/web-apidoc2ts.git"
+    "url": "git+https://github.com/fluix/apidoc2ts.git"
   },
   "author": {
     "name": "Artem Velkov",
@@ -34,9 +34,9 @@
   },
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/fluix/web-apidoc2ts/issues"
+    "url": "https://github.com/fluix/apidoc2ts/issues"
   },
-  "homepage": "https://fluix.github.io/web-apidoc2ts/",
+  "homepage": "https://fluix.github.io/apidoc2ts/",
   "files": [
     "/bin",
     "/dist"
