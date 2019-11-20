@@ -2,7 +2,7 @@
   "name": "apidoc2ts-site",
   "version": "0.1.0",
   "private": true,
-  "homepage": "https://fluix.github.io/web-apidoc2ts",
+  "homepage": "https://fluix.github.io/apidoc2ts",
   "dependencies": {
     "@types/jest": "24.0.17",
     "@types/node": "12.7.1",

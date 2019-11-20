@@ -30,7 +30,7 @@ async function checkBranchName() {
     console.log("Invalid branch name");
     console.log("Branch name should start with: 'impr', 'fix', 'feat' or 'ref'");
     console.log("Please check contributing guide for more information");
-    console.log("https://github.com/fluix/web-apidoc2ts/blob/develop/CONTRIBUTING.md");
+    console.log("https://github.com/fluix/apidoc2ts/blob/develop/CONTRIBUTING.md");
     process.exit(1);
 }
 
