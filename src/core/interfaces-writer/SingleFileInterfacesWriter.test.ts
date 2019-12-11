@@ -1,6 +1,7 @@
 import {ApiDoc2InterfaceGroupingMode} from "../ApiDoc2Interface";
 import {ConverterResult} from "../endpoint-converter/ApiDocToInterfaceConverter";
 import {writeFileToPath} from "../utils/FsUtils";
+import {removeConsecutiveBlankLines} from "../utils/StringUtils";
 import {stringifyAllInterfaces} from "../utils/WriterUtils";
 import {SingleFileInterfacesWriter} from "./SingleFileInterfacesWriter";
 
@@ -62,5 +63,22 @@ describe("Single file interfaces writer", () => {
     it("should call writeFile with given output path and filename", async () => {
         await writer.writeInterfaces(converterResults as Array<ConverterResult>, args);
         expect(writeFileSpy).toBeCalledWith("path/to/the/output/interfaces.ts", expect.anything());
+    });
+});
+
+describe("consecutive blank lines fixer", () => {
+    it("should remove consecutive blank lines", () => {
+        expect(removeConsecutiveBlankLines("interface1\n\n\ninterface2"))
+            .toEqual("interface1\n\ninterface2");
+    });
+
+    it("should remove consecutive blank lines in several places", () => {
+        expect(removeConsecutiveBlankLines("i1\n\n\ni2\n\n\n\ni3"))
+            .toEqual("i1\n\ni2\n\ni3");
+    });
+
+    it("should leave only one newline in end of string", () => {
+        expect(removeConsecutiveBlankLines("i1\n\n"))
+            .toEqual("i1\n");
     });
 });
