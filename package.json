@@ -1,13 +1,13 @@
 {
   "name": "apidoc2ts",
-  "version": "0.3.0",
+  "version": "0.3.1",
   "description": "Typescript interface generator based on ApiDoc",
   "bin": {
     "apidoc2ts": "./bin/run"
   },
   "main": "src/cli/Index.ts",
   "scripts": {
-    "start": "npm run lint && npm test && npm run build && npm run main",
+    "start": "npm run lint && npm test && npm run build",
     "monitor": "jest --watchAll --verbose",
     "build": "tsc",
     "test": "jest --verbose --passWithNoTests",
