@@ -144,10 +144,10 @@ module.exports = {
             "error",
             {
                 "rulesDirectory": [
-                    "/Users/user/dev/web-apidoc2ts/node_modules/tslint-consistent-codestyle/rules",
-                    "/Users/user/dev/web-apidoc2ts/node_modules/tslint-eslint-rules/dist/rules",
-                    "/Users/user/dev/web-apidoc2ts/node_modules/tslint-microsoft-contrib",
-                    "/Users/user/dev/web-apidoc2ts/ts-rules"
+                    "./node_modules/tslint-consistent-codestyle/rules",
+                    "./node_modules/tslint-eslint-rules/dist/rules",
+                    "./node_modules/tslint-microsoft-contrib",
+                    "./ts-rules"
                 ],
                 "rules": {
                     "align": [
