@@ -5,7 +5,6 @@
   "bin": {
     "apidoc2ts": "./bin/run"
   },
-  "main": "src/cli/Index.ts",
   "scripts": {
     "start": "npm run lint && npm test && npm run build",
     "monitor": "jest --watchAll --verbose",
@@ -13,7 +12,9 @@
     "test": "jest --verbose --passWithNoTests",
     "lint": "eslint -c .eslintrc.js --cache 'src/**/*.ts'",
     "lint:fix": "eslint -c .eslintrc.js --fix 'src/**/*.ts'",
-    "lint:strict": "eslint -c .eslintrc.js 'src/**/*.ts'"
+    "lint:strict": "eslint -c .eslintrc.js 'src/**/*.ts'",
+    "postpack": "rm -f oclif.manifest.json",
+    "prepack": "npm run build && oclif-dev manifest"
   },
   "jest": {
     "preset": "ts-jest//presets/default",
@@ -39,12 +40,13 @@
   "homepage": "https://fluix.github.io/apidoc2ts/",
   "files": [
     "/bin",
-    "/dist"
+    "/dist",
+    "oclif.manifest.json"
   ],
   "dependencies": {
-    "@oclif/command": "^1.5.18",
-    "@oclif/config": "^1.13.2",
-    "@oclif/plugin-help": "^2.2.0",
+    "@oclif/command": "^1.5.19",
+    "@oclif/config": "^1.13.3",
+    "@oclif/plugin-help": "^2.2.2",
     "@types/lodash": "^4.14.138",
     "chalk": "^2.4.2",
     "lodash": "^4.17.14",
@@ -53,6 +55,8 @@
     "tslib": "^1.10.0"
   },
   "devDependencies": {
+    "@oclif/dev-cli": "^1.22.2",
+    "@oclif/plugin-legacy": "^1.1.4",
     "@oclif/tslint": "^3.1.1",
     "@types/jest": "^24.0.15",
     "@types/node": "^10.14.13",
