@@ -1,6 +1,6 @@
 {
   "name": "apidoc2ts",
-  "version": "0.3.3",
+  "version": "0.3.4",
   "description": "Typescript interface generator based on ApiDoc",
   "bin": {
     "apidoc2ts": "./bin/run"
@@ -14,7 +14,7 @@
     "lint:fix": "eslint -c .eslintrc.js --fix 'src/**/*.ts'",
     "lint:strict": "eslint -c .eslintrc.js 'src/**/*.ts'",
     "postpack": "rm -f oclif.manifest.json",
-    "prepack": "npm run build && oclif-dev manifest"
+    "prepack": "rm -rf dist && npm run build && oclif-dev manifest"
   },
   "jest": {
     "preset": "ts-jest//presets/default",
